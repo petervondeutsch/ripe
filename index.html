@@ -4271,7 +4271,8 @@
                   <div class="stat-item"><span class="stat-label">Week</span><span class="stat-value">${week.length}</span></div>
                   <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">${state.focusStreak}🔥</span></div>
                   <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">${state.sessionHistory.length}</span></div>
-                `;\n            }
+                                `;
+                        }
 
             function completeSession() {
                 pause();
@@ -4928,13 +4929,13 @@
                 taskPriorityBtn.dataset.priority = 'medium';
                 taskPriorityBtn.addEventListener('click', () => {
                     const priorities = ['high', 'medium', 'low'];
-                    const current = taskPriorityBtn.dataset.priority || 'medium';
-                    const idx = priorities.indexOf(current);
-                    taskPriorityBtn.dataset.priority = priorities[(idx + 1) % priorities.length];
+                        const current = taskPriorityBtn.dataset.priority || 'medium';
+                        const idx = priorities.indexOf(current);
+                        taskPriorityBtn.dataset.priority = priorities[(idx + 1) % priorities.length];
+                        updatePriorityBtn();
+                    });
                     updatePriorityBtn();
-                });
-                updatePriorityBtn();
-            }
+                }
 
             setTimeout(() => {
                 applyTheme(state.theme);
