@@ -4892,8 +4892,23 @@
             renderPips();
             renderTasks();
             render();
+            updateStats();
             const colors = THEME_COLORS[state.theme] || ['#333', '#666'];
             themePreviewDot.style.background = colors[1];
+            
+            // Priority button setup
+            const taskPriorityBtn = $('#taskPriority');
+            if (taskPriorityBtn) {
+                taskPriorityBtn.dataset.priority = 'medium';
+                taskPriorityBtn.addEventListener('click', () => {
+                    const priorities = ['high', 'medium', 'low'];
+                    const current = taskPriorityBtn.dataset.priority || 'medium';
+                    const idx = priorities.indexOf(current);
+                    taskPriorityBtn.dataset.priority = priorities[(idx + 1) % priorities.length];
+                    updatePriorityBtn();
+                });
+                updatePriorityBtn();
+            }
 
             setTimeout(() => {
                 applyTheme(state.theme);
