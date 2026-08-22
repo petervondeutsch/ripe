@@ -1698,6 +1698,73 @@
         .add-task .add-btn:active {
             transform: scale(0.96);
         }
+        
+        .priority-btn {
+            background: #dba43f;
+            color: var(--on-accent);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.15s ease;
+            text-transform: capitalize;
+        }
+        .priority-btn:hover {
+            transform: scale(1.05);
+        }
+        .priority-btn:active {
+            transform: scale(0.95);
+        }
+        
+        #stats-panel {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-2);
+            border-radius: 12px;
+            margin-top: 12px;
+            border: 1px solid var(--line);
+        }
+        
+        .stat-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: var(--fg-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent);
+            font-family: var(--font-mono);
+        }
+        
+        .task-priority {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: opacity 0.2s ease, transform 0.15s ease;
+        }
+        
+        .task-priority:hover {
+            opacity: 1 !important;
+            transform: scale(1.3);
+        }
 
         /* ===== task list ===== */
         .task-list {
@@ -3043,6 +3110,14 @@
     <!-- ===== TASKS ===== -->
     <div class="tasks-section">
         <div class="divider"><div class="line"></div><h2>Tasks</h2><div class="line"></div></div>
+        
+        <!-- Stats Panel -->
+        <div id="stats-panel">
+            <div class="stat-item"><span class="stat-label">Today</span><span class="stat-value">0</span></div>
+            <div class="stat-item"><span class="stat-label">Week</span><span class="stat-value">0</span></div>
+            <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">0🔥</span></div>
+            <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">0</span></div>
+        </div>
 
         <!-- Add Task -->
         <div class="add-task">
@@ -3054,6 +3129,7 @@
                     <button type="button" data-target="taskEstimate" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
                 </div>
             </div>
+            <button type="button" id="taskPriority" class="priority-btn" title="Priority: medium (click to change)">Priority</button>
             <button class="add-btn" id="addTaskBtn">Add</button>
         </div>
 
@@ -3083,6 +3159,9 @@
                 <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 Clear all tasks
             </button>
+            <button class="btn-bottom" id="exportBtn">Export data</button>
+            <button class="btn-bottom" id="importBtn">Import data</button>
+            <input type="file" id="importFile" accept=".json" style="display:none">
         </div>
 
         <footer>Ripe — a focused clone of the pomodoro timer concept, built for you.</footer>
@@ -3440,6 +3519,11 @@
                 timerScale: 1.0,
                 hideFocusedBadge: false,
                 hideScrollCue: false,
+                soundTheme: 'default',
+                sessionHistory: [],
+                focusStreak: 0,
+                lastFocusDate: null,
+                showStats: true,
                 customThemes: [
                     { name: 'Custom 1', bg: '#1b1a1f', bg2: '#242229', fg: '#f4ede2', focus: '#e05a3d',
                         short: '#8ea583', long: '#dba43f' },
@@ -3458,7 +3542,9 @@
 
             // ===== PERSISTENCE =====
             function save() {
+                state.todayDate = state.todayDate || new Date().toDateString();
                 const data = {
+                    todayDate: state.todayDate,
                     durations: state.durations,
                     cyclesBeforeLong: state.cyclesBeforeLong,
                     autostart: state.autostart,
@@ -3477,7 +3563,12 @@
                     customThemes: state.customThemes,
                     timerScale: state.timerScale,
                     hideFocusedBadge: state.hideFocusedBadge,
-                    hideScrollCue: state.hideScrollCue
+                    hideScrollCue: state.hideScrollCue,
+                    soundTheme: state.soundTheme,
+                    sessionHistory: state.sessionHistory.slice(-500),
+                    focusStreak: state.focusStreak,
+                    lastFocusDate: state.lastFocusDate,
+                    showStats: state.showStats
                 };
                 localStorage.setItem('ripe_state', JSON.stringify(data));
             }
@@ -3504,6 +3595,19 @@
                         state.timerScale = raw.timerScale ?? 1.0;
                         state.hideFocusedBadge = raw.hideFocusedBadge ?? false;
                         state.hideScrollCue = raw.hideScrollCue ?? false;
+                        state.todayDate = raw.todayDate || null;
+                        state.soundTheme = raw.soundTheme || 'default';
+                        state.sessionHistory = raw.sessionHistory || [];
+                        state.focusStreak = raw.focusStreak || 0;
+                        state.lastFocusDate = raw.lastFocusDate || null;
+                        state.showStats = raw.showStats ?? true;
+                        const _today = new Date().toDateString();
+                        if (state.todayDate !== _today) {
+                            state.cycleCount = 0;
+                            state.totalFocusedSec = 0;
+                            state.todayDate = _today;
+                            updateFocusStreak();
+                        }
                         if (raw.customThemes && raw.customThemes.length === 5) {
                             state.customThemes = raw.customThemes.map(t => {
                                 if (t.accent && !t.focus) {
@@ -3826,12 +3930,7 @@
             }
             buildThemeGrid();
 
-            const savedTheme = localStorage.getItem('ripe_theme');
-            if (savedTheme && THEMES.includes(savedTheme)) {
-                applyTheme(savedTheme);
-            } else {
-                applyTheme('og-dark');
-            }
+            applyTheme(state.theme);
 
             // ===== TIMER SCALE =====
             function applyTimerScale(scale) {
@@ -3903,6 +4002,7 @@
                     '<polygon points="6 4 20 12 6 20 6 4"/>';
                 renderEstLine();
                 renderStats();
+                updateStats();
                 document.title = (state.running ? fmt(state.remaining) + ' · ' : '') + 'Ripe — Focus Timer';
                 timeDisplay.style.fontFamily = state.timerFont;
                 const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim();
@@ -3940,6 +4040,46 @@
             }
 
             function activeTask() { return state.tasks.find(t => t.id === state.activeTaskId); }
+            
+            function recordSession() {
+                const session = {
+                    mode: state.mode,
+                    timestamp: new Date().toISOString(),
+                    taskId: state.activeTaskId,
+                    taskTitle: activeTask()?.title || 'Unnamed'
+                };
+                state.sessionHistory.push(session);
+                if (state.sessionHistory.length > 1000) state.sessionHistory.shift();
+            }
+            
+            function updateFocusStreak() {
+                const today = new Date().toDateString();
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                if (state.lastFocusDate === today) return;
+                if (state.lastFocusDate === yesterday && state.cycleCount > 0) {
+                    state.focusStreak++;
+                } else if (state.lastFocusDate !== today) {
+                    if (state.cycleCount > 0) state.focusStreak = 1;
+                    else state.focusStreak = 0;
+                }
+                if (state.cycleCount > 0) state.lastFocusDate = today;
+            }
+            
+            function getTodayStats() {
+                const today = new Date().toDateString();
+                const todayStart = new Date(today).getTime();
+                const todayEnd = todayStart + 86400000;
+                return state.sessionHistory.filter(s => {
+                    const t = new Date(s.timestamp).getTime();
+                    return t >= todayStart && t < todayEnd;
+                });
+            }
+            
+            function getWeekStats() {
+                const now = Date.now();
+                const weekAgo = now - (7 * 86400000);
+                return state.sessionHistory.filter(s => new Date(s.timestamp).getTime() > weekAgo);
+            }
 
             function escapeHtml(s) { const d = document.createElement('div');
                 d.textContent = s; return d.innerHTML; }
@@ -4030,6 +4170,7 @@
 
             function start() {
                 if (state.running) return;
+                requestNotifyPermission();
                 state.running = true;
                 timerInterval = setInterval(tick, 1000);
                 render();
@@ -4045,6 +4186,17 @@
                 pause();
                 state.remaining = state.durations[state.mode];
                 render();
+            }
+
+            function requestNotifyPermission() {
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+            }
+            function notifySessionEnd(mode) {
+                if (!('Notification' in window) || Notification.permission !== 'granted') return;
+                const msg = mode === 'pomodoro' ? 'Focus session complete — take a break.' : 'Break over — back to it.';
+                try { new Notification('Ripe', { body: msg }); } catch (_) {}
             }
 
             function playChime() {
@@ -4068,12 +4220,42 @@
                     });
                 } catch (_) { /* ignore */ }
             }
+            
+            function updatePriorityBtn() {
+                const btn = $('#taskPriority');
+                if (!btn) return;
+                const priority = btn.dataset.priority || 'medium';
+                const colors = { high: '#e05a3d', medium: '#dba43f', low: '#8ea583' };
+                btn.style.backgroundColor = colors[priority];
+                btn.style.opacity = '0.8';
+                btn.title = `Priority: ${priority} (click to change)`;
+            }
+            
+            function applySoundTheme(theme) {
+                state.soundTheme = theme;
+                const btn = $('#soundThemeBtn');
+                if (btn) btn.textContent = theme === 'default' ? '🔔 Default' : theme === 'bell' ? '🔕 Bell' : '🎵 Chime';
+            }
+            
+            function updateStats() {
+                const stats = document.getElementById('stats-panel');
+                if (!stats) return;
+                const today = getTodayStats();
+                const week = getWeekStats();
+                stats.innerHTML = `
+                  <div class="stat-item"><span class="stat-label">Today</span><span class="stat-value">${today.length}</span></div>
+                  <div class="stat-item"><span class="stat-label">Week</span><span class="stat-value">${week.length}</span></div>
+                  <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">${state.focusStreak}🔥</span></div>
+                  <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">${state.sessionHistory.length}</span></div>
+                `;\n            }
 
             function completeSession() {
                 pause();
+                notifySessionEnd(state.mode);
                 if (state.alarmSound && !state.masterMute) playChime();
                 if (state.mode === 'pomodoro') {
                     state.cycleCount++;
+                    recordSession();
                     const t = activeTask();
                     if (t) {
                         t.completedPomos = (t.completedPomos || 0) + 1;
@@ -4090,7 +4272,16 @@
                 else render();
             }
 
-            function skip() { completeSession(); }
+            function skip() {
+                pause();
+                if (state.mode === 'pomodoro') {
+                    const next = (state.cycleCount % state.cyclesBeforeLong === state.cyclesBeforeLong - 1) ? 'long' : 'short';
+                    switchMode(next);
+                } else {
+                    switchMode('pomodoro');
+                }
+                save();
+            }
 
             startBtn.addEventListener('click', () => state.running ? pause() : start());
             resetBtn.addEventListener('click', reset);
@@ -4123,6 +4314,9 @@
                 const pomosHTML = showPomos ?
                     `<div class="task-pomos" data-action="edit-est" title="Click to edit estimate">${t.completedPomos||0}/${t.est} ${POMO_ICON}</div>` :
                     `<div class="task-pomos" style="display:none;"></div>`;
+                const priority = t.priority || 'medium';
+                const priorityColors = { high: '#e05a3d', medium: '#dba43f', low: '#8ea583' };
+                const priorityBadge = !isCompleted ? `<span class="task-priority" style="background:${priorityColors[priority]};opacity:0.7;" title="Priority: ${priority} (click to cycle)" data-action="cycle-priority"></span>` : '';
 
                 return `
                 <div class="task-row">
@@ -4130,6 +4324,7 @@
                   <div class="task-check ${done?'done':''}" data-action="toggle">
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
+                  ${priorityBadge}
                   <div class="task-title" data-action="activate">${escapeHtml(t.title)}</div>
                   ${pomosHTML}
                   ${isCompleted ? `<button class="task-undo" data-action="undo" title="Undo"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>` : ''}
@@ -4159,6 +4354,18 @@
                     titleEl.addEventListener('click', () => {
                         if (t.done) return;
                         state.activeTaskId = (state.activeTaskId === t.id) ? null : t.id;
+                        save();
+                        renderTasks();
+                        render();
+                    });
+                }
+                const priorityBtn = el.querySelector('[data-action=cycle-priority]');
+                if (priorityBtn) {
+                    priorityBtn.addEventListener('click', e => {
+                        e.stopPropagation();
+                        const priorities = ['high', 'medium', 'low'];
+                        const idx = priorities.indexOf(t.priority || 'medium');
+                        t.priority = priorities[(idx + 1) % priorities.length];
                         save();
                         renderTasks();
                         render();
@@ -4330,14 +4537,18 @@
             function addTask() {
                 const input = $('#taskInput');
                 const estInput = $('#taskEstimate');
+                const priorityBtn = $('#taskPriority');
                 const title = input.value.trim();
                 if (!title) return;
                 const est = Math.max(1, parseInt(estInput.value) || 1);
-                const t = { id: uid(), title, est, completedPomos: 0, done: false, notes: '' };
+                const priority = priorityBtn?.dataset.priority || 'medium';
+                const t = { id: uid(), title, est, completedPomos: 0, done: false, notes: '', priority };
                 state.tasks.push(t);
                 if (!state.activeTaskId) state.activeTaskId = t.id;
                 input.value = '';
                 estInput.value = 1;
+                priorityBtn.dataset.priority = 'medium';
+                updatePriorityBtn();
                 save();
                 renderTasks();
                 render();
@@ -4643,6 +4854,33 @@
             $('#ytPlayBtn').addEventListener('click', () => { if (ytReady) ytPlayer.playVideo(); });
             $('#ytPauseBtn').addEventListener('click', () => { if (ytReady) ytPlayer.pauseVideo(); });
             $('#ytVolume').addEventListener('input', e => { if (ytReady) ytPlayer.setVolume(parseInt(e.target.value) || 0); });
+
+            // ===== EXPORT / IMPORT =====
+            $('#exportBtn').addEventListener('click', () => {
+                const blob = new Blob([localStorage.getItem('ripe_state') || '{}'], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `ripe-backup-${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+            });
+            $('#importBtn').addEventListener('click', () => $('#importFile').click());
+            $('#importFile').addEventListener('change', e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    try {
+                        JSON.parse(reader.result);
+                        localStorage.setItem('ripe_state', reader.result);
+                        location.reload();
+                    } catch (_) {
+                        alert('Invalid backup file.');
+                    }
+                };
+                reader.readAsText(file);
+                e.target.value = '';
+            });
 
             // ===== SCROLL CUE CLICK =====
             scrollCue.addEventListener('click', () => {
