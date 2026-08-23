@@ -1802,6 +1802,16 @@
             border: 1px solid var(--line);
             width: 100%;
             box-sizing: border-box;
+            transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
+            overflow: hidden;
+        }
+        #stats-panel.hidden {
+            opacity: 0;
+            max-height: 0;
+            margin: 0;
+            padding: 0 16px;
+            border: none;
+            pointer-events: none;
         }
         .stat-item {
             display: flex;
@@ -3053,6 +3063,8 @@
             .bottom-actions .btn-bottom svg { width: 12px; height: 12px; }
             .statbar .stat-est-finish { font-size: 9px; }
             .goal-dot { width: 8px; height: 8px; }
+            #stats-panel { gap: 6px 12px; padding: 10px 12px; }
+            .stat-value { font-size: 15px; }
         }
         @media (max-width: 380px) {
             .ring-box { width: calc(200px * var(--timer-scale, 1)); height: calc(200px * var(--timer-scale, 1)); }
@@ -3177,7 +3189,7 @@
         <div id="stats-panel">
             <div class="stat-item"><span class="stat-label">Today</span><span class="stat-value">0</span></div>
             <div class="stat-item"><span class="stat-label">Week</span><span class="stat-value">0</span></div>
-            <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">0🔥</span></div>
+            <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">0</span></div>
             <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">0</span></div>
         </div>
 
@@ -3403,6 +3415,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="field-row">
+                    <label>Only show goal during long breaks</label>
+                    <div class="toggle" id="setGoalOnlyLong"></div>
+                </div>
 
                 <!-- Preferences -->
                 <div class="section-title">
@@ -3436,6 +3452,10 @@
                 <div class="field-row">
                     <label>Hide tasks down arrow</label>
                     <div class="toggle" id="setHideScrollCue"></div>
+                </div>
+                <div class="field-row">
+                    <label>Hide stats panel</label>
+                    <div class="toggle" id="setHideStats"></div>
                 </div>
 
                 <div class="modal-actions">
@@ -3535,7 +3555,9 @@
                 alarmVolume: 80,
                 alarmRepeats: 3,
                 alarmRepeatUntilDismiss: false,
-                dailyGoal: 0
+                dailyGoal: 0,
+                goalOnlyLong: false,
+                hideStats: false
             };
 
             // ===== STATE =====
@@ -3572,6 +3594,8 @@
                 alarmRepeats: 3,
                 alarmRepeatUntilDismiss: false,
                 dailyGoal: 0,
+                goalOnlyLong: false,
+                hideStats: false,
                 customThemes: [
                     { name: 'Custom 1', bg: '#1b1a1f', bg2: '#242229', fg: '#f4ede2', focus: '#e05a3d',
                         short: '#8ea583', long: '#dba43f' },
@@ -3584,12 +3608,13 @@
                     { name: 'Custom 5', bg: '#241a16', bg2: '#332420', fg: '#f5e8e0', focus: '#d97a3f',
                         short: '#b89a6a', long: '#3f6bd9' }
                 ],
-                // timestamp-based timer fields
+                // timer state
                 timerStartTime: null,
                 timerInitialRemaining: 0,
                 timerPausedRemaining: 0,
                 timerPausedAt: null,
                 timerHiddenAt: null,
+                timerIntervalId: null,
                 // alarm state
                 alarmActive: false,
                 alarmRepeatCount: 0,
@@ -3633,7 +3658,9 @@
                     alarmVolume: state.alarmVolume,
                     alarmRepeats: state.alarmRepeats,
                     alarmRepeatUntilDismiss: state.alarmRepeatUntilDismiss,
-                    dailyGoal: state.dailyGoal
+                    dailyGoal: state.dailyGoal,
+                    goalOnlyLong: state.goalOnlyLong,
+                    hideStats: state.hideStats
                 };
                 localStorage.setItem('ripe_state', JSON.stringify(data));
             }
@@ -3671,6 +3698,8 @@
                         state.alarmRepeats = raw.alarmRepeats ?? 3;
                         state.alarmRepeatUntilDismiss = raw.alarmRepeatUntilDismiss ?? false;
                         state.dailyGoal = raw.dailyGoal ?? 0;
+                        state.goalOnlyLong = raw.goalOnlyLong ?? false;
+                        state.hideStats = raw.hideStats ?? false;
                         const _today = new Date().toDateString();
                         if (state.todayDate !== _today) {
                             state.cycleCount = 0;
@@ -3738,6 +3767,7 @@
             const alarmMsg = $('#alarmMsg');
             const goalRow = $('#goalRow');
             const goalDots = $('#goalDots');
+            const statsPanel = $('#stats-panel');
 
             const RADIUS = 90;
             const CIRC = 2 * Math.PI * RADIUS;
@@ -3747,7 +3777,11 @@
             // ===== DAILY GOAL RENDER =====
             function renderGoal() {
                 const goal = state.dailyGoal;
-                if (goal <= 0) {
+                // Only show goal if:
+                // - goal > 0
+                // - (goalOnlyLong is OFF) OR (goalOnlyLong is ON and mode === 'long')
+                const showGoal = goal > 0 && (!state.goalOnlyLong || state.mode === 'long');
+                if (!showGoal) {
                     goalRow.style.display = 'none';
                     return;
                 }
@@ -4065,6 +4099,8 @@
                 state.timerInitialRemaining = 0;
                 state.timerPausedRemaining = 0;
                 state.timerPausedAt = null;
+                // Update goal visibility based on new mode
+                renderGoal();
             }
 
             $('#tabs').addEventListener('click', e => {
@@ -4122,6 +4158,12 @@
                 updateStats();
                 updateFinishTime();
                 renderGoal();
+                // Update stats panel visibility
+                if (state.hideStats) {
+                    statsPanel.classList.add('hidden');
+                } else {
+                    statsPanel.classList.remove('hidden');
+                }
                 document.title = (state.running ? fmt(state.remaining) + ' · ' : '') + 'Ripe — Focus Timer';
                 timeDisplay.style.fontFamily = state.timerFont;
                 const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim();
@@ -4271,10 +4313,11 @@
                 updateScrollCue();
             }, 50);
 
-            // ===== TIMER (timestamp-based, drift-corrected) =====
-            let timerRAF = null;
+            // ===== TIMER (setInterval-based, works when screen is off) =====
+            let timerTickInterval = null;
+            let timerLastTick = 0;
 
-            function tick() {
+            function timerTick() {
                 if (!state.running) return;
                 const now = performance.now();
                 if (state.timerStartTime === null) {
@@ -4291,11 +4334,11 @@
                 }
                 state.remaining = remaining;
                 render();
-                timerRAF = requestAnimationFrame(tick);
             }
 
             function start() {
                 if (state.running) return;
+                // If we were paused, use the paused remaining
                 if (state.timerPausedRemaining > 0 && state.timerPausedAt !== null) {
                     state.timerStartTime = performance.now();
                     state.timerInitialRemaining = state.timerPausedRemaining;
@@ -4307,17 +4350,18 @@
                 }
                 state.running = true;
                 requestNotifyPermission();
-                if (timerRAF) cancelAnimationFrame(timerRAF);
-                timerRAF = requestAnimationFrame(tick);
+                if (timerTickInterval) clearInterval(timerTickInterval);
+                timerTickInterval = setInterval(timerTick, 500); // tick twice per second for accuracy
+                timerTick(); // immediate first tick
                 render();
             }
 
             function pause() {
                 if (!state.running) return;
                 state.running = false;
-                if (timerRAF) {
-                    cancelAnimationFrame(timerRAF);
-                    timerRAF = null;
+                if (timerTickInterval) {
+                    clearInterval(timerTickInterval);
+                    timerTickInterval = null;
                 }
                 state.timerPausedRemaining = state.remaining;
                 state.timerPausedAt = performance.now();
@@ -4345,23 +4389,10 @@
                             state.timerStartTime += hiddenDuration * 1000;
                         }
                         state.timerHiddenAt = null;
+                        // Force a tick to update
+                        timerTick();
                     } else {
                         state.timerHiddenAt = null;
-                    }
-                    if (state.running) {
-                        const now = performance.now();
-                        if (state.timerStartTime !== null) {
-                            const elapsed = (now - state.timerStartTime) / 1000;
-                            let remaining = state.timerInitialRemaining - elapsed;
-                            if (remaining <= 0) {
-                                state.remaining = 0;
-                                render();
-                                completeSession();
-                                return;
-                            }
-                            state.remaining = remaining;
-                            render();
-                        }
                     }
                 }
             }
@@ -4595,7 +4626,6 @@
                     render();
                 });
 
-                // Rename: double-click on title
                 const titleEl = el.querySelector('[data-action=rename]');
                 if (titleEl) {
                     titleEl.addEventListener('dblclick', function(e) {
@@ -4612,11 +4642,7 @@
 
                         const saveRename = () => {
                             const newTitle = input.value.trim();
-                            if (newTitle) {
-                                t.title = newTitle;
-                            } else {
-                                t.title = currentTitle; // revert if empty
-                            }
+                            t.title = newTitle || currentTitle;
                             save();
                             renderTasks();
                             render();
@@ -4861,6 +4887,8 @@
                 state.alarmRepeats = pendingAlarmRepeats;
                 state.alarmRepeatUntilDismiss = $('#setAlarmRepeatUntilDismiss').classList.contains('on');
                 state.dailyGoal = Math.max(0, parseInt($('#setDailyGoal').value) || 0);
+                state.goalOnlyLong = $('#setGoalOnlyLong').classList.contains('on');
+                state.hideStats = $('#setHideStats').classList.contains('on');
                 $('#alarmVolumeLabel').textContent = state.alarmVolume + '%';
                 alarmVolumeValue = state.alarmVolume;
                 timeDisplay.style.fontFamily = state.timerFont;
@@ -4871,6 +4899,12 @@
                 render();
                 applyModeClass();
                 updateScrollCue();
+                // Update stats panel visibility
+                if (state.hideStats) {
+                    statsPanel.classList.add('hidden');
+                } else {
+                    statsPanel.classList.remove('hidden');
+                }
                 save();
             }
 
@@ -4887,7 +4921,8 @@
                 save();
             });
             ['setKeyboardShortcuts', 'setAutostart', 'setAlarmSound', 'setMasterMute', 'setShowActiveTaskProgress',
-                'setHideFocusedBadge', 'setHideScrollCue', 'setShowCyclesLeft', 'setAlarmRepeatUntilDismiss'
+                'setHideFocusedBadge', 'setHideScrollCue', 'setShowCyclesLeft', 'setAlarmRepeatUntilDismiss',
+                'setGoalOnlyLong', 'setHideStats'
             ].forEach(id => {
                 $(`#${id}`).addEventListener('click', function() {
                     this.classList.toggle('on');
@@ -4940,6 +4975,8 @@
                 $('#setHideScrollCue').classList.toggle('on', state.hideScrollCue);
                 $('#setShowCyclesLeft').classList.toggle('on', state.showCyclesLeft);
                 $('#setAlarmRepeatUntilDismiss').classList.toggle('on', state.alarmRepeatUntilDismiss);
+                $('#setGoalOnlyLong').classList.toggle('on', state.goalOnlyLong);
+                $('#setHideStats').classList.toggle('on', state.hideStats);
                 timerScaleSlider.value = Math.round(state.timerScale * 100);
                 timerScaleLabel.textContent = Math.round(state.timerScale * 100) + '%';
                 $$('.theme-grid .theme-swatch').forEach(el => {
@@ -4952,9 +4989,12 @@
 
             settingsBtn.addEventListener('click', openModal);
 
-            closeModalBtn.addEventListener('click', () => {
+            function closeModalAndApply() {
+                applySettingsLive();
                 modalBackdrop.classList.remove('show');
-            });
+            }
+
+            closeModalBtn.addEventListener('click', closeModalAndApply);
 
             revertDefaultsBtn.addEventListener('click', () => {
                 state.durations.pomodoro = DEFAULTS.pomodoro * 60;
@@ -4974,6 +5014,8 @@
                 state.alarmRepeats = DEFAULTS.alarmRepeats;
                 state.alarmRepeatUntilDismiss = DEFAULTS.alarmRepeatUntilDismiss;
                 state.dailyGoal = DEFAULTS.dailyGoal;
+                state.goalOnlyLong = DEFAULTS.goalOnlyLong;
+                state.hideStats = DEFAULTS.hideStats;
                 state.remaining = state.durations[state.mode];
                 pendingCycles = DEFAULTS.cyclesBeforeLong;
                 pendingAlarmRepeats = DEFAULTS.alarmRepeats;
@@ -4999,6 +5041,8 @@
                 $('#setHideScrollCue').classList.toggle('on', DEFAULTS.hideScrollCue);
                 $('#setShowCyclesLeft').classList.toggle('on', DEFAULTS.showCyclesLeft);
                 $('#setAlarmRepeatUntilDismiss').classList.toggle('on', DEFAULTS.alarmRepeatUntilDismiss);
+                $('#setGoalOnlyLong').classList.toggle('on', DEFAULTS.goalOnlyLong);
+                $('#setHideStats').classList.toggle('on', DEFAULTS.hideStats);
                 timerScaleSlider.value = Math.round(DEFAULTS.timerScale * 100);
                 timerScaleLabel.textContent = Math.round(DEFAULTS.timerScale * 100) + '%';
 
@@ -5013,11 +5057,15 @@
                 render();
                 applyModeClass();
                 updateScrollCue();
+                if (state.hideStats) {
+                    statsPanel.classList.add('hidden');
+                } else {
+                    statsPanel.classList.remove('hidden');
+                }
                 save();
             });
 
-            modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) modalBackdrop.classList.remove(
-                    'show'); });
+            modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModalAndApply(); });
 
             // ===== SOUND MIXER =====
             mixerBtn.addEventListener('click', () => {
@@ -5234,10 +5282,12 @@
                 if (!stats) return;
                 const today = getTodayStats();
                 const week = getWeekStats();
+                const streakDisplay = state.focusStreak > 0 ? state.focusStreak + ' day' + (state.focusStreak > 1 ?
+                    's' : '') + ' 🔥' : '0';
                 stats.innerHTML = `
                   <div class="stat-item"><span class="stat-label">Today</span><span class="stat-value">${today.length}</span></div>
                   <div class="stat-item"><span class="stat-label">Week</span><span class="stat-value">${week.length}</span></div>
-                  <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">${state.focusStreak}🔥</span></div>
+                  <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">${streakDisplay}</span></div>
                   <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">${state.sessionHistory.length}</span></div>
                 `;
             }
@@ -5256,6 +5306,11 @@
             alarmMaxRepeats = state.alarmRepeats;
             alarmRepeatUntilDismiss = state.alarmRepeatUntilDismiss;
 
+            // Handle stats panel visibility on load
+            if (state.hideStats) {
+                statsPanel.classList.add('hidden');
+            }
+
             setTimeout(() => {
                 applyTheme(state.theme);
                 applyTimerScale(state.timerScale);
@@ -5263,8 +5318,9 @@
                 if (state.running) {
                     state.timerStartTime = performance.now();
                     state.timerInitialRemaining = state.remaining;
-                    if (timerRAF) cancelAnimationFrame(timerRAF);
-                    timerRAF = requestAnimationFrame(tick);
+                    if (timerTickInterval) clearInterval(timerTickInterval);
+                    timerTickInterval = setInterval(timerTick, 500);
+                    timerTick();
                 }
             }, 50);
 
