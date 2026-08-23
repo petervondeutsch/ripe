@@ -1262,10 +1262,20 @@
         }
         .hero-inner {
             width: 100%;
-            max-width: 640px;
+            max-width: 740px;
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        /* timer row: goal dots + ring */
+        .timer-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 8px;
         }
 
         /* ===== scroll cue ===== */
@@ -1363,6 +1373,7 @@
             height: calc(320px * var(--timer-scale, 1));
             margin: 0 auto;
             transition: width 0.2s ease, height 0.2s ease;
+            flex-shrink: 0;
         }
         .ring-box svg.ring {
             transform: rotate(-90deg);
@@ -1427,6 +1438,42 @@
             transition: background 0.3s ease, border-color 0.3s ease;
         }
         .cycle-pips .pip.filled {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Goal row */
+        .goal-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 14px;
+            height: 24px;
+            min-height: 24px;
+        }
+        .goal-row .goal-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--fg-dim);
+            font-weight: 600;
+            margin-right: 4px;
+            opacity: 0.7;
+        }
+        .goal-dots {
+            display: flex;
+            gap: 4px;
+        }
+        .goal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--bg-3);
+            border: 1px solid var(--line);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .goal-dot.filled {
             background: var(--accent);
             border-color: var(--accent);
         }
@@ -1742,10 +1789,13 @@
             transform: scale(0.95);
         }
 
+        /* ===== Stats Panel ===== */
         #stats-panel {
             display: flex;
-            gap: 12px;
-            padding: 12px;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 8px 16px;
+            padding: 12px 16px;
             background: var(--bg-2);
             border-radius: 12px;
             margin-top: 12px;
@@ -1753,28 +1803,27 @@
             width: 100%;
             box-sizing: border-box;
         }
-
         .stat-item {
-            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            min-width: 0;
+            gap: 2px;
+            flex: 0 1 auto;
+            min-width: 60px;
         }
-
         .stat-label {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--fg-dim);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 600;
         }
-
         .stat-value {
             font-size: 18px;
             font-weight: 600;
             color: var(--accent);
             font-family: var(--font-mono);
+            line-height: 1.2;
         }
 
         .task-priority {
@@ -1881,6 +1930,24 @@
             cursor: pointer;
             word-break: break-word;
             color: var(--fg);
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background 0.15s ease;
+        }
+        .task-title:hover {
+            background: var(--accent-soft);
+        }
+        .task-title-input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            color: var(--fg);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 2px 6px;
+            font-family: inherit;
+            outline: none;
         }
         .task-pomos {
             font-family: var(--font-mono);
@@ -2947,6 +3014,7 @@
             .topbar-actions .btn-icon { width: 38px; height: 38px; }
             .topbar-actions .btn-icon svg { width: 16px; height: 16px; }
             .topbar-actions .btn-icon .theme-preview { width: 13px; height: 13px; bottom: -1px; right: -1px; }
+            .timer-row { gap: 12px; }
             .ring-box { width: calc(250px * var(--timer-scale, 1)); height: calc(250px * var(--timer-scale, 1)); }
             .ring-center .time { font-size: calc(54px * var(--timer-scale, 1)); }
             .ring-center .time.cycles-mode { font-size: calc(34px * var(--timer-scale, 1)); }
@@ -2984,6 +3052,7 @@
             .bottom-actions .btn-bottom { font-size: 11px; padding: 8px 16px; }
             .bottom-actions .btn-bottom svg { width: 12px; height: 12px; }
             .statbar .stat-est-finish { font-size: 9px; }
+            .goal-dot { width: 8px; height: 8px; }
         }
         @media (max-width: 380px) {
             .ring-box { width: calc(200px * var(--timer-scale, 1)); height: calc(200px * var(--timer-scale, 1)); }
@@ -2993,6 +3062,8 @@
             .btn-main { padding: 12px 20px; font-size: 12px; min-width: 80px; }
             .btn-main::before { inset: -4px; filter: blur(10px); }
             .btn-ghost { width: 36px; height: 36px; }
+            .timer-row { gap: 8px; }
+            .goal-dot { width: 6px; height: 6px; }
         }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -3051,35 +3122,43 @@
                 <button class="tab" data-mode="long">Long Break</button>
             </div>
 
-            <!-- Timer -->
-            <div class="timer-stage">
-                <div class="ring-box">
-                    <svg class="ring" viewBox="0 0 200 200">
-                        <circle class="ring-bg" cx="100" cy="100" r="90"></circle>
-                        <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="90"></circle>
-                    </svg>
-                    <div class="ring-center">
-                        <div class="time" id="timeDisplay">25:00</div>
-                        <div class="session-label" id="sessionLabel">Focus Session</div>
-                        <div class="cycle-pips" id="cyclePips"></div>
+            <!-- Timer row: ring + controls -->
+            <div class="timer-row">
+                <div class="timer-stage">
+                    <div class="ring-box">
+                        <svg class="ring" viewBox="0 0 200 200">
+                            <circle class="ring-bg" cx="100" cy="100" r="90"></circle>
+                            <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="90"></circle>
+                        </svg>
+                        <div class="ring-center">
+                            <div class="time" id="timeDisplay">25:00</div>
+                            <div class="session-label" id="sessionLabel">Focus Session</div>
+                            <div class="cycle-pips" id="cyclePips"></div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="controls">
-                    <button class="btn-ghost" id="resetBtn" title="Reset">
-                        <svg viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-                    </button>
-                    <button class="btn-main" id="startBtn">
-                        <svg id="startIcon" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg>
-                        <span id="startLabel">Start</span>
-                    </button>
-                    <button class="btn-ghost" id="skipBtn" title="Skip">
-                        <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-                    </button>
-                </div>
+                    <div class="controls">
+                        <button class="btn-ghost" id="resetBtn" title="Reset">
+                            <svg viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                        </button>
+                        <button class="btn-main" id="startBtn">
+                            <svg id="startIcon" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                            <span id="startLabel">Start</span>
+                        </button>
+                        <button class="btn-ghost" id="skipBtn" title="Skip">
+                            <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+                        </button>
+                    </div>
 
-                <!-- Active task badge -->
-                <div class="est-line" id="estLine">No active task selected</div>
+                    <!-- Goal progress row -->
+                    <div class="goal-row" id="goalRow">
+                        <span class="goal-label">Goal</span>
+                        <div class="goal-dots" id="goalDots"></div>
+                    </div>
+
+                    <!-- Active task badge -->
+                    <div class="est-line" id="estLine">No active task selected</div>
+                </div>
             </div>
 
             <!-- Scroll Cue (down arrow) -->
@@ -3314,6 +3393,16 @@
                     <label>Show cycles left instead of time</label>
                     <div class="toggle" id="setShowCyclesLeft"></div>
                 </div>
+                <div class="field-row">
+                    <label>Daily cycles goal (0 = disabled)</label>
+                    <div class="num-field">
+                        <input type="number" id="setDailyGoal" min="0" max="20" value="0" />
+                        <div class="num-arrows">
+                            <button type="button" data-target="setDailyGoal" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg></button>
+                            <button type="button" data-target="setDailyGoal" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Preferences -->
                 <div class="section-title">
@@ -3445,7 +3534,8 @@
                 showCyclesLeft: false,
                 alarmVolume: 80,
                 alarmRepeats: 3,
-                alarmRepeatUntilDismiss: false
+                alarmRepeatUntilDismiss: false,
+                dailyGoal: 0
             };
 
             // ===== STATE =====
@@ -3481,6 +3571,7 @@
                 alarmVolume: 80,
                 alarmRepeats: 3,
                 alarmRepeatUntilDismiss: false,
+                dailyGoal: 0,
                 customThemes: [
                     { name: 'Custom 1', bg: '#1b1a1f', bg2: '#242229', fg: '#f4ede2', focus: '#e05a3d',
                         short: '#8ea583', long: '#dba43f' },
@@ -3541,7 +3632,8 @@
                     showCyclesLeft: state.showCyclesLeft,
                     alarmVolume: state.alarmVolume,
                     alarmRepeats: state.alarmRepeats,
-                    alarmRepeatUntilDismiss: state.alarmRepeatUntilDismiss
+                    alarmRepeatUntilDismiss: state.alarmRepeatUntilDismiss,
+                    dailyGoal: state.dailyGoal
                 };
                 localStorage.setItem('ripe_state', JSON.stringify(data));
             }
@@ -3578,6 +3670,7 @@
                         state.alarmVolume = raw.alarmVolume ?? 80;
                         state.alarmRepeats = raw.alarmRepeats ?? 3;
                         state.alarmRepeatUntilDismiss = raw.alarmRepeatUntilDismiss ?? false;
+                        state.dailyGoal = raw.dailyGoal ?? 0;
                         const _today = new Date().toDateString();
                         if (state.todayDate !== _today) {
                             state.cycleCount = 0;
@@ -3643,11 +3736,30 @@
             const alarmDismiss = $('#alarmDismiss');
             const alarmSnooze = $('#alarmSnooze');
             const alarmMsg = $('#alarmMsg');
+            const goalRow = $('#goalRow');
+            const goalDots = $('#goalDots');
 
             const RADIUS = 90;
             const CIRC = 2 * Math.PI * RADIUS;
             ringFg.style.strokeDasharray = CIRC;
             timeDisplay.style.fontFamily = state.timerFont;
+
+            // ===== DAILY GOAL RENDER =====
+            function renderGoal() {
+                const goal = state.dailyGoal;
+                if (goal <= 0) {
+                    goalRow.style.display = 'none';
+                    return;
+                }
+                goalRow.style.display = 'flex';
+                const filled = Math.min(state.cycleCount, goal);
+                goalDots.innerHTML = '';
+                for (let i = 0; i < goal; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'goal-dot' + (i < filled ? ' filled' : '');
+                    goalDots.appendChild(dot);
+                }
+            }
 
             // ===== UPDATE FINISH TIME =====
             function updateFinishTime() {
@@ -3976,7 +4088,6 @@
                         total += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
                     }
                 });
-                // Add current session if it's a focus session
                 if (state.mode === 'pomodoro' && state.remaining > 0) {
                     total += 1;
                 }
@@ -4010,6 +4121,7 @@
                 renderStats();
                 updateStats();
                 updateFinishTime();
+                renderGoal();
                 document.title = (state.running ? fmt(state.remaining) + ' · ' : '') + 'Ripe — Focus Timer';
                 timeDisplay.style.fontFamily = state.timerFont;
                 const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim();
@@ -4033,10 +4145,9 @@
             function renderPips() {
                 cyclePips.innerHTML = '';
                 const pos = state.cycleCount % state.cyclesBeforeLong;
-                const showFull = (state.mode === 'long');
                 for (let i = 0; i < state.cyclesBeforeLong; i++) {
                     const p = document.createElement('div');
-                    p.className = 'pip' + (showFull || i < pos ? ' filled' : '');
+                    p.className = 'pip' + (i < pos ? ' filled' : '');
                     cyclePips.appendChild(p);
                 }
                 cyclePips.style.display = (state.mode !== 'pomodoro' || state.showCycleFocus) ? 'flex' : 'none';
@@ -4167,7 +4278,6 @@
                 if (!state.running) return;
                 const now = performance.now();
                 if (state.timerStartTime === null) {
-                    // Should not happen, but guard
                     state.timerStartTime = now;
                     state.timerInitialRemaining = state.remaining;
                 }
@@ -4181,13 +4291,11 @@
                 }
                 state.remaining = remaining;
                 render();
-                // Schedule next frame
                 timerRAF = requestAnimationFrame(tick);
             }
 
             function start() {
                 if (state.running) return;
-                // If we were paused, use the paused remaining
                 if (state.timerPausedRemaining > 0 && state.timerPausedAt !== null) {
                     state.timerStartTime = performance.now();
                     state.timerInitialRemaining = state.timerPausedRemaining;
@@ -4232,18 +4340,14 @@
                     state.timerHiddenAt = performance.now();
                 } else {
                     if (state.running && state.timerHiddenAt !== null) {
-                        // Recalculate from current time
                         const hiddenDuration = (performance.now() - state.timerHiddenAt) / 1000;
-                        // If we were running, adjust the start time to account for hidden duration
                         if (state.timerStartTime !== null) {
-                            // We want to shift the start time forward so that elapsed time is correct
                             state.timerStartTime += hiddenDuration * 1000;
                         }
                         state.timerHiddenAt = null;
                     } else {
                         state.timerHiddenAt = null;
                     }
-                    // Force a render to update display
                     if (state.running) {
                         const now = performance.now();
                         if (state.timerStartTime !== null) {
@@ -4341,7 +4445,6 @@
                     alarmGainNode.gain.setValueAtTime(vol * 0.6, now);
                     alarmGainNode.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
 
-                    // Play a sequence of notes: rising then falling
                     const freqs = [523, 659, 784, 659, 523, 392, 523];
                     freqs.forEach((f, i) => {
                         const osc = alarmCtx.createOscillator();
@@ -4359,7 +4462,6 @@
                         alarmOscillators.push(osc);
                     });
 
-                    // Schedule next repeat if needed
                     const totalDuration = freqs.length * 0.12 + 0.4;
                     if (alarmRepeatTimer) clearTimeout(alarmRepeatTimer);
                     alarmRepeatTimer = setTimeout(() => {
@@ -4368,8 +4470,6 @@
                         const shouldRepeat = alarmRepeatUntilDismiss || alarmCurrentRepeat < alarmMaxRepeats;
                         if (shouldRepeat && !alarmDismissedFlag) {
                             playAlarmSound();
-                        } else if (!alarmRepeatUntilDismiss && alarmCurrentRepeat >= alarmMaxRepeats) {
-                            // Stop repeating but keep overlay visible
                         }
                     }, totalDuration * 1000 + 800);
 
@@ -4387,7 +4487,6 @@
                     clearTimeout(alarmSnoozeTimer);
                     alarmSnoozeTimer = null;
                 }
-                // Stop any playing oscillators
                 alarmOscillators.forEach(osc => {
                     try { osc.stop(); } catch (_) {}
                 });
@@ -4403,7 +4502,7 @@
                     if (!alarmDismissedFlag) {
                         triggerAlarm(state.mode === 'pomodoro' ? 'pomodoro' : 'short');
                     }
-                }, 120000); // 2 minutes
+                }, 120000);
             }
 
             alarmDismiss.addEventListener('click', dismissAlarm);
@@ -4471,7 +4570,7 @@
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
                   ${priorityBadge}
-                  <div class="task-title" data-action="activate">${escapeHtml(t.title)}</div>
+                  <div class="task-title" data-action="rename" title="Double-click to rename">${escapeHtml(t.title)}</div>
                   ${pomosHTML}
                   ${isCompleted ? `<button class="task-undo" data-action="undo" title="Undo"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>` : ''}
                   <button class="task-del" data-action="delete" title="Delete">
@@ -4495,16 +4594,47 @@
                     renderTasks();
                     render();
                 });
-                const titleEl = el.querySelector('[data-action=activate]');
+
+                // Rename: double-click on title
+                const titleEl = el.querySelector('[data-action=rename]');
                 if (titleEl) {
-                    titleEl.addEventListener('click', () => {
-                        if (t.done) return;
-                        state.activeTaskId = (state.activeTaskId === t.id) ? null : t.id;
-                        save();
-                        renderTasks();
-                        render();
+                    titleEl.addEventListener('dblclick', function(e) {
+                        e.stopPropagation();
+                        const currentTitle = t.title;
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.value = currentTitle;
+                        input.className = 'task-title-input';
+                        input.maxLength = 120;
+                        this.replaceWith(input);
+                        input.focus();
+                        input.select();
+
+                        const saveRename = () => {
+                            const newTitle = input.value.trim();
+                            if (newTitle) {
+                                t.title = newTitle;
+                            } else {
+                                t.title = currentTitle; // revert if empty
+                            }
+                            save();
+                            renderTasks();
+                            render();
+                        };
+
+                        input.addEventListener('blur', saveRename);
+                        input.addEventListener('keydown', (ev) => {
+                            if (ev.key === 'Enter') {
+                                input.blur();
+                            }
+                            if (ev.key === 'Escape') {
+                                input.value = t.title;
+                                input.blur();
+                            }
+                        });
                     });
                 }
+
                 const priorityBtn = el.querySelector('[data-action=cycle-priority]');
                 if (priorityBtn) {
                     priorityBtn.addEventListener('click', e => {
@@ -4730,6 +4860,7 @@
                 state.alarmVolume = parseInt($('#alarmVolume').value) || 80;
                 state.alarmRepeats = pendingAlarmRepeats;
                 state.alarmRepeatUntilDismiss = $('#setAlarmRepeatUntilDismiss').classList.contains('on');
+                state.dailyGoal = Math.max(0, parseInt($('#setDailyGoal').value) || 0);
                 $('#alarmVolumeLabel').textContent = state.alarmVolume + '%';
                 alarmVolumeValue = state.alarmVolume;
                 timeDisplay.style.fontFamily = state.timerFont;
@@ -4747,6 +4878,7 @@
             $('#setShort').addEventListener('input', applySettingsLive);
             $('#setLong').addEventListener('input', applySettingsLive);
             $('#setTimerFont').addEventListener('change', applySettingsLive);
+            $('#setDailyGoal').addEventListener('input', applySettingsLive);
             $('#alarmVolume').addEventListener('input', function() {
                 const val = parseInt(this.value) || 0;
                 $('#alarmVolumeLabel').textContent = val + '%';
@@ -4798,6 +4930,7 @@
                 $('#alarmVolume').value = state.alarmVolume;
                 $('#alarmVolumeLabel').textContent = state.alarmVolume + '%';
                 $('#setTimerFont').value = state.timerFont;
+                $('#setDailyGoal').value = state.dailyGoal;
                 $('#setKeyboardShortcuts').classList.toggle('on', state.keyboardShortcuts);
                 $('#setAutostart').classList.toggle('on', state.autostart);
                 $('#setAlarmSound').classList.toggle('on', state.alarmSound);
@@ -4840,6 +4973,7 @@
                 state.alarmVolume = DEFAULTS.alarmVolume;
                 state.alarmRepeats = DEFAULTS.alarmRepeats;
                 state.alarmRepeatUntilDismiss = DEFAULTS.alarmRepeatUntilDismiss;
+                state.dailyGoal = DEFAULTS.dailyGoal;
                 state.remaining = state.durations[state.mode];
                 pendingCycles = DEFAULTS.cyclesBeforeLong;
                 pendingAlarmRepeats = DEFAULTS.alarmRepeats;
@@ -4855,6 +4989,7 @@
                 $('#alarmVolume').value = DEFAULTS.alarmVolume;
                 $('#alarmVolumeLabel').textContent = DEFAULTS.alarmVolume + '%';
                 $('#setTimerFont').value = DEFAULTS.timerFont;
+                $('#setDailyGoal').value = DEFAULTS.dailyGoal;
                 $('#setKeyboardShortcuts').classList.toggle('on', DEFAULTS.keyboardShortcuts);
                 $('#setAutostart').classList.toggle('on', DEFAULTS.autostart);
                 $('#setAlarmSound').classList.toggle('on', DEFAULTS.alarmSound);
@@ -5106,7 +5241,7 @@
                   <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">${state.sessionHistory.length}</span></div>
                 `;
             }
-//test
+
             // ===== INIT =====
             switchMode('pomodoro', false);
             renderPips();
@@ -5125,9 +5260,7 @@
                 applyTheme(state.theme);
                 applyTimerScale(state.timerScale);
                 updateScrollCue();
-                // if we have a timer running from a previous session, resume it
                 if (state.running) {
-                    // restart the timer with the current remaining time
                     state.timerStartTime = performance.now();
                     state.timerInitialRemaining = state.remaining;
                     if (timerRAF) cancelAnimationFrame(timerRAF);
