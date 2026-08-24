@@ -1111,16 +1111,17 @@
             z-index: 40;
             display: flex;
             justify-content: center;
-            gap: 28px;
-            padding: 12px 20px;
+            gap: 32px;
+            padding: 10px 24px;
             background: var(--bg-2);
             border-bottom: 1px solid var(--line);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             transform: translateY(-100%);
-            transition: transform 0.4s cubic-bezier(.2, .8, .2, 1), background 0.4s ease, border-color 0.4s ease;
+            transition: transform 0.4s cubic-bezier(.2, .8, .2, 1), background 0.4s ease, border-color 0.4s ease, padding 0.3s ease;
             font-family: 'JetBrains Mono', monospace;
             font-size: 12px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .statbar.show {
             transform: translateY(0);
@@ -1128,7 +1129,7 @@
         .statbar .stat {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
             color: var(--fg-dim);
             white-space: nowrap;
         }
@@ -1137,8 +1138,8 @@
             font-weight: 600;
         }
         .statbar .dot {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: var(--accent);
             flex-shrink: 0;
@@ -1147,6 +1148,24 @@
         .statbar .stat-est-finish {
             color: var(--accent);
             font-weight: 500;
+        }
+        .btn-toggle-info {
+            background: transparent;
+            border: none;
+            color: var(--fg-dim);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 6px;
+            transition: all 0.2s ease;
+            font-weight: 300;
+            line-height: 1;
+            margin-left: 4px;
+        }
+        .btn-toggle-info:hover {
+            color: var(--fg);
+        }
+        .btn-toggle-info:active {
+            transform: scale(0.95);
         }
 
         /* ===== topbar actions ===== */
@@ -1256,7 +1275,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 80px 24px 64px;
+            padding: 72px 24px 56px;
             position: relative;
             width: 100%;
         }
@@ -1271,7 +1290,7 @@
         /* ===== scroll cue ===== */
         .scroll-cue {
             position: absolute;
-            bottom: 20px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -1324,7 +1343,7 @@
             background: var(--bg-2);
             padding: 6px;
             border-radius: 14px;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
             width: fit-content;
             border: 1px solid var(--line);
         }
@@ -1354,7 +1373,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 4px;
+            margin-bottom: 0;
             width: 100%;
         }
         .ring-box {
@@ -1470,7 +1489,7 @@
 
         .controls {
             display: flex;
-            gap: 12px;
+            gap: 14px;
             margin-top: 28px;
             align-items: center;
             flex-wrap: wrap;
@@ -1499,18 +1518,18 @@
         .btn-main::before {
             content: '';
             position: absolute;
-            inset: -8px;
+            inset: -10px;
             background: var(--accent);
-            filter: blur(18px);
-            opacity: 0.10;
+            filter: blur(24px);
+            opacity: 0.18;
             border-radius: 60px;
             z-index: -1;
             transition: background 0.4s ease, opacity 0.3s ease;
             pointer-events: none;
         }
         .btn-main:hover::before {
-            opacity: 0.16;
-            filter: blur(22px);
+            opacity: 0.30;
+            filter: blur(28px);
         }
         .btn-main svg {
             width: 16px;
@@ -1604,7 +1623,7 @@
         .tasks-section {
             max-width: 640px;
             margin: 0 auto;
-            padding: 30px 24px 120px;
+            padding: 28px 24px 100px;
             width: 100%;
             position: relative;
             z-index: 10;
@@ -1613,7 +1632,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            margin: 8px 0 22px;
+            margin: 0 0 20px;
         }
         .divider .line {
             flex: 1;
@@ -1635,6 +1654,7 @@
             gap: 10px;
             margin-bottom: 18px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .add-task input[type="text"] {
             flex: 1;
@@ -1660,6 +1680,7 @@
             border: 1px solid var(--line);
             background: var(--bg-2);
             transition: border-color 0.25s ease;
+            flex-shrink: 0;
         }
         .add-task .num-field:focus-within {
             border-color: var(--accent);
@@ -1730,6 +1751,9 @@
             font-size: 14px;
             cursor: pointer;
             transition: background 0.25s ease, transform 0.15s ease;
+            height: 50px;
+            display: flex;
+            align-items: center;
         }
         .add-task .add-btn:hover {
             transform: scale(1.02);
@@ -1738,25 +1762,103 @@
             transform: scale(0.96);
         }
 
-        .add-task .priority-btn {
-            background: #dba43f;
-            color: var(--on-accent);
-            border: none;
+        /* Timing selector - improved */
+        .timing-selector {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            background: var(--bg-2);
+            border: 1px solid var(--line);
             border-radius: 12px;
-            padding: 12px 16px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+        .timing-btn-select {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: none;
+            background: transparent;
+            color: var(--fg-dim);
+            border-radius: 8px;
             cursor: pointer;
-            transition: opacity 0.2s ease, transform 0.15s ease;
-            text-transform: capitalize;
+            transition: all 0.25s ease;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            position: relative;
         }
-        .add-task .priority-btn:hover {
-            transform: scale(1.05);
-            opacity: 1;
+        .timing-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .add-task .priority-btn:active {
-            transform: scale(0.95);
+        .timing-btn-select.today .timing-indicator {
+            background: #4ade80;
+        }
+        .timing-btn-select.tomorrow .timing-indicator {
+            background: #60a5fa;
+        }
+        .timing-btn-select.weekend .timing-indicator {
+            background: #1e40af;
+        }
+        .timing-btn-select.active {
+            background: var(--bg-3);
+            color: var(--fg);
+            box-shadow: 0 0 0 2px var(--accent-focus), 0 0 0 4px var(--accent-soft);
+        }
+        .timing-btn-select:hover {
+            color: var(--fg);
+            background: var(--bg-3);
+        }
+        .timing-btn-select .timing-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+        @media (max-width: 520px) {
+            .timing-btn-select .timing-label {
+                display: none;
+            }
+            .timing-btn-select {
+                padding: 8px 10px;
+            }
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            padding: 0 0 12px 0;
+            border-bottom: 1px solid var(--line);
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 6px 14px;
+            border: 1px solid var(--line);
+            background: transparent;
+            color: var(--fg-dim);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .filter-btn:hover {
+            border-color: var(--fg);
+            color: var(--fg);
+            background: var(--bg-3);
+        }
+        .filter-btn.active {
+            background: var(--accent);
+            color: var(--on-accent);
+            border-color: var(--accent);
+            box-shadow: 0 2px 10px -4px var(--accent);
         }
 
         /* ===== Stats Panel ===== */
@@ -1765,7 +1867,7 @@
             flex-wrap: wrap;
             justify-content: space-around;
             gap: 8px 16px;
-            padding: 12px 16px;
+            padding: 14px 16px;
             background: var(--bg-2);
             border-radius: 12px;
             margin-top: 12px;
@@ -1806,18 +1908,59 @@
             line-height: 1.2;
         }
 
-        .task-priority {
+        /* Timing dot on tasks */
+        .task-timing-dot {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             cursor: pointer;
             flex-shrink: 0;
-            transition: opacity 0.2s ease, transform 0.15s ease;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0;
+            background: transparent;
         }
-        .task-priority:hover {
-            opacity: 1 !important;
-            transform: scale(1.3);
+        .task-timing-dot.today {
+            background: #4ade80;
+        }
+        .task-timing-dot.tomorrow {
+            background: #60a5fa;
+        }
+        .task-timing-dot.weekend {
+            background: #1e40af;
+        }
+        .task-timing-dot:hover {
+            transform: scale(1.4);
+        }
+
+        /* Rename button on tasks */
+        .task-rename {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            color: var(--fg-dim);
+            border-radius: 6px;
+        }
+        .task-rename:hover {
+            color: var(--fg);
+            background: var(--accent-soft);
+            transform: scale(1.15);
+        }
+        .task-rename svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
         }
 
         /* ===== task list ===== */
@@ -1946,7 +2089,7 @@
             color: var(--accent);
         }
         .task-est-input {
-            width: 40px;
+            width: 44px;
             font-family: var(--font-mono);
             font-size: 12px;
             background: var(--bg-3);
@@ -2175,11 +2318,11 @@
             width: 100%;
         }
 
-        /* ===== sound mixer ===== */
+        /* ===== sound mixer — FIXED GLOW + SPACING ===== */
         .mixer-btn {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
+            bottom: 28px;
+            right: 28px;
             z-index: 45;
             background: var(--accent);
             color: var(--on-accent);
@@ -2191,15 +2334,42 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 26px -10px var(--accent);
-            transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+            transition: transform 0.25s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.4s ease, background 0.3s ease;
+            /* refined glow — softer, more natural */
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+                0 0 32px -4px var(--accent);
+        }
+        .mixer-btn::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.08;
+            filter: blur(18px);
+            z-index: -1;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
         }
         .mixer-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 14px 34px -12px var(--accent);
+            transform: scale(1.06) translateY(-2px);
+            box-shadow:
+                0 8px 28px rgba(0, 0, 0, 0.30),
+                0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+                0 0 44px -2px var(--accent);
+        }
+        .mixer-btn:hover::after {
+            opacity: 0.14;
+            transform: scale(1.1);
         }
         .mixer-btn:active {
             transform: scale(0.92);
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.20),
+                0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+                0 0 20px -6px var(--accent);
         }
         .mixer-btn svg {
             width: 22px;
@@ -2207,23 +2377,37 @@
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
+            position: relative;
+            z-index: 1;
         }
         .mixer-panel {
             position: fixed;
-            bottom: 86px;
-            right: 24px;
+            bottom: 92px;
+            right: 28px;
             z-index: 44;
             width: 280px;
             background: var(--bg-2);
             border: 1px solid var(--line);
             border-radius: 18px;
-            padding: 18px 18px 14px;
+            padding: 20px 20px 16px;
             display: none;
-            box-shadow: 0 20px 50px var(--shadow);
-            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 60px var(--shadow), 0 0 0 1px var(--line);
+            backdrop-filter: blur(14px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
         }
         .mixer-panel.show {
             display: block;
+            animation: mixerSlideUp 0.3s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        @keyframes mixerSlideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         .mixer-panel h4 {
             margin: 0 0 14px;
@@ -2249,11 +2433,12 @@
         .mixer-panel h4 button:hover {
             color: var(--accent);
             border-color: var(--accent);
+            background: var(--accent-soft);
         }
         .mixer-divider {
             height: 1px;
             background: var(--line);
-            margin: 10px 0;
+            margin: 12px 0;
         }
         .yt-controls {
             display: flex;
@@ -2906,6 +3091,89 @@
             background: #c84a2e;
         }
 
+        /* ===== rename modal ===== */
+        .rename-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 75;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .rename-modal-backdrop.show {
+            display: flex;
+        }
+        .rename-modal {
+            background: var(--bg-2);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 28px 24px 24px;
+            max-width: 380px;
+            width: 100%;
+            box-shadow: 0 30px 70px var(--shadow);
+        }
+        .rename-modal h4 {
+            font-family: 'Fraunces', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--fg);
+            margin: 0 0 16px;
+        }
+        .rename-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            background: var(--bg);
+            color: var(--fg);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+        .rename-input:focus {
+            outline: none;
+            border-color: var(--accent-focus);
+            background: var(--bg-3);
+            box-shadow: 0 0 0 2px var(--accent-soft);
+        }
+        .rename-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .rename-actions button {
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        .rename-actions .btn-cancel {
+            background: var(--bg-3);
+            color: var(--fg-dim);
+            border: 1px solid var(--line);
+        }
+        .rename-actions .btn-cancel:hover {
+            background: var(--bg);
+            color: var(--fg);
+        }
+        .rename-actions .btn-confirm {
+            background: var(--accent-focus);
+            color: var(--on-accent);
+        }
+        .rename-actions .btn-confirm:hover {
+            transform: scale(1.02);
+            filter: brightness(1.05);
+        }
+
         /* ===== alarm dismiss overlay ===== */
         .alarm-overlay {
             position: fixed;
@@ -2933,8 +3201,12 @@
             animation: alarmPulse 1.2s ease-in-out infinite alternate;
         }
         @keyframes alarmPulse {
-            0% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb, 224,90,61),0.2); }
-            100% { box-shadow: 0 0 0 20px rgba(var(--accent-rgb, 224,90,61),0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(var(--accent-rgb, 224, 90, 61), 0.2);
+            }
+            100% {
+                box-shadow: 0 0 0 20px rgba(var(--accent-rgb, 224, 90, 61), 0);
+            }
         }
         .alarm-overlay .alarm-box h3 {
             font-family: 'Fraunces', serif;
@@ -2983,74 +3255,268 @@
             color: var(--fg);
         }
 
-        /* ===== responsive ===== */
+        /* ===== responsive — improved spacing ===== */
         @media (max-width: 520px) {
-            body { padding: 0; }
-            .statbar { gap: 12px; font-size: 10px; padding: 8px 12px; flex-wrap: wrap; }
-            .statbar .stat { gap: 4px; }
-            .brand { top: 16px; left: 16px; }
-            .brand span { font-size: 18px; }
-            .brand .logo { width: 28px; height: 28px; }
-            .topbar-actions { top: 14px; right: 14px; gap: 8px; }
-            .topbar-actions .btn-icon { width: 38px; height: 38px; }
-            .topbar-actions .btn-icon svg { width: 16px; height: 16px; }
-            .topbar-actions .btn-icon .theme-preview { width: 13px; height: 13px; bottom: -1px; right: -1px; }
-            .ring-box { width: calc(250px * var(--timer-scale, 1)); height: calc(250px * var(--timer-scale, 1)); }
-            .ring-center .time { font-size: calc(54px * var(--timer-scale, 1)); }
-            .ring-center .time.cycles-mode { font-size: calc(34px * var(--timer-scale, 1)); }
-            .ring-center .session-label { font-size: calc(10px * var(--timer-scale, 1)); letter-spacing: 1.5px; }
-            .btn-main { padding: 14px 32px; font-size: 13px; min-width: 100px; }
-            .btn-main::before { inset: -6px; filter: blur(14px); }
-            .btn-main:hover::before { filter: blur(16px); }
-            .btn-ghost { width: 40px; height: 40px; }
-            .hero { padding: 80px 16px 56px; }
-            .tasks-section { padding: 20px 16px 100px; }
-            .modal-inner { padding: 20px 16px; }
-            .theme-grid { grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); }
-            .theme-grid .theme-swatch { font-size: 7px; padding: 4px 2px; }
-            .mixer-panel { right: 10px; width: 220px; bottom: 72px; }
-            .mixer-btn { bottom: 16px; right: 16px; width: 46px; height: 46px; }
-            .mixer-btn svg { width: 19px; height: 19px; }
-            .add-task input[type="text"] { min-width: 100px; font-size: 13px; padding: 11px 12px; }
-            .add-task .num-field input[type="number"] { width: 44px; padding: 11px 2px; font-size: 13px; }
-            .add-task .num-field .num-arrows button { width: 22px; height: 18px; }
-            .add-task .add-btn { padding: 0 16px; font-size: 13px; }
-            .task { padding: 12px 12px; }
-            .task-title { font-size: 13px; }
-            .scroll-cue { font-size: 9px; bottom: 12px; }
-            .scroll-cue svg { width: 15px; height: 15px; }
-            .est-line { font-size: 13px; }
-            .tabs { gap: 4px; padding: 4px; margin-bottom: 24px; }
-            .tab { font-size: 12px; padding: 8px 14px; }
-            .yt-controls input[type="text"] { min-width: 70px; }
-            .yt-controls button { padding: 5px 10px; font-size: 11px; }
-            .completed-header .actions button { font-size: 10px; padding: 4px 10px; }
-            .modal .modal-actions { flex-direction: column-reverse; }
-            .modal .modal-actions .btn-revert { flex: 1; }
-            .custom-theme-row .ct-color-group { font-size: 8px; }
-            .color-swatch-input { width: 22px; height: 22px; }
-            .bottom-actions .btn-bottom { font-size: 11px; padding: 8px 16px; }
-            .bottom-actions .btn-bottom svg { width: 12px; height: 12px; }
-            .statbar .stat-est-finish { font-size: 9px; }
-            .goal-dot { width: 8px; height: 8px; }
-            #stats-panel { gap: 6px 12px; padding: 10px 12px; }
-            .stat-value { font-size: 15px; }
+            body {
+                padding: 0;
+            }
+            .statbar {
+                gap: 14px;
+                font-size: 10px;
+                padding: 8px 14px;
+                flex-wrap: wrap;
+            }
+            .statbar .stat {
+                gap: 4px;
+            }
+            .brand {
+                top: 16px;
+                left: 16px;
+            }
+            .brand span {
+                font-size: 18px;
+            }
+            .brand .logo {
+                width: 28px;
+                height: 28px;
+            }
+            .topbar-actions {
+                top: 14px;
+                right: 14px;
+                gap: 8px;
+            }
+            .topbar-actions .btn-icon {
+                width: 38px;
+                height: 38px;
+            }
+            .topbar-actions .btn-icon svg {
+                width: 16px;
+                height: 16px;
+            }
+            .topbar-actions .btn-icon .theme-preview {
+                width: 13px;
+                height: 13px;
+                bottom: -1px;
+                right: -1px;
+            }
+            .ring-box {
+                width: calc(250px * var(--timer-scale, 1));
+                height: calc(250px * var(--timer-scale, 1));
+            }
+            .ring-center .time {
+                font-size: calc(54px * var(--timer-scale, 1));
+            }
+            .ring-center .time.cycles-mode {
+                font-size: calc(34px * var(--timer-scale, 1));
+            }
+            .ring-center .session-label {
+                font-size: calc(10px * var(--timer-scale, 1));
+                letter-spacing: 1.5px;
+            }
+            .btn-main {
+                padding: 14px 32px;
+                font-size: 13px;
+                min-width: 100px;
+            }
+            .btn-main::before {
+                inset: -6px;
+                filter: blur(14px);
+            }
+            .btn-main:hover::before {
+                filter: blur(16px);
+            }
+            .btn-ghost {
+                width: 40px;
+                height: 40px;
+            }
+            .hero {
+                padding: 72px 16px 48px;
+            }
+            .tasks-section {
+                padding: 20px 16px 80px;
+            }
+            .modal-inner {
+                padding: 20px 16px;
+            }
+            .theme-grid {
+                grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+            }
+            .theme-grid .theme-swatch {
+                font-size: 7px;
+                padding: 4px 2px;
+            }
+            .mixer-panel {
+                right: 12px;
+                width: 220px;
+                bottom: 76px;
+                padding: 16px 14px 14px;
+            }
+            .mixer-btn {
+                bottom: 18px;
+                right: 18px;
+                width: 46px;
+                height: 46px;
+            }
+            .mixer-btn svg {
+                width: 19px;
+                height: 19px;
+            }
+            .add-task input[type="text"] {
+                min-width: 100px;
+                font-size: 13px;
+                padding: 11px 12px;
+            }
+            .add-task .num-field input[type="number"] {
+                width: 44px;
+                padding: 11px 2px;
+                font-size: 13px;
+            }
+            .add-task .num-field .num-arrows button {
+                width: 22px;
+                height: 18px;
+            }
+            .add-task .add-btn {
+                padding: 0 16px;
+                font-size: 13px;
+                height: 44px;
+            }
+            .task {
+                padding: 12px 12px;
+            }
+            .task-title {
+                font-size: 13px;
+            }
+            .scroll-cue {
+                font-size: 9px;
+                bottom: 16px;
+            }
+            .scroll-cue svg {
+                width: 15px;
+                height: 15px;
+            }
+            .est-line {
+                font-size: 13px;
+            }
+            .tabs {
+                gap: 4px;
+                padding: 4px;
+                margin-bottom: 22px;
+            }
+            .tab {
+                font-size: 12px;
+                padding: 8px 14px;
+            }
+            .yt-controls input[type="text"] {
+                min-width: 70px;
+            }
+            .yt-controls button {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+            .completed-header .actions button {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+            .modal .modal-actions {
+                flex-direction: column-reverse;
+            }
+            .modal .modal-actions .btn-revert {
+                flex: 1;
+            }
+            .custom-theme-row .ct-color-group {
+                font-size: 8px;
+            }
+            .color-swatch-input {
+                width: 22px;
+                height: 22px;
+            }
+            .bottom-actions .btn-bottom {
+                font-size: 11px;
+                padding: 8px 16px;
+            }
+            .bottom-actions .btn-bottom svg {
+                width: 12px;
+                height: 12px;
+            }
+            .statbar .stat-est-finish {
+                font-size: 9px;
+            }
+            .goal-dot {
+                width: 8px;
+                height: 8px;
+            }
+            #stats-panel {
+                gap: 6px 12px;
+                padding: 10px 12px;
+            }
+            .stat-value {
+                font-size: 15px;
+            }
+            .timing-btn-select .timing-label {
+                display: none;
+            }
+            .timing-btn-select {
+                padding: 8px 10px;
+            }
+            .timing-selector {
+                gap: 2px;
+                padding: 3px;
+            }
         }
         @media (max-width: 380px) {
-            .ring-box { width: calc(200px * var(--timer-scale, 1)); height: calc(200px * var(--timer-scale, 1)); }
-            .ring-center .time { font-size: calc(42px * var(--timer-scale, 1)); }
-            .ring-center .time.cycles-mode { font-size: calc(28px * var(--timer-scale, 1)); }
-            .controls { gap: 8px; }
-            .btn-main { padding: 12px 20px; font-size: 12px; min-width: 80px; }
-            .btn-main::before { inset: -4px; filter: blur(10px); }
-            .btn-ghost { width: 36px; height: 36px; }
-            .goal-dot { width: 6px; height: 6px; }
+            .ring-box {
+                width: calc(200px * var(--timer-scale, 1));
+                height: calc(200px * var(--timer-scale, 1));
+            }
+            .ring-center .time {
+                font-size: calc(42px * var(--timer-scale, 1));
+            }
+            .ring-center .time.cycles-mode {
+                font-size: calc(28px * var(--timer-scale, 1));
+            }
+            .controls {
+                gap: 8px;
+            }
+            .btn-main {
+                padding: 12px 20px;
+                font-size: 12px;
+                min-width: 80px;
+            }
+            .btn-main::before {
+                inset: -4px;
+                filter: blur(10px);
+            }
+            .btn-ghost {
+                width: 36px;
+                height: 36px;
+            }
+            .goal-dot {
+                width: 6px;
+                height: 6px;
+            }
+            .add-task .num-field input[type="number"] {
+                width: 36px;
+            }
+            .add-task .num-field .num-arrows button {
+                width: 20px;
+                height: 16px;
+            }
         }
 
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-2); }
-        ::-webkit-scrollbar-thumb { background: var(--fg-dim-2); border-radius: 6px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--fg-dim); }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--fg-dim-2);
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--fg-dim);
+        }
     </style>
 </head>
 <body data-theme="og-dark" class="mode-focus">
@@ -3061,21 +3527,22 @@
         <div class="stat">Focused <b id="statFocused">0m</b></div>
         <div class="stat">Est. remaining <b id="statRemaining">0m</b></div>
         <div class="stat stat-est-finish" id="statEstFinish">⏱ finish at <b id="statFinishTime">--:--</b></div>
+        <button class="btn-toggle-info" id="toggleInfoBtn" title="Toggle info bar">−</button>
     </div>
 
     <!-- ===== TOPBAR ===== -->
     <div class="topbar-actions">
         <button class="btn-icon" id="themeToggleBtn" title="Cycle themes">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                <circle cx="12" cy="12" r="4"/>
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
             </svg>
             <span class="theme-preview" id="themePreviewDot"></span>
         </button>
         <button class="btn-icon" id="settingsBtn" title="Settings">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l.06.06A1.65 1.65 0 0019.32 9c.1.36.51.6 1 .6H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l.06.06A1.65 1.65 0 0019.32 9c.1.36.51.6 1 .6H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
             </svg>
         </button>
     </div>
@@ -3085,8 +3552,8 @@
         <span class="logo">
             <svg viewBox="0 0 40 40" fill="none">
                 <circle class="bg-circle" cx="20" cy="20" r="18" />
-                <path class="pulse-line" d="M20 8c4.5 5.6 8 9.6 8 14.4A8 8 0 1 1 12 22.4c0-4.8 3.5-8.8 8-14.4z" fill="var(--accent-focus)" stroke="none"/>
-                <path d="M20 14c1.8 2.5 3.6 4.6 3.6 6.8" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round" opacity="0.55"/>
+                <path class="pulse-line" d="M20 8c4.5 5.6 8 9.6 8 14.4A8 8 0 1 1 12 22.4c0-4.8 3.5-8.8 8-14.4z" fill="var(--accent-focus)" stroke="none" />
+                <path d="M20 14c1.8 2.5 3.6 4.6 3.6 6.8" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round" opacity="0.55" />
             </svg>
         </span>
         <span>Ripe</span>
@@ -3164,14 +3631,35 @@
         <div class="add-task">
             <input type="text" id="taskInput" placeholder="What are you working on?" maxlength="120" />
             <div class="num-field">
-                <input type="number" id="taskEstimate" min="1" max="20" value="1" title="Estimated pomodoros" />
+                <input type="number" id="taskEstimate" min="0" max="20" value="1" title="Estimated pomodoros (0 = untimed)" />
                 <div class="num-arrows">
                     <button type="button" data-target="taskEstimate" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg></button>
                     <button type="button" data-target="taskEstimate" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
                 </div>
             </div>
-            <button type="button" id="taskPriority" class="priority-btn" title="Priority: medium (click to change)">Priority</button>
+            <div class="timing-selector" id="timingSelector">
+                <button type="button" class="timing-btn-select today active" data-timing="today">
+                    <span class="timing-indicator"></span>
+                    <span class="timing-label">Today</span>
+                </button>
+                <button type="button" class="timing-btn-select tomorrow" data-timing="tomorrow">
+                    <span class="timing-indicator"></span>
+                    <span class="timing-label">Tomorrow</span>
+                </button>
+                <button type="button" class="timing-btn-select weekend" data-timing="weekend">
+                    <span class="timing-indicator"></span>
+                    <span class="timing-label">Weekend</span>
+                </button>
+            </div>
             <button class="add-btn" id="addTaskBtn">Add</button>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="filter-bar">
+            <button type="button" class="filter-btn active" data-filter="all">All</button>
+            <button type="button" class="filter-btn" data-filter="today">Today</button>
+            <button type="button" class="filter-btn" data-filter="tomorrow">Tomorrow</button>
+            <button type="button" class="filter-btn" data-filter="weekend">Weekend</button>
         </div>
 
         <!-- Task List -->
@@ -3216,6 +3704,18 @@
             <div class="actions">
                 <button class="btn-cancel" id="confirmCancel">Cancel</button>
                 <button class="btn-danger" id="confirmProceed">Clear all</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== RENAME MODAL ===== -->
+    <div class="rename-modal-backdrop" id="renameBackdrop">
+        <div class="rename-modal">
+            <h4>Rename Task</h4>
+            <input type="text" id="renameInput" class="rename-input" placeholder="New task name..." maxlength="120" />
+            <div class="rename-actions">
+                <button class="btn-cancel" id="renameCancelBtn">Cancel</button>
+                <button class="btn-confirm" id="renameConfirmBtn">Rename</button>
             </div>
         </div>
     </div>
@@ -3452,54 +3952,128 @@
                 'vanilla', 'sky-light', 'rose-light', 'mint-light', 'lavender-light', 'peach-light'
             ];
             const THEME_LABELS = {
-                'og-dark': 'OG Dark', 'og-light': 'OG Light', dark: 'Dark', light: 'Light',
-                forest: 'Forest', ocean: 'Ocean', sunset: 'Sunset', lavender: 'Lavender',
-                mint: 'Mint', rose: 'Rose', amber: 'Amber', slate: 'Slate',
-                wine: 'Wine', teal: 'Teal', peach: 'Peach', indigo: 'Indigo',
-                emerald: 'Emerald', coral: 'Coral', graphite: 'Graphite', sand: 'Sand',
-                plum: 'Plum', sky: 'Sky', cherry: 'Cherry', moss: 'Moss',
-                stone: 'Stone', blush: 'Blush', midnight: 'Midnight', aurora: 'Aurora',
-                coffee: 'Coffee', candy: 'Candy', lime: 'Lime', sakura: 'Sakura',
-                charcoal: 'Charcoal', ivory: 'Ivory', denim: 'Denim', mango: 'Mango',
-                mocha: 'Mocha', silver: 'Silver', sunflower: 'Sunflower', cotton: 'Cotton',
-                obsidian: 'Obsidian', twilight: 'Twilight', honey: 'Honey', mist: 'Mist',
-                berry: 'Berry', breeze: 'Breeze', earl: 'Earl', spice: 'Spice',
-                glacier: 'Glacier', flame: 'Flame', dream: 'Dream', frost: 'Frost',
-                terra: 'Terra', bloom: 'Bloom', vanilla: 'Vanilla', 'sky-light': 'Sky Light',
-                'rose-light': 'Rose Light', 'mint-light': 'Mint Light', 'lavender-light': 'Lavender Light',
+                'og-dark': 'OG Dark',
+                'og-light': 'OG Light',
+                dark: 'Dark',
+                light: 'Light',
+                forest: 'Forest',
+                ocean: 'Ocean',
+                sunset: 'Sunset',
+                lavender: 'Lavender',
+                mint: 'Mint',
+                rose: 'Rose',
+                amber: 'Amber',
+                slate: 'Slate',
+                wine: 'Wine',
+                teal: 'Teal',
+                peach: 'Peach',
+                indigo: 'Indigo',
+                emerald: 'Emerald',
+                coral: 'Coral',
+                graphite: 'Graphite',
+                sand: 'Sand',
+                plum: 'Plum',
+                sky: 'Sky',
+                cherry: 'Cherry',
+                moss: 'Moss',
+                stone: 'Stone',
+                blush: 'Blush',
+                midnight: 'Midnight',
+                aurora: 'Aurora',
+                coffee: 'Coffee',
+                candy: 'Candy',
+                lime: 'Lime',
+                sakura: 'Sakura',
+                charcoal: 'Charcoal',
+                ivory: 'Ivory',
+                denim: 'Denim',
+                mango: 'Mango',
+                mocha: 'Mocha',
+                silver: 'Silver',
+                sunflower: 'Sunflower',
+                cotton: 'Cotton',
+                obsidian: 'Obsidian',
+                twilight: 'Twilight',
+                honey: 'Honey',
+                mist: 'Mist',
+                berry: 'Berry',
+                breeze: 'Breeze',
+                earl: 'Earl',
+                spice: 'Spice',
+                glacier: 'Glacier',
+                flame: 'Flame',
+                dream: 'Dream',
+                frost: 'Frost',
+                terra: 'Terra',
+                bloom: 'Bloom',
+                vanilla: 'Vanilla',
+                'sky-light': 'Sky Light',
+                'rose-light': 'Rose Light',
+                'mint-light': 'Mint Light',
+                'lavender-light': 'Lavender Light',
                 'peach-light': 'Peach Light'
             };
             const THEME_COLORS = {
-                'og-dark': ['#1b1a1f', '#e05a3d'], 'og-light': ['#f6f1e6', '#d14c30'],
-                dark: ['#1b1a1f', '#e05a3d'], light: ['#f6f1e6', '#d14c30'],
-                forest: ['#1a261e', '#7cb083'], ocean: ['#0e1f2b', '#5fa8d3'],
-                sunset: ['#261a1a', '#e8856e'], lavender: ['#1e1a2a', '#b8a5e0'],
-                mint: ['#14201a', '#6fc9a8'], rose: ['#261a1f', '#e880a8'],
-                amber: ['#1f1a12', '#e8b85a'], slate: ['#16181c', '#7a8a9a'],
-                wine: ['#1e1218', '#d46a8a'], teal: ['#0e1e1e', '#4ab8b8'],
-                peach: ['#221a14', '#e8a070'], indigo: ['#12101e', '#8a7ad8'],
-                emerald: ['#0e1a14', '#50c890'], coral: ['#1f1412', '#e87a62'],
-                graphite: ['#121212', '#888888'], sand: ['#1e1a14', '#d4b870'],
-                plum: ['#1e1420', '#d480c8'], sky: ['#0e1a26', '#5ab0d4'],
-                cherry: ['#1e1012', '#e06050'], moss: ['#141c12', '#8aba6a'],
-                stone: ['#161412', '#b0a090'], blush: ['#1e161a', '#e898a8'],
-                midnight: ['#0c0e14', '#6a7a9a'], aurora: ['#0e1a1a', '#4ad4d4'],
-                coffee: ['#1a1410', '#c89060'], candy: ['#1e1018', '#e870a8'],
-                lime: ['#121c10', '#9ad46a'], sakura: ['#1e141e', '#e880d4'],
-                charcoal: ['#0e0e10', '#909098'], ivory: ['#f4f0e6', '#b0a090'],
-                denim: ['#101a24', '#6a9ac8'], mango: ['#1e1a0e', '#e8c060'],
-                mocha: ['#1a1412', '#c8907a'], silver: ['#18181a', '#a8a8b0'],
-                sunflower: ['#1e1a0a', '#f0d050'], cotton: ['#f0f0f0', '#8a8a8a'],
-                obsidian: ['#08080a', '#5a5a6a'], twilight: ['#14101e', '#9a8ad8'],
-                honey: ['#1e180e', '#e8c850'], mist: ['#141a1e', '#6aaac8'],
-                berry: ['#1e1018', '#d86098'], breeze: ['#eaf0f5', '#5a8aaa'],
-                earl: ['#1a1612', '#c8a070'], spice: ['#1e1410', '#e08860'],
-                glacier: ['#0e1418', '#5ab8d4'], flame: ['#1e0e0a', '#e87040'],
-                dream: ['#1a1622', '#b89ae0'], frost: ['#eef2f4', '#6aaac8'],
-                terra: ['#16120e', '#b09878'], bloom: ['#1e141a', '#e898b8'],
-                vanilla: ['#fcf8f0', '#d4a060'], 'sky-light': ['#f0f6fa', '#5a9ac8'],
-                'rose-light': ['#faf2f4', '#d87090'], 'mint-light': ['#f0f8f2', '#5aaa7a'],
-                'lavender-light': ['#f6f2fa', '#9a7ac8'], 'peach-light': ['#faf4ee', '#d48a60']
+                'og-dark': ['#1b1a1f', '#e05a3d'],
+                'og-light': ['#f6f1e6', '#d14c30'],
+                dark: ['#1b1a1f', '#e05a3d'],
+                light: ['#f6f1e6', '#d14c30'],
+                forest: ['#1a261e', '#7cb083'],
+                ocean: ['#0e1f2b', '#5fa8d3'],
+                sunset: ['#261a1a', '#e8856e'],
+                lavender: ['#1e1a2a', '#b8a5e0'],
+                mint: ['#14201a', '#6fc9a8'],
+                rose: ['#261a1f', '#e880a8'],
+                amber: ['#1f1a12', '#e8b85a'],
+                slate: ['#16181c', '#7a8a9a'],
+                wine: ['#1e1218', '#d46a8a'],
+                teal: ['#0e1e1e', '#4ab8b8'],
+                peach: ['#221a14', '#e8a070'],
+                indigo: ['#12101e', '#8a7ad8'],
+                emerald: ['#0e1a14', '#50c890'],
+                coral: ['#1f1412', '#e87a62'],
+                graphite: ['#121212', '#888888'],
+                sand: ['#1e1a14', '#d4b870'],
+                plum: ['#1e1420', '#d480c8'],
+                sky: ['#0e1a26', '#5ab0d4'],
+                cherry: ['#1e1012', '#e06050'],
+                moss: ['#141c12', '#8aba6a'],
+                stone: ['#161412', '#b0a090'],
+                blush: ['#1e161a', '#e898a8'],
+                midnight: ['#0c0e14', '#6a7a9a'],
+                aurora: ['#0e1a1a', '#4ad4d4'],
+                coffee: ['#1a1410', '#c89060'],
+                candy: ['#1e1018', '#e870a8'],
+                lime: ['#121c10', '#9ad46a'],
+                sakura: ['#1e141e', '#e880d4'],
+                charcoal: ['#0e0e10', '#909098'],
+                ivory: ['#f4f0e6', '#b0a090'],
+                denim: ['#101a24', '#6a9ac8'],
+                mango: ['#1e1a0e', '#e8c060'],
+                mocha: ['#1a1412', '#c8907a'],
+                silver: ['#18181a', '#a8a8b0'],
+                sunflower: ['#1e1a0a', '#f0d050'],
+                cotton: ['#f0f0f0', '#8a8a8a'],
+                obsidian: ['#08080a', '#5a5a6a'],
+                twilight: ['#14101e', '#9a8ad8'],
+                honey: ['#1e180e', '#e8c850'],
+                mist: ['#141a1e', '#6aaac8'],
+                berry: ['#1e1018', '#d86098'],
+                breeze: ['#eaf0f5', '#5a8aaa'],
+                earl: ['#1a1612', '#c8a070'],
+                spice: ['#1e1410', '#e08860'],
+                glacier: ['#0e1418', '#5ab8d4'],
+                flame: ['#1e0e0a', '#e87040'],
+                dream: ['#1a1622', '#b89ae0'],
+                frost: ['#eef2f4', '#6aaac8'],
+                terra: ['#16120e', '#b09878'],
+                bloom: ['#1e141a', '#e898b8'],
+                vanilla: ['#fcf8f0', '#d4a060'],
+                'sky-light': ['#f0f6fa', '#5a9ac8'],
+                'rose-light': ['#faf2f4', '#d87090'],
+                'mint-light': ['#f0f8f2', '#5aaa7a'],
+                'lavender-light': ['#f6f2fa', '#9a7ac8'],
+                'peach-light': ['#faf4ee', '#d48a60']
             };
 
             // ===== DEFAULTS =====
@@ -3586,7 +4160,12 @@
                 alarmTimeoutId: null,
                 alarmDismissed: false,
                 alarmSnoozeTimeout: null,
-                finishTime: null
+                finishTime: null,
+                timerLastSavedAt: null,
+                infoBarHidden: false,
+                taskFilter: 'all',
+                renameTargetId: null,
+                _loading: false
             };
 
             // ===== PERSISTENCE =====
@@ -3624,7 +4203,13 @@
                     alarmRepeatUntilDismiss: state.alarmRepeatUntilDismiss,
                     dailyGoal: state.dailyGoal,
                     goalOnlyLong: state.goalOnlyLong,
-                    hideStats: state.hideStats
+                    hideStats: state.hideStats,
+                    infoBarHidden: state.infoBarHidden,
+                    taskFilter: state.taskFilter,
+                    running: state.running,
+                    remaining: state.remaining,
+                    timerPausedRemaining: state.timerPausedRemaining,
+                    timerLastSavedAt: state.timerLastSavedAt
                 };
                 localStorage.setItem('ripe_state', JSON.stringify(data));
             }
@@ -3664,6 +4249,12 @@
                         state.dailyGoal = raw.dailyGoal ?? 0;
                         state.goalOnlyLong = raw.goalOnlyLong ?? false;
                         state.hideStats = raw.hideStats ?? false;
+                        state.infoBarHidden = raw.infoBarHidden ?? false;
+                        state.taskFilter = raw.taskFilter || 'all';
+                        state.running = raw.running ?? false;
+                        state.remaining = raw.remaining ?? (state.durations[state.mode] || 25 * 60);
+                        state.timerPausedRemaining = raw.timerPausedRemaining ?? 0;
+                        state.timerLastSavedAt = raw.timerLastSavedAt ?? null;
                         const _today = new Date().toDateString();
                         if (state.todayDate !== _today) {
                             state.cycleCount = 0;
@@ -3732,6 +4323,11 @@
             const goalRow = $('#goalRow');
             const goalDots = $('#goalDots');
             const statsPanel = $('#stats-panel');
+            const toggleInfoBtn = $('#toggleInfoBtn');
+            const renameBackdrop = $('#renameBackdrop');
+            const renameInput = $('#renameInput');
+            const renameConfirmBtn = $('#renameConfirmBtn');
+            const renameCancelBtn = $('#renameCancelBtn');
 
             const RADIUS = 90;
             const CIRC = 2 * Math.PI * RADIUS;
@@ -3989,6 +4585,23 @@
 
             themeToggleBtn.addEventListener('click', cycleTheme);
 
+            // ===== INFO BAR TOGGLE =====
+            if (toggleInfoBtn) {
+                toggleInfoBtn.addEventListener('click', () => {
+                    state.infoBarHidden = !state.infoBarHidden;
+                    statbar.classList.toggle('show', !state.infoBarHidden);
+                    toggleInfoBtn.textContent = state.infoBarHidden ? '+' : '−';
+                    save();
+                });
+                if (state.infoBarHidden) {
+                    statbar.classList.remove('show');
+                    toggleInfoBtn.textContent = '+';
+                } else {
+                    statbar.classList.add('show');
+                    toggleInfoBtn.textContent = '−';
+                }
+            }
+
             function buildThemeGrid() {
                 themeGrid.innerHTML = '';
                 THEMES.forEach(name => {
@@ -4079,7 +4692,7 @@
             function getCyclesRemaining() {
                 let total = 0;
                 state.tasks.forEach(t => {
-                    if (!t.done) {
+                    if (!t.done && t.est > 0) {
                         total += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
                     }
                 });
@@ -4212,7 +4825,9 @@
                 }
                 const done = t.completedPomos || 0;
                 const total = t.est || 1;
-                const progressHTML = state.showActiveTaskProgress ? `<span class="pomo-progress">${done}/${total}</span>` :
+                const isUntimed = t.est === 0;
+                const progressDisplay = isUntimed ? (t.untimedProgress || 0) + '∞' : done + '/' + total;
+                const progressHTML = state.showActiveTaskProgress ? `<span class="pomo-progress">${progressDisplay}</span>` :
                     '';
                 estLine.innerHTML = `
                   <span class="task-badge">
@@ -4230,7 +4845,11 @@
 
             function totalRemainingMinutes() {
                 let rem = 0;
-                state.tasks.forEach(t => { if (!t.done) rem += Math.max(0, (t.est || 0) - (t.completedPomos || 0)); });
+                state.tasks.forEach(t => {
+                    if (!t.done && t.est > 0) {
+                        rem += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
+                    }
+                });
                 if (rem <= 0) return 0;
                 let minutes = 0;
                 if (state.mode === 'pomodoro') {
@@ -4310,6 +4929,8 @@
                 timerTickInterval = setInterval(timerTick, 500);
                 timerTick();
                 render();
+                state.timerLastSavedAt = Date.now();
+                save();
             }
 
             function pause() {
@@ -4322,6 +4943,8 @@
                 state.timerPausedRemaining = state.remaining;
                 state.timerPausedAt = performance.now();
                 render();
+                state.timerLastSavedAt = Date.now();
+                save();
             }
 
             function reset() {
@@ -4353,6 +4976,50 @@
 
             document.addEventListener('visibilitychange', handleVisibilityChange);
 
+            // ===== BACKGROUND TIMER PERSISTENCE =====
+            window.addEventListener('beforeunload', () => {
+                if (state.running || state.timerPausedRemaining > 0) {
+                    state.timerLastSavedAt = Date.now();
+                    save();
+                }
+            });
+
+            // Restore timer on load
+            function restoreTimer() {
+                if (state._loading) return;
+                state._loading = true;
+                if (state.timerLastSavedAt && state.remaining > 0) {
+                    const timePassed = Math.floor((Date.now() - state.timerLastSavedAt) / 1000);
+                    if (timePassed > 0) {
+                        state.remaining = Math.max(0, state.remaining - timePassed);
+                        if (state.remaining === 0 && state.running) {
+                            state.running = false;
+                            completeSession();
+                            state._loading = false;
+                            return;
+                        }
+                        if (state.remaining <= 0) {
+                            state.remaining = 0;
+                            state.running = false;
+                            render();
+                            state._loading = false;
+                            return;
+                        }
+                    }
+                    if (state.running) {
+                        state.timerStartTime = performance.now();
+                        state.timerInitialRemaining = state.remaining;
+                        if (timerTickInterval) clearInterval(timerTickInterval);
+                        timerTickInterval = setInterval(timerTick, 500);
+                        timerTick();
+                    } else if (state.timerPausedRemaining > 0) {
+                        state.remaining = state.timerPausedRemaining;
+                        render();
+                    }
+                }
+                state._loading = false;
+            }
+
             // ===== COMPLETE SESSION =====
             function completeSession() {
                 pause();
@@ -4365,10 +5032,22 @@
                     recordSession();
                     const t = activeTask();
                     if (t) {
-                        t.completedPomos = (t.completedPomos || 0) + 1;
-                        if (t.completedPomos >= t.est) t.done = true;
+                        if (t.est === 0) {
+                            t.untimedProgress = (t.untimedProgress || 0) + 1;
+                        } else {
+                            t.completedPomos = (t.completedPomos || 0) + 1;
+                            if (t.completedPomos >= t.est) t.done = true;
+                        }
                     }
                     renderTasks();
+                    if (t && t.est === 0) {
+                        switchMode('pomodoro');
+                        if (state.autostart) {
+                            setTimeout(start, 500);
+                        }
+                        save();
+                        return;
+                    }
                     const next = (state.cycleCount % state.cyclesBeforeLong === 0) ? 'long' : 'short';
                     switchMode(next);
                 } else {
@@ -4515,6 +5194,7 @@
                 if (!state.keyboardShortcuts) return;
                 if (modalBackdrop.classList.contains('show')) return;
                 if (confirmDialog.classList.contains('show')) return;
+                if (renameBackdrop.classList.contains('show')) return;
                 if (alarmOverlay.classList.contains('show')) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -4541,12 +5221,16 @@
                 const done = t.done || false;
                 const isActive = t.id === state.activeTaskId && !done;
                 const showPomos = state.showTaskPomos && (!isActive || state.showActivePomos);
+                const est = t.est || 1;
+                const isUntimed = est === 0;
+                const untimedProgress = t.untimedProgress || 0;
+                const displayProgress = isUntimed ? untimedProgress + '∞' : (t.completedPomos || 0) + '/' + est;
                 const pomosHTML = showPomos ?
-                    `<div class="task-pomos" data-action="edit-est" title="Click to edit estimate">${t.completedPomos||0}/${t.est} ${POMO_ICON}</div>` :
+                    `<div class="task-pomos" data-action="edit-est" title="Click to edit estimate">${displayProgress} ${POMO_ICON}</div>` :
                     `<div class="task-pomos" style="display:none;"></div>`;
-                const priority = t.priority || 'medium';
-                const priorityColors = { high: '#e05a3d', medium: '#dba43f', low: '#8ea583' };
-                const priorityBadge = !isCompleted ? `<span class="task-priority" style="background:${priorityColors[priority]};opacity:0.7;" title="Priority: ${priority} (click to cycle)" data-action="cycle-priority"></span>` : '';
+                const timing = t.timing || 'today';
+                const timingDotClass = `task-timing-dot ${timing}`;
+                const timingDot = !isCompleted ? `<button class="${timingDotClass}" data-action="cycle-timing" title="Timing: ${timing} (click to cycle)"></button>` : '';
 
                 return `
                 <div class="task-row">
@@ -4554,9 +5238,10 @@
                   <div class="task-check ${done?'done':''}" data-action="toggle">
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
-                  ${priorityBadge}
+                  ${timingDot}
                   <div class="task-title" data-action="activate" title="Click to focus this task">${escapeHtml(t.title)}</div>
                   ${pomosHTML}
+                  ${!isCompleted ? `<button class="task-rename" data-action="rename" title="Rename task"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>` : ''}
                   ${isCompleted ? `<button class="task-undo" data-action="undo" title="Undo"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>` : ''}
                   <button class="task-del" data-action="delete" title="Delete">
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -4586,9 +5271,7 @@
                 if (titleEl) {
                     titleEl.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        // If task is completed, don't activate it
                         if (t.done) return;
-                        // Toggle: if already active, deselect; otherwise select
                         state.activeTaskId = (state.activeTaskId === t.id) ? null : t.id;
                         save();
                         renderTasks();
@@ -4596,17 +5279,32 @@
                     });
                 }
 
-                // Priority cycle
-                const priorityBtn = el.querySelector('[data-action=cycle-priority]');
-                if (priorityBtn) {
-                    priorityBtn.addEventListener('click', e => {
+                // Timing cycle
+                const timingBtn = el.querySelector('[data-action=cycle-timing]');
+                if (timingBtn) {
+                    timingBtn.addEventListener('click', e => {
                         e.stopPropagation();
-                        const priorities = ['high', 'medium', 'low'];
-                        const idx = priorities.indexOf(t.priority || 'medium');
-                        t.priority = priorities[(idx + 1) % priorities.length];
+                        const timings = ['today', 'tomorrow', 'weekend'];
+                        const idx = timings.indexOf(t.timing || 'today');
+                        t.timing = timings[(idx + 1) % timings.length];
                         save();
                         renderTasks();
                         render();
+                    });
+                }
+
+                // Rename task
+                const renameBtn = el.querySelector('[data-action=rename]');
+                if (renameBtn) {
+                    renameBtn.addEventListener('click', e => {
+                        e.stopPropagation();
+                        state.renameTargetId = t.id;
+                        renameInput.value = t.title;
+                        renameBackdrop.classList.add('show');
+                        setTimeout(() => {
+                            renameInput.focus();
+                            renameInput.select();
+                        }, 50);
                     });
                 }
 
@@ -4646,7 +5344,7 @@
                         e.stopPropagation();
                         const input = document.createElement('input');
                         input.type = 'number';
-                        input.min = '1';
+                        input.min = '0';
                         input.max = '20';
                         input.value = t.est;
                         input.className = 'task-est-input';
@@ -4654,7 +5352,8 @@
                         input.focus();
                         input.select();
                         const commit = () => {
-                            t.est = Math.max(1, parseInt(input.value) || 1);
+                            const val = parseInt(input.value);
+                            t.est = isNaN(val) ? t.est : Math.max(0, val);
                             save();
                             renderTasks();
                         };
@@ -4668,8 +5367,34 @@
                 }
             }
 
+            function getTaskTimingOrder() {
+                const now = new Date();
+                const dayOfWeek = now.getDay();
+                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                if (isWeekend) {
+                    return { weekend: 0, today: 1, tomorrow: 2 };
+                }
+                return { today: 0, tomorrow: 1, weekend: 2 };
+            }
+
             function renderTasks() {
-                const active = state.tasks.filter(t => !t.done);
+                const filter = state.taskFilter || 'all';
+                const timingOrder = getTaskTimingOrder();
+
+                let active = state.tasks.filter(t => !t.done);
+
+                // Apply filter
+                if (filter !== 'all') {
+                    active = active.filter(t => (t.timing || 'today') === filter);
+                }
+
+                // Sort by timing order
+                active.sort((a, b) => {
+                    const aOrder = timingOrder[a.timing || 'today'] ?? 3;
+                    const bOrder = timingOrder[b.timing || 'today'] ?? 3;
+                    return aOrder - bOrder;
+                });
+
                 const completed = state.tasks.filter(t => t.done);
 
                 taskList.innerHTML = '';
@@ -4769,34 +5494,68 @@
             $('#addTaskBtn').addEventListener('click', addTask);
             $('#taskInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
 
+            // ===== RENAME MODAL =====
+            renameConfirmBtn.addEventListener('click', () => {
+                const newName = renameInput.value.trim();
+                if (newName && state.renameTargetId) {
+                    const task = state.tasks.find(t => t.id === state.renameTargetId);
+                    if (task) {
+                        task.title = newName;
+                        save();
+                        renderTasks();
+                        render();
+                    }
+                }
+                renameBackdrop.classList.remove('show');
+                state.renameTargetId = null;
+            });
+
+            renameCancelBtn.addEventListener('click', () => {
+                renameBackdrop.classList.remove('show');
+                state.renameTargetId = null;
+            });
+
+            renameBackdrop.addEventListener('click', e => {
+                if (e.target === renameBackdrop) {
+                    renameBackdrop.classList.remove('show');
+                    state.renameTargetId = null;
+                }
+            });
+
+            renameInput.addEventListener('keydown', e => {
+                if (e.key === 'Enter') renameConfirmBtn.click();
+                if (e.key === 'Escape') renameCancelBtn.click();
+            });
+
             function addTask() {
                 const input = $('#taskInput');
                 const estInput = $('#taskEstimate');
-                const priorityBtn = $('#taskPriority');
                 const title = input.value.trim();
                 if (!title) return;
-                const est = Math.max(1, parseInt(estInput.value) || 1);
-                const priority = priorityBtn?.dataset.priority || 'medium';
-                const t = { id: uid(), title, est, completedPomos: 0, done: false, notes: '', priority };
+                const val = parseInt(estInput.value);
+                const est = isNaN(val) ? 1 : Math.max(0, val);
+                const timing = currentTiming || 'today';
+                const t = { id: uid(), title, est, completedPomos: 0, untimedProgress: 0, done: false, notes: '',
+                    timing };
                 state.tasks.push(t);
                 if (!state.activeTaskId) state.activeTaskId = t.id;
                 input.value = '';
                 estInput.value = 1;
-                if (priorityBtn) {
-                    priorityBtn.dataset.priority = 'medium';
-                    updatePriorityBtn();
-                }
+                currentTiming = 'today';
+                updateTimingButtons();
                 save();
                 renderTasks();
                 render();
             }
 
+            // ===== ARROW BUTTON FIX =====
             document.querySelectorAll('.num-arrows button').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const inp = document.getElementById(btn.dataset.target);
                     if (!inp) return;
                     const step = parseInt(btn.dataset.dir) || 0;
-                    const min = parseInt(inp.min) || 1;
+                    const rawMin = parseInt(inp.min);
+                    const min = isNaN(rawMin) ? 1 : rawMin;
                     const max = parseInt(inp.max) || 999;
                     let val = (parseInt(inp.value) || 0) + step;
                     val = Math.max(min, Math.min(max, val));
@@ -5194,30 +5953,34 @@
                 document.querySelector('.tasks-section').scrollIntoView({ behavior: 'smooth' });
             });
 
-            // ===== PRIORITY BUTTON =====
-            function updatePriorityBtn() {
-                const btn = $('#taskPriority');
-                if (!btn) return;
-                const priority = btn.dataset.priority || 'medium';
-                const colors = { high: '#e05a3d', medium: '#dba43f', low: '#8ea583' };
-                btn.style.backgroundColor = colors[priority];
-                btn.style.opacity = '0.85';
-                btn.title = `Priority: ${priority} (click to change)`;
-                btn.textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
+            // ===== TIMING BUTTONS =====
+            let currentTiming = 'today';
+
+            function updateTimingButtons() {
+                $$('.timing-btn-select').forEach(btn => btn.classList.remove('active'));
+                const target = document.querySelector(`.timing-btn-select[data-timing="${currentTiming}"]`);
+                if (target) target.classList.add('active');
             }
 
-            const taskPriorityBtn = $('#taskPriority');
-            if (taskPriorityBtn) {
-                taskPriorityBtn.dataset.priority = 'medium';
-                taskPriorityBtn.addEventListener('click', () => {
-                    const priorities = ['high', 'medium', 'low'];
-                    const current = taskPriorityBtn.dataset.priority || 'medium';
-                    const idx = priorities.indexOf(current);
-                    taskPriorityBtn.dataset.priority = priorities[(idx + 1) % priorities.length];
-                    updatePriorityBtn();
+            $$('.timing-btn-select').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentTiming = btn.dataset.timing;
+                    updateTimingButtons();
                 });
-                updatePriorityBtn();
-            }
+            });
+
+            updateTimingButtons();
+
+            // ===== FILTER BUTTONS =====
+            $$('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    $$('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.taskFilter = btn.dataset.filter;
+                    save();
+                    renderTasks();
+                });
+            });
 
             // ===== UPDATE STATS =====
             function updateStats() {
@@ -5252,17 +6015,12 @@
                 statsPanel.classList.add('hidden');
             }
 
+            // Restore timer after UI is ready
             setTimeout(() => {
                 applyTheme(state.theme);
                 applyTimerScale(state.timerScale);
                 updateScrollCue();
-                if (state.running) {
-                    state.timerStartTime = performance.now();
-                    state.timerInitialRemaining = state.remaining;
-                    if (timerTickInterval) clearInterval(timerTickInterval);
-                    timerTickInterval = setInterval(timerTick, 500);
-                    timerTick();
-                }
+                restoreTimer();
             }, 50);
 
         })();
