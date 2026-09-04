@@ -5093,7 +5093,8 @@
                     ytStations: state.ytStations || [],
                     ytLastLoadedId: state.ytLastLoadedId,
                     lastResumeData: state.lastResumeData,
-                    sessionPauseCount: state.sessionPauseCount
+                    sessionPauseCount: state.sessionPauseCount,
+                    activeTaskId: state.activeTaskId
                 };
                 try {
                     localStorage.setItem('ripe_state', JSON.stringify(data));
@@ -5160,6 +5161,9 @@
                         state.ytLastLoadedId = raw.ytLastLoadedId || null;
                         state.lastResumeData = raw.lastResumeData || null;
                         state.sessionPauseCount = raw.sessionPauseCount || 0;
+                        // Restore active task, but only if it still exists (task may have been deleted)
+                        state.activeTaskId = (raw.activeTaskId && state.tasks.some(t => t.id === raw.activeTaskId && !t.done)) ?
+                            raw.activeTaskId : null;
                         const _today = new Date().toDateString();
                         if (state.todayDate !== _today) {
                             state.cycleCount = 0;
@@ -5731,14 +5735,15 @@
             function updateFocusStreak() {
                 const today = new Date().toDateString();
                 const yesterday = new Date(Date.now() - 86400000).toDateString();
+                const focusedYesterday = state.totalFocusedSec > 0 || state.cycleCount > 0;
                 if (state.lastFocusDate === today) return;
-                if (state.lastFocusDate === yesterday && state.cycleCount > 0) {
+                if (state.lastFocusDate === yesterday && focusedYesterday) {
                     state.focusStreak++;
                 } else if (state.lastFocusDate !== today) {
-                    if (state.cycleCount > 0) state.focusStreak = 1;
+                    if (focusedYesterday) state.focusStreak = 1;
                     else state.focusStreak = 0;
                 }
-                if (state.cycleCount > 0) state.lastFocusDate = today;
+                if (focusedYesterday) state.lastFocusDate = today;
             }
 
             function getTodayStats() {
@@ -5848,6 +5853,32 @@
             let timerTickInterval = null;
             let timerLastTick = 0;
 
+            function isFlowTask(t) {
+                return !!t && t.est === 0;
+            }
+
+            // What happens when the countdown hits zero — shared by the live tick
+            // and by the backgrounded-tab catch-up path in restoreTimer().
+            function handleTimeUp() {
+                const t = activeTask();
+                if (state.mode === 'pomodoro' && isFlowTask(t)) {
+                    // Flow task: no alarm, no break, no pause — just quietly start the next lap.
+                    t.untimedProgress = (t.untimedProgress || 0) + 1;
+                    recordSession();
+                    renderTasks();
+                    state.remaining = state.durations.pomodoro;
+                    state.timerStartTime = performance.now();
+                    state.timerInitialRemaining = state.remaining;
+                    state._lastTickMark = state.timerStartTime;
+                    render();
+                    save();
+                } else {
+                    state.remaining = 0;
+                    render();
+                    completeSession();
+                }
+            }
+
             function timerTick() {
                 if (!state.running) return;
                 const now = performance.now();
@@ -5855,12 +5886,16 @@
                     state.timerStartTime = now;
                     state.timerInitialRemaining = state.remaining;
                 }
+                // Credit real elapsed focus time continuously (accurate across pauses/laps/mode switches)
+                if (state.mode === 'pomodoro' && state._lastTickMark != null) {
+                    const deltaSec = (now - state._lastTickMark) / 1000;
+                    if (deltaSec > 0) state.totalFocusedSec += deltaSec;
+                }
+                state._lastTickMark = now;
                 const elapsed = (now - state.timerStartTime) / 1000;
                 let remaining = state.timerInitialRemaining - elapsed;
                 if (remaining <= 0) {
-                    state.remaining = 0;
-                    render();
-                    completeSession();
+                    handleTimeUp();
                     return;
                 }
                 state.remaining = remaining;
@@ -5884,6 +5919,7 @@
                     state.timerStartTime = performance.now();
                     state.timerInitialRemaining = state.remaining;
                 }
+                state._lastTickMark = null; // avoid crediting a stale gap after resuming
                 state.running = true;
                 requestNotifyPermission();
                 if (timerTickInterval) clearInterval(timerTickInterval);
@@ -5970,8 +6006,18 @@
                     if (timePassed > 0) {
                         state.remaining = Math.max(0, state.remaining - timePassed);
                         if (state.remaining === 0 && state.running) {
+                            const t = activeTask();
+                            if (state.mode === 'pomodoro' && isFlowTask(t)) {
+                                // Flow task ran out while backgrounded — credit the lap and keep going
+                                handleTimeUp();
+                                if (timerTickInterval) clearInterval(timerTickInterval);
+                                timerTickInterval = setInterval(timerTick, 200);
+                                timerTick();
+                                state._loading = false;
+                                return;
+                            }
                             state.running = false;
-                            completeSession();
+                            handleTimeUp();
                             state._loading = false;
                             return;
                         }
@@ -6019,22 +6065,10 @@
                     recordSession();
                     const t = activeTask();
                     if (t) {
-                        if (t.est === 0) {
-                            t.untimedProgress = (t.untimedProgress || 0) + 1;
-                        } else {
-                            t.completedPomos = (t.completedPomos || 0) + 1;
-                            if (t.completedPomos >= t.est) t.done = true;
-                        }
+                        t.completedPomos = (t.completedPomos || 0) + 1;
+                        if (t.completedPomos >= t.est) t.done = true;
                     }
                     renderTasks();
-                    if (t && t.est === 0) {
-                        switchMode('pomodoro');
-                        if (state.autostart) {
-                            setTimeout(start, 500);
-                        }
-                        save();
-                        return;
-                    }
                     const next = (state.cycleCount % state.cyclesBeforeLong === 0) ? 'long' : 'short';
                     switchMode(next);
                 } else {
@@ -6249,8 +6283,8 @@
                 const done = t.done || false;
                 const isActive = t.id === state.activeTaskId && !done;
                 const showPomos = state.showTaskPomos && (!isActive || state.showActivePomos);
-                const est = t.est || 1;
-                const isUntimed = est === 0;
+                const isUntimed = t.est === 0;
+                const est = isUntimed ? 0 : (t.est || 1);
                 const untimedProgress = t.untimedProgress || 0;
                 const displayProgress = isUntimed ? untimedProgress + '∞' : (t.completedPomos || 0) + '/' + est;
                 const pomosHTML = showPomos ?
@@ -6391,11 +6425,11 @@
                         input.type = 'number';
                         input.min = '0';
                         input.max = '20';
-                        input.value = t.est;
+                        input.value = '';
+                        input.placeholder = String(t.est);
                         input.className = 'task-est-input';
                         pomosEl.replaceWith(input);
                         input.focus();
-                        input.select();
                         const commit = () => {
                             const val = parseInt(input.value);
                             t.est = isNaN(val) ? t.est : Math.max(0, val);
@@ -6405,7 +6439,7 @@
                         input.addEventListener('blur', commit);
                         input.addEventListener('keydown', ev => {
                             if (ev.key === 'Enter') input.blur();
-                            if (ev.key === 'Escape') { input.value = t.est;
+                            if (ev.key === 'Escape') { input.value = '';
                                 input.blur(); }
                         });
                     });
