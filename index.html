@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ripe — Focus Timer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
-    <link href="code%20model_files/css2_Tx9o.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@500;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
 
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23e05a3d'/%3E%3Cstop offset='100%25' style='stop-color:%23b8402a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%231b1a1f'/%3E%3Cpath d='M32 12c7 9 13 15.5 13 23A13 13 0 1 1 19 35c0-7.5 6-14 13-23z' fill='url(%23g)'/%3E%3Cpath d='M32 22c3 4 6 7.5 6 11' stroke='%231b1a1f' stroke-width='2.4' stroke-linecap='round' fill='none' opacity='.5'/%3E%3C/svg%3E">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23e05a3d'/%3E%3Cstop offset='100%25' style='stop-color:%23b8402a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%231b1a1f'/%3E%3Cpath d='M32 12c7 9 13 15.5 13 23A13 13 0 1 1 19 35c0-7.5 6-14 13-23z' fill='url(%23g)'/%3E%3Cpath d='M32 22c3 4 6 7.5 6 11' stroke='%231b1a1f' stroke-width='2.4' stroke-linecap='round' fill='none' opacity='.5'/%3E%3C/svg%3E">
@@ -1093,6 +1094,35 @@
             --accent-dim: var(--accent-long);
         }
 
+        /* ===== HIGH CONTRAST ===== */
+        body.high-contrast {
+            --fg: #ffffff !important;
+            --fg-dim: #cccccc !important;
+            --fg-dim-2: #aaaaaa !important;
+            --bg: #000000 !important;
+            --bg-2: #1a1a1a !important;
+            --bg-3: #2a2a2a !important;
+            --line: rgba(255, 255, 255, 0.25) !important;
+            --shadow: rgba(0, 0, 0, 0.85) !important;
+            --ring-bg: #2a2a2a !important;
+        }
+
+        /* ===== REDUCED MOTION ===== */
+        body.reduced-motion *,
+        body.reduced-motion *::before,
+        body.reduced-motion *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+
+        /* ===== DYSLEXIA FONT ===== */
+        body.dyslexia-font {
+            --font-timer: 'Comic Sans MS', 'Chalkboard SE', 'Verdana', sans-serif !important;
+            --font-ui: 'Comic Sans MS', 'Chalkboard SE', 'Verdana', sans-serif !important;
+            --font-mono: 'Comic Sans MS', 'Chalkboard SE', 'Verdana', sans-serif !important;
+        }
+
         /* ===== layout ===== */
         body {
             display: flex;
@@ -1366,6 +1396,12 @@
         .tab:not(.active):hover {
             color: var(--fg);
         }
+        .tab.disabled-strict,
+        button.disabled-strict {
+            opacity: 0.35;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
 
         /* ===== timer ===== */
         .timer-stage {
@@ -1484,6 +1520,27 @@
         .goal-dot.filled {
             background: var(--accent);
             border-color: var(--accent);
+        }
+
+        .resume-btn {
+            display: none;
+            margin: 14px auto 0;
+            padding: 8px 18px;
+            background: var(--bg-2);
+            border: 1px solid var(--line);
+            color: var(--fg-dim);
+            border-radius: 20px;
+            font-size: 13px;
+            font-family: var(--font-ui);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .resume-btn.show {
+            display: inline-block;
+        }
+        .resume-btn:hover {
+            color: var(--fg);
+            border-color: var(--fg-dim);
         }
 
         .controls {
@@ -1650,14 +1707,18 @@
         /* ===== add task ===== */
         .add-task {
             display: flex;
+            flex-direction: column;
             gap: 10px;
             margin-bottom: 18px;
+        }
+        .add-task-row2 {
+            display: flex;
+            gap: 10px;
             flex-wrap: wrap;
             align-items: center;
         }
         .add-task input[type="text"] {
-            flex: 1;
-            min-width: 140px;
+            width: 100%;
             background: var(--bg-2);
             border: 1px solid var(--line);
             color: var(--fg);
@@ -1761,22 +1822,25 @@
             transform: scale(0.96);
         }
 
-        /* Timing selector - improved */
+        /* Timing selector - improved, height matched to add-btn/num-field so the row lines up */
         .timing-selector {
             display: flex;
             gap: 4px;
-            align-items: center;
+            align-items: stretch;
             background: var(--bg-2);
             border: 1px solid var(--line);
             border-radius: 12px;
             padding: 4px;
             flex-shrink: 0;
+            height: 50px;
+            box-sizing: border-box;
         }
         .timing-btn-select {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
-            padding: 8px 14px;
+            padding: 0 14px;
             border: none;
             background: transparent;
             color: var(--fg-dim);
@@ -1955,17 +2019,18 @@
             transform: scale(1.4);
         }
 
-        /* Priority dot on tasks */
+        /* Priority dot on tasks — sized to match .task-timing-dot for visual consistency */
         .task-priority-dot {
             display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 3px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
             cursor: pointer;
             flex-shrink: 0;
             transition: all 0.2s ease;
             border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 0;
+            background: transparent;
         }
         .task-priority-dot.low {
             background: var(--fg-dim-2);
@@ -1977,7 +2042,7 @@
             background: var(--accent-focus);
         }
         .task-priority-dot:hover {
-            transform: scale(1.3);
+            transform: scale(1.4);
         }
 
         /* Quiet hours range inputs */
@@ -2415,6 +2480,17 @@
             padding-bottom: 8px;
             width: 100%;
         }
+        .footer-link-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            font: inherit;
+            letter-spacing: inherit;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 4px;
+        }
 
         /* ===== sound mixer — FIXED GLOW + SPACING ===== */
         .mixer-btn {
@@ -2585,6 +2661,97 @@
         }
         .yt-controls button#ytLoadBtn:hover {
             filter: brightness(1.08);
+        }
+        .yt-stations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 8px;
+            align-items: center;
+            min-height: 0;
+        }
+        .yt-stations .station-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px 3px 12px;
+            background: var(--bg-3);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            font-size: 11px;
+            color: var(--fg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+            max-width: 130px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .yt-stations .station-chip.active {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+        .yt-stations .station-chip:hover {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+        .yt-stations .station-chip .del {
+            background: none;
+            border: none;
+            color: var(--fg-dim-2);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 2px;
+            line-height: 1;
+            transition: color 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .yt-stations .station-chip .del:hover {
+            color: var(--accent);
+        }
+        .yt-stations .station-save-prompt {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 2px 0;
+        }
+        .yt-stations .station-save-prompt input[type="text"] {
+            background: var(--bg-3);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 3px 8px;
+            color: var(--fg);
+            font-size: 11px;
+            width: 80px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .yt-stations .station-save-prompt input[type="text"]:focus {
+            border-color: var(--accent);
+        }
+        .yt-stations .station-save-prompt button {
+            background: var(--accent-soft);
+            border: 1px solid var(--line);
+            color: var(--fg);
+            border-radius: 8px;
+            padding: 3px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+        }
+        .yt-stations .station-save-prompt button:hover {
+            background: var(--accent);
+            color: var(--on-accent);
+            border-color: var(--accent);
+        }
+        .yt-stations .station-label {
+            font-size: 11px;
+            color: var(--fg-dim);
+            font-weight: 500;
+            margin-right: 2px;
         }
         #ytPlayerHolder {
             position: absolute;
@@ -3352,6 +3519,94 @@
             color: var(--fg);
         }
 
+        /* ===== design principles modal ===== */
+        .principles-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .principles-backdrop.show {
+            display: flex;
+        }
+        .principles-modal {
+            background: var(--bg-2);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            max-width: 620px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 32px 36px;
+            box-shadow: 0 30px 80px var(--shadow);
+        }
+        .principles-modal h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--fg);
+            margin: 0 0 6px;
+            letter-spacing: -0.5px;
+        }
+        .principles-modal .sub {
+            font-size: 13px;
+            color: var(--fg-dim);
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 16px;
+        }
+        .principles-modal .principle {
+            margin-bottom: 20px;
+        }
+        .principles-modal .principle h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-focus);
+            margin: 0 0 4px;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.2px;
+        }
+        .principles-modal .principle p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--fg-dim);
+            margin: 0;
+        }
+        .principles-modal .principle p code {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            background: var(--bg);
+            padding: 1px 6px;
+            border-radius: 4px;
+            color: var(--fg);
+        }
+        .principles-modal .close-principles {
+            margin-top: 20px;
+            padding: 10px 28px;
+            border: none;
+            background: var(--accent);
+            color: var(--on-accent);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: transform 0.15s ease, box-shadow 0.3s ease;
+            width: 100%;
+        }
+        .principles-modal .close-principles:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .principles-modal .close-principles:active {
+            transform: scale(0.97);
+        }
+
         /* ===== responsive — improved spacing ===== */
         @media (max-width: 520px) {
             body {
@@ -3553,11 +3808,12 @@
                 display: none;
             }
             .timing-btn-select {
-                padding: 8px 10px;
+                padding: 0 10px;
             }
             .timing-selector {
                 gap: 2px;
                 padding: 3px;
+                height: 44px;
             }
         }
         @media (max-width: 380px) {
@@ -3623,7 +3879,7 @@
         <div class="stat"><span class="dot" style="background: rgb(224, 90, 61);"></span>Cycles today <b id="statCycles">0</b></div>
         <div class="stat">Focused <b id="statFocused">0m</b></div>
         <div class="stat" id="statEstRemaining">Est. remaining <b id="statRemaining">25m</b></div>
-        <button class="btn-toggle-info" id="toggleInfoBtn" title="Toggle info bar">−</button>
+        <div class="stat" id="statCyclesLeft">Cycles left <b id="statCyclesLeftVal">4</b></div>
     </div>
 
     <!-- ===== TOPBAR ===== -->
@@ -3695,9 +3951,11 @@
 
                 <!-- Goal row -->
                 <div class="goal-row" id="goalRow" style="display: none;">
-                    <span class="goal-label">Goal</span>
+                    <span class="goal-label">Cycle sets</span>
                     <div class="goal-dots" id="goalDots"></div>
                 </div>
+
+                <button type="button" class="resume-btn" id="resumeBtn">↻ Resume last session</button>
 
                 <!-- Focused task badge -->
                 <div class="est-line" id="estLine">No active task selected</div>
@@ -3729,28 +3987,30 @@
         <!-- Add Task -->
         <div class="add-task">
             <input type="text" id="taskInput" placeholder="What are you working on?" maxlength="120">
-            <div class="num-field">
-                <input type="number" id="taskEstimate" min="0" max="20" value="1" title="Estimated pomodoros (0 = untimed)">
-                <div class="num-arrows">
-                    <button type="button" data-target="taskEstimate" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"></polyline></svg></button>
-                    <button type="button" data-target="taskEstimate" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+            <div class="add-task-row2">
+                <div class="num-field">
+                    <input type="number" id="taskEstimate" min="0" max="20" value="1" title="Estimated pomodoros (0 = untimed)">
+                    <div class="num-arrows">
+                        <button type="button" data-target="taskEstimate" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"></polyline></svg></button>
+                        <button type="button" data-target="taskEstimate" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+                    </div>
                 </div>
-            </div>
-            <div class="timing-selector" id="timingSelector">
-                <button type="button" class="timing-btn-select today active" data-timing="today">
-                    <span class="timing-indicator"></span>
-                    <span class="timing-label">Today</span>
-                </button>
-                <button type="button" class="timing-btn-select tomorrow" data-timing="tomorrow">
-                    <span class="timing-indicator"></span>
+                <div class="timing-selector" id="timingSelector">
+                    <button type="button" class="timing-btn-select today active" data-timing="today">
+                        <span class="timing-indicator"></span>
+                        <span class="timing-label">Today</span>
+                    </button>
+                    <button type="button" class="timing-btn-select tomorrow" data-timing="tomorrow">
+                        <span class="timing-indicator"></span>
                     <span class="timing-label">Tomorrow</span>
                 </button>
-                <button type="button" class="timing-btn-select weekend" data-timing="weekend">
-                    <span class="timing-indicator"></span>
-                    <span class="timing-label">Weekend</span>
-                </button>
+                    <button type="button" class="timing-btn-select weekend" data-timing="weekend">
+                        <span class="timing-indicator"></span>
+                        <span class="timing-label">Weekend</span>
+                    </button>
+                </div>
+                <button class="add-btn" id="addTaskBtn">Add</button>
             </div>
-            <button class="add-btn" id="addTaskBtn">Add</button>
         </div>
 
         <!-- Filter Buttons + Sort button -->
@@ -3764,27 +4024,7 @@
         </div>
 
         <!-- Task List -->
-        <div class="task-list" id="taskList"><div class="task" data-id="vpwslgc" draggable="true">
-                <div class="task-row">
-                  <div class="drag-handle" title="Drag to reorder"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="1.5"></circle><circle cx="8" cy="12" r="1.5"></circle><circle cx="8" cy="18" r="1.5"></circle><circle cx="16" cy="6" r="1.5"></circle><circle cx="16" cy="12" r="1.5"></circle><circle cx="16" cy="18" r="1.5"></circle></svg></div>
-                  <div class="task-check " data-action="toggle">
-                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  </div>
-                  <button class="task-timing-dot weekend" data-action="cycle-timing" title="Timing: weekend (click to cycle)"></button>
-                  <div class="task-title" data-action="activate" title="Click to focus this task">hi</div>
-                  <div class="task-pomos" data-action="edit-est" title="Click to edit estimate">0/1 <svg class="pomo-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4 3-7 7-7 11a7 7 0 0014 0c0-4-3-8-7-11z"></path></svg></div>
-                  <button class="task-rename" data-action="rename" title="Rename task"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
-                  
-                  <button class="task-del" data-action="delete" title="Delete">
-                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                  </button>
-                </div>
-                
-                <div class="task-notes">
-                  <span class="notes-label">Notes</span>
-                  <textarea placeholder="Jot down context, next steps…"></textarea>
-                </div>
-              </div></div>
+        <div class="task-list" id="taskList"></div>
         <div class="empty-tasks" id="emptyState" style="display: none;">No tasks yet — add one above and click it to make it active.</div>
 
         <!-- Completed -->
@@ -3815,7 +4055,7 @@
             <input type="file" id="importFile" accept=".json" style="display:none">
         </div>
 
-        <footer>Ripe — a focused clone of the pomodoro timer concept, built for you.</footer>
+        <footer>Ripe — a focused clone of the pomodoro timer concept, built for you. <button type="button" id="openPrinciplesBtn" class="footer-link-btn">Design principles</button></footer>
     </div>
 
     <!-- ===== CONFIRMATION DIALOG ===== -->
@@ -3839,6 +4079,41 @@
                 <button class="btn-cancel" id="renameCancelBtn">Cancel</button>
                 <button class="btn-confirm" id="renameConfirmBtn">Rename</button>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== DESIGN PRINCIPLES MODAL ===== -->
+    <div class="principles-backdrop" id="principlesBackdrop">
+        <div class="principles-modal">
+            <h2>Design Principles</h2>
+            <div class="sub">The guiding philosophy behind Ripe Focus Timer</div>
+
+            <div class="principle">
+                <h4>1. Minimalism</h4>
+                <p>Show only what's needed for the current moment. The default view is calm: timer, one active task, and a few controls. Depth is hidden behind Settings, toggles, or scroll.</p>
+            </div>
+
+            <div class="principle">
+                <h4>2. Function</h4>
+                <p>Every element earns its place by helping you complete focused work sessions and finish tasks. There is no decorative complexity — everything serves a purpose.</p>
+            </div>
+
+            <div class="principle">
+                <h4>3. Distractionlessness</h4>
+                <p>Nothing competes with the timer or the current task for attention. No flashing, no unprompted popups, no content that invites browsing.</p>
+            </div>
+
+            <div class="principle">
+                <h4>4. Convenience</h4>
+                <p>Common actions take one click or keystroke. Defaults are sensible so most people never need to open Settings. Data is never lost — autosave, recovery, and export/import are baked in.</p>
+            </div>
+
+            <div class="principle">
+                <h4>5. Configurability</h4>
+                <p>Power users can reshape almost everything — timings, sounds, themes, behavior toggles. But every new setting defaults to <code>off</code> so a first-time user's experience remains clean and unchanged unless they go looking for more.</p>
+            </div>
+
+            <button class="close-principles" id="closePrinciplesBtn">Close</button>
         </div>
     </div>
 
@@ -3870,11 +4145,12 @@
             <input type="text" id="ytUrlInput" placeholder="Paste YouTube URL or ID" value="https://www.youtube.com/watch?v=s1K00Fiz_0Q">
             <button id="ytLoadBtn">Load</button>
         </div>
+        <div class="yt-stations" id="ytStations"></div>
         <div class="yt-controls">
             <button id="ytPlayBtn">▶ Play</button>
             <button id="ytPauseBtn">⏸ Pause</button>
         </div>
-        <div id="ytPlayerHolder"><iframe id="ytPlayerEl" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" title="YouTube video player" width="1" height="1" src="code%20model_files/a_Tx9o.htm"></iframe></div>
+        <div id="ytPlayerHolder"></div>
     </div>
 
     <!-- ===== SETTINGS MODAL ===== -->
@@ -4364,6 +4640,7 @@
                         <option value="Georgia, serif">Classic Serif</option>
                         <option value="'Playfair Display', serif">Playfair Display</option>
                         <option value="'Source Code Pro', monospace">Source Code Pro</option>
+                        <option value="'Comic Sans MS', 'Chalkboard SE', 'Verdana', sans-serif">Dyslexia-friendly</option>
                     </select>
                 </div>
 
@@ -4410,7 +4687,7 @@
                     <div class="toggle" id="setShowCyclesLeft"></div>
                 </div>
                 <div class="field-row">
-                    <label>Daily cycles goal (0 = disabled)</label>
+                    <label>Cycle sets goal (0 = disabled)</label>
                     <div class="num-field">
                         <input type="number" id="setDailyGoal" min="0" max="20" value="0">
                         <div class="num-arrows">
@@ -4418,6 +4695,7 @@
                             <button type="button" data-target="setDailyGoal" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
                         </div>
                     </div>
+                    <label style="font-size:11px;color:var(--fg-dim-2);font-weight:400;flex:0 0 auto;">1 set = cycles before a long break</label>
                 </div>
                 <div class="field-row">
                     <label>Only show goal during long breaks</label>
@@ -4438,6 +4716,22 @@
                         <span>to</span>
                         <input type="time" id="setQuietHoursEnd" value="08:00">
                     </div>
+                </div>
+                <div class="field-row">
+                    <label>Strict breaks (can't skip a break early)</label>
+                    <div class="toggle" id="setStrictBreaks"></div>
+                </div>
+                <div class="field-row">
+                    <label>Voice announcements</label>
+                    <div class="toggle" id="setVoiceAnnounce"></div>
+                </div>
+                <div class="field-row">
+                    <label>High contrast</label>
+                    <div class="toggle" id="setHighContrast"></div>
+                </div>
+                <div class="field-row">
+                    <label>Reduced motion</label>
+                    <div class="toggle" id="setReducedMotion"></div>
                 </div>
 
                 <!-- Preferences -->
@@ -4486,7 +4780,7 @@
         </div>
     </div>
 
-    <script type="text/javascript" id="www-widgetapi-script" src="code%20model_files/www-widgetapi_Tx9o.js" async=""></script><script>
+    <script>
         (function() {
             'use strict';
 
@@ -4655,7 +4949,11 @@
                 taskPriority: false,
                 quietHours: false,
                 quietHoursStart: '22:00',
-                quietHoursEnd: '08:00'
+                quietHoursEnd: '08:00',
+                strictBreaks: false,
+                voiceAnnounce: false,
+                highContrast: false,
+                reducedMotion: false
             };
 
             // ===== STATE =====
@@ -4726,7 +5024,15 @@
                 quietHours: false,
                 quietHoursStart: '22:00',
                 quietHoursEnd: '08:00',
-                lastRolloverDate: null
+                lastRolloverDate: null,
+                strictBreaks: false,
+                voiceAnnounce: false,
+                highContrast: false,
+                reducedMotion: false,
+                sessionPauseCount: 0,
+                lastResumeData: null,
+                ytStations: [],
+                ytLastLoadedId: null
             };
 
             // ===== PERSISTENCE =====
@@ -4779,7 +5085,15 @@
                     quietHours: state.quietHours,
                     quietHoursStart: state.quietHoursStart,
                     quietHoursEnd: state.quietHoursEnd,
-                    lastRolloverDate: state.lastRolloverDate
+                    lastRolloverDate: state.lastRolloverDate,
+                    strictBreaks: state.strictBreaks,
+                    voiceAnnounce: state.voiceAnnounce,
+                    highContrast: state.highContrast,
+                    reducedMotion: state.reducedMotion,
+                    ytStations: state.ytStations || [],
+                    ytLastLoadedId: state.ytLastLoadedId,
+                    lastResumeData: state.lastResumeData,
+                    sessionPauseCount: state.sessionPauseCount
                 };
                 try {
                     localStorage.setItem('ripe_state', JSON.stringify(data));
@@ -4838,6 +5152,14 @@
                         state.quietHoursStart = raw.quietHoursStart || '22:00';
                         state.quietHoursEnd = raw.quietHoursEnd || '08:00';
                         state.lastRolloverDate = raw.lastRolloverDate || null;
+                        state.strictBreaks = raw.strictBreaks ?? false;
+                        state.voiceAnnounce = raw.voiceAnnounce ?? false;
+                        state.highContrast = raw.highContrast ?? false;
+                        state.reducedMotion = raw.reducedMotion ?? false;
+                        state.ytStations = Array.isArray(raw.ytStations) ? raw.ytStations : [];
+                        state.ytLastLoadedId = raw.ytLastLoadedId || null;
+                        state.lastResumeData = raw.lastResumeData || null;
+                        state.sessionPauseCount = raw.sessionPauseCount || 0;
                         const _today = new Date().toDateString();
                         if (state.todayDate !== _today) {
                             state.cycleCount = 0;
@@ -4891,6 +5213,7 @@
             const startBtn = $('#startBtn');
             const resetBtn = $('#resetBtn');
             const skipBtn = $('#skipBtn');
+            const resumeBtn = $('#resumeBtn');
             const ringFg = $('#ringFg');
             const cyclePips = $('#cyclePips');
             const estLine = $('#estLine');
@@ -4928,7 +5251,7 @@
             const goalRow = $('#goalRow');
             const goalDots = $('#goalDots');
             const statsPanel = $('#stats-panel');
-            const toggleInfoBtn = $('#toggleInfoBtn');
+            const statCyclesLeftEl = $('#statCyclesLeftVal');
             const renameBackdrop = $('#renameBackdrop');
             const renameInput = $('#renameInput');
             const renameConfirmBtn = $('#renameConfirmBtn');
@@ -4951,7 +5274,8 @@
                     return;
                 }
                 goalRow.style.display = 'flex';
-                const filled = Math.min(state.cycleCount, goal);
+                const totalSets = Math.floor(state.cycleCount / state.cyclesBeforeLong);
+                const filled = Math.min(totalSets, goal);
                 goalDots.innerHTML = '';
                 for (let i = 0; i < goal; i++) {
                     const dot = document.createElement('div');
@@ -5179,22 +5503,20 @@
 
             themeToggleBtn.addEventListener('click', cycleTheme);
 
-            // ===== INFO BAR TOGGLE =====
-            if (toggleInfoBtn) {
-                toggleInfoBtn.addEventListener('click', () => {
-                    state.infoBarHidden = !state.infoBarHidden;
-                    statbar.classList.toggle('show', !state.infoBarHidden);
-                    toggleInfoBtn.textContent = state.infoBarHidden ? '+' : '−';
-                    save();
+            // ===== INFO BAR (live cycles-left stat, reflects current task filter) =====
+            function updateCyclesLeftStat() {
+                const el = document.getElementById('statCyclesLeftVal');
+                if (!el) return;
+                const filter = state.taskFilter || 'all';
+                let total = 0;
+                state.tasks.forEach(t => {
+                    if (t.done || !(t.est > 0)) return;
+                    if (filter !== 'all' && (t.timing || 'today') !== filter) return;
+                    total += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
                 });
-                if (state.infoBarHidden) {
-                    statbar.classList.remove('show');
-                    toggleInfoBtn.textContent = '+';
-                } else {
-                    statbar.classList.add('show');
-                    toggleInfoBtn.textContent = '−';
-                }
+                el.textContent = total;
             }
+            updateCyclesLeftStat();
 
             function buildThemeGrid() {
                 themeGrid.innerHTML = '';
@@ -5244,6 +5566,29 @@
             // ===== MODE =====
             const labels = { pomodoro: 'Focus Session', short: 'Short Break', long: 'Long Break' };
 
+            function applyAccessibility() {
+                document.body.classList.toggle('high-contrast', state.highContrast);
+                document.body.classList.toggle('reduced-motion', state.reducedMotion);
+                const font = (state.timerFont || '').toLowerCase();
+                document.body.classList.toggle('dyslexia-font', font.includes('comic') || font.includes('chalkboard'));
+            }
+
+            function updateSkipButton() {
+                if (!skipBtn) return;
+                const isBreak = state.mode !== 'pomodoro';
+                const shouldDisable = state.strictBreaks && isBreak && state.running;
+                skipBtn.disabled = shouldDisable;
+                skipBtn.classList.toggle('disabled-strict', shouldDisable);
+            }
+
+            function updateTabsDisabled() {
+                const isBreak = state.mode !== 'pomodoro';
+                const shouldDisable = state.strictBreaks && isBreak && state.running;
+                $$('.tab').forEach(t => {
+                    if (t.dataset.mode !== state.mode) t.classList.toggle('disabled-strict', shouldDisable);
+                });
+            }
+
             function applyModeClass() {
                 document.body.classList.remove('mode-focus', 'mode-short', 'mode-long');
                 if (state.mode === 'pomodoro') document.body.classList.add('mode-focus');
@@ -5267,6 +5612,8 @@
                 state.timerPausedRemaining = 0;
                 state.timerPausedAt = null;
                 renderGoal();
+                updateSkipButton();
+                updateTabsDisabled();
             }
 
             $('#tabs').addEventListener('click', e => {
@@ -5297,6 +5644,15 @@
             }
 
             function render() {
+                updateCyclesLeftStat();
+                if (resumeBtn) {
+                    if (state.lastResumeData && !state.running && state.remaining >= state.durations[state.mode]) {
+                        resumeBtn.classList.add('show');
+                        resumeBtn.textContent = '↻ Resume last session (' + fmt(state.lastResumeData.remaining) + ')';
+                    } else {
+                        resumeBtn.classList.remove('show');
+                    }
+                }
                 const showCycles = state.showCyclesLeft && state.mode === 'pomodoro';
                 let displayText;
                 if (showCycles) {
@@ -5535,6 +5891,8 @@
                 timerTick();
                 render();
                 state.timerLastSavedAt = Date.now();
+                updateSkipButton();
+                updateTabsDisabled();
                 save();
             }
 
@@ -5547,19 +5905,29 @@
                 }
                 state.timerPausedRemaining = state.remaining;
                 state.timerPausedAt = performance.now();
+                state.sessionPauseCount = (state.sessionPauseCount || 0) + 1;
                 render();
                 state.timerLastSavedAt = Date.now();
+                updateSkipButton();
+                updateTabsDisabled();
                 save();
             }
 
             function reset() {
                 pause();
+                // Remember meaningful progress so it can be resumed later
+                if (state.remaining > 0 && state.remaining < state.durations[state.mode]) {
+                    state.lastResumeData = { remaining: state.remaining, mode: state.mode, taskId: state.activeTaskId };
+                } else {
+                    state.lastResumeData = null;
+                }
                 state.remaining = state.durations[state.mode];
                 state.timerStartTime = null;
                 state.timerInitialRemaining = 0;
                 state.timerPausedRemaining = 0;
                 state.timerPausedAt = null;
                 render();
+                save();
             }
 
             // Visibility change — catch up time lost while tab was hidden
@@ -5640,6 +6008,9 @@
             function completeSession() {
                 pause();
                 notifySessionEnd(state.mode);
+                if (state.voiceAnnounce && !state.masterMute) {
+                    speakAnnouncement(state.mode);
+                }
                 if (state.alarmSound && !state.masterMute) {
                     triggerAlarm(state.mode);
                 }
@@ -5678,6 +6049,17 @@
                 if ('Notification' in window && Notification.permission === 'default') {
                     Notification.requestPermission();
                 }
+            }
+
+            function speakAnnouncement(mode) {
+                try {
+                    if (!('speechSynthesis' in window)) return;
+                    const msg = mode === 'pomodoro' ? 'Focus session complete. Time for a break.' : 'Break is over. Back to focus.';
+                    const utter = new SpeechSynthesisUtterance(msg);
+                    utter.rate = 1;
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(utter);
+                } catch (_) { /* ignore */ }
             }
 
             function notifySessionEnd(mode) {
@@ -5804,6 +6186,7 @@
 
             // ===== SKIP =====
             function skip() {
+                if (state.strictBreaks && state.mode !== 'pomodoro' && state.running) return;
                 pause();
                 if (state.mode === 'pomodoro') {
                     const next = (state.cycleCount % state.cyclesBeforeLong === state.cyclesBeforeLong - 1) ? 'long' :
@@ -5818,6 +6201,21 @@
             startBtn.addEventListener('click', () => state.running ? pause() : start());
             resetBtn.addEventListener('click', reset);
             skipBtn.addEventListener('click', skip);
+
+            if (resumeBtn) {
+                resumeBtn.addEventListener('click', () => {
+                    if (state.lastResumeData) {
+                        state.remaining = state.lastResumeData.remaining || state.durations[state.mode];
+                        state.mode = state.lastResumeData.mode || state.mode;
+                        state.activeTaskId = state.lastResumeData.taskId || null;
+                        state.lastResumeData = null;
+                        switchMode(state.mode, false);
+                        render();
+                        save();
+                        resumeBtn.classList.remove('show');
+                    }
+                });
+            }
 
             // ===== KEYBOARD =====
             document.addEventListener('keydown', e => {
@@ -6105,6 +6503,8 @@
                     wireTaskEvents(el, t);
                     completedList.appendChild(el);
                 });
+
+                updateCyclesLeftStat();
             }
 
             // Drag and drop support on taskList
@@ -6201,6 +6601,20 @@
                 if (e.key === 'Escape') renameCancelBtn.click();
             });
 
+            // ===== DESIGN PRINCIPLES MODAL =====
+            const principlesBackdrop = $('#principlesBackdrop');
+            const openPrinciplesBtn = $('#openPrinciplesBtn');
+            const closePrinciplesBtn = $('#closePrinciplesBtn');
+            function openPrinciples() { principlesBackdrop.classList.add('show'); }
+            function closePrinciples() { principlesBackdrop.classList.remove('show'); }
+            if (openPrinciplesBtn) openPrinciplesBtn.addEventListener('click', openPrinciples);
+            if (closePrinciplesBtn) closePrinciplesBtn.addEventListener('click', closePrinciples);
+            if (principlesBackdrop) {
+                principlesBackdrop.addEventListener('click', e => {
+                    if (e.target === principlesBackdrop) closePrinciples();
+                });
+            }
+
             function addTask() {
                 const input = $('#taskInput');
                 const estInput = $('#taskEstimate');
@@ -6272,6 +6686,13 @@
                 state.quietHoursEnd = $('#setQuietHoursEnd').value || '08:00';
                 if (quietHoursRangeRow) quietHoursRangeRow.style.display = state.quietHours ? '' : 'none';
                 if (sortByPriorityBtn) sortByPriorityBtn.style.display = state.taskPriority ? '' : 'none';
+                state.strictBreaks = $('#setStrictBreaks').classList.contains('on');
+                state.voiceAnnounce = $('#setVoiceAnnounce').classList.contains('on');
+                state.highContrast = $('#setHighContrast').classList.contains('on');
+                state.reducedMotion = $('#setReducedMotion').classList.contains('on');
+                applyAccessibility();
+                updateSkipButton();
+                updateTabsDisabled();
                 $('#alarmVolumeLabel').textContent = state.alarmVolume + '%';
                 alarmVolumeValue = state.alarmVolume;
                 timeDisplay.style.fontFamily = state.timerFont;
@@ -6304,7 +6725,8 @@
             });
             ['setKeyboardShortcuts', 'setAutostart', 'setAlarmSound', 'setMasterMute', 'setShowActiveTaskProgress',
                 'setHideFocusedBadge', 'setHideScrollCue', 'setShowCyclesLeft', 'setAlarmRepeatUntilDismiss',
-                'setGoalOnlyLong', 'setHideStats', 'setTaskPriority', 'setQuietHours'
+                'setGoalOnlyLong', 'setHideStats', 'setTaskPriority', 'setQuietHours',
+                'setStrictBreaks', 'setVoiceAnnounce', 'setHighContrast', 'setReducedMotion'
             ].forEach(id => {
                 $(`#${id}`).addEventListener('click', function() {
                     this.classList.toggle('on');
@@ -6367,6 +6789,10 @@
                 $('#setQuietHoursEnd').value = state.quietHoursEnd || '08:00';
                 if (quietHoursRangeRow) quietHoursRangeRow.style.display = state.quietHours ? '' : 'none';
                 if (sortByPriorityBtn) sortByPriorityBtn.style.display = state.taskPriority ? '' : 'none';
+                $('#setStrictBreaks').classList.toggle('on', state.strictBreaks);
+                $('#setVoiceAnnounce').classList.toggle('on', state.voiceAnnounce);
+                $('#setHighContrast').classList.toggle('on', state.highContrast);
+                $('#setReducedMotion').classList.toggle('on', state.reducedMotion);
                 timerScaleSlider.value = Math.round(state.timerScale * 100);
                 timerScaleLabel.textContent = Math.round(state.timerScale * 100) + '%';
                 $$('.theme-grid .theme-swatch').forEach(el => {
@@ -6410,6 +6836,10 @@
                 state.quietHours = DEFAULTS.quietHours;
                 state.quietHoursStart = DEFAULTS.quietHoursStart;
                 state.quietHoursEnd = DEFAULTS.quietHoursEnd;
+                state.strictBreaks = DEFAULTS.strictBreaks;
+                state.voiceAnnounce = DEFAULTS.voiceAnnounce;
+                state.highContrast = DEFAULTS.highContrast;
+                state.reducedMotion = DEFAULTS.reducedMotion;
                 state.remaining = state.durations[state.mode];
                 pendingCycles = DEFAULTS.cyclesBeforeLong;
                 pendingAlarmRepeats = DEFAULTS.alarmRepeats;
@@ -6443,6 +6873,13 @@
                 $('#setQuietHoursEnd').value = DEFAULTS.quietHoursEnd;
                 if (quietHoursRangeRow) quietHoursRangeRow.style.display = DEFAULTS.quietHours ? '' : 'none';
                 if (sortByPriorityBtn) sortByPriorityBtn.style.display = DEFAULTS.taskPriority ? '' : 'none';
+                $('#setStrictBreaks').classList.toggle('on', DEFAULTS.strictBreaks);
+                $('#setVoiceAnnounce').classList.toggle('on', DEFAULTS.voiceAnnounce);
+                $('#setHighContrast').classList.toggle('on', DEFAULTS.highContrast);
+                $('#setReducedMotion').classList.toggle('on', DEFAULTS.reducedMotion);
+                applyAccessibility();
+                updateSkipButton();
+                updateTabsDisabled();
                 timerScaleSlider.value = Math.round(DEFAULTS.timerScale * 100);
                 timerScaleLabel.textContent = Math.round(DEFAULTS.timerScale * 100) + '%';
 
@@ -6572,6 +7009,7 @@
             let ytPlayer = null,
                 ytReady = false,
                 pendingVideoId = null;
+            const ytStationsEl = $('#ytStations');
 
             function extractYouTubeId(input) {
                 input = (input || '').trim();
@@ -6602,22 +7040,87 @@
                             ytPlayer.setVolume(parseInt($('#ytVolume').value) || 50);
                             if (pendingVideoId) { ytPlayer.loadVideoById(pendingVideoId);
                                 pendingVideoId = null; }
+                            renderYTStations();
                         }
                     }
                 });
+            }
+
+            function renderYTStations() {
+                if (!ytStationsEl) return;
+                const stations = state.ytStations || [];
+                let html = '';
+                stations.forEach((s, i) => {
+                    const active = state.ytLastLoadedId === s.videoId;
+                    html +=
+                        `<span class="station-chip${active ? ' active' : ''}" data-idx="${i}" title="${escapeHtml(s.label)}">${escapeHtml(s.label)}<button class="del" data-idx="${i}" aria-label="Remove station">×</button></span>`;
+                });
+                if (state.ytLastLoadedId && !stations.some(s => s.videoId === state.ytLastLoadedId)) {
+                    html +=
+                        `<span class="station-save-prompt"><span class="station-label">Save as:</span><input type="text" id="ytSaveLabel" placeholder="Label" maxlength="20" /><button id="ytSaveStation">Save</button></span>`;
+                }
+                ytStationsEl.innerHTML = html;
+                ytStationsEl.querySelectorAll('.station-chip').forEach(chip => {
+                    const idx = parseInt(chip.dataset.idx);
+                    chip.addEventListener('click', e => {
+                        if (e.target.classList.contains('del')) return;
+                        const station = state.ytStations[idx];
+                        if (station && station.videoId) {
+                            if (!ytPlayer) { loadYouTubeAPI();
+                                pendingVideoId = station.videoId; }
+                            else if (ytReady) ytPlayer.loadVideoById(station.videoId);
+                            else pendingVideoId = station.videoId;
+                            state.ytLastLoadedId = station.videoId;
+                            save();
+                            renderYTStations();
+                        }
+                    });
+                    const del = chip.querySelector('.del');
+                    if (del) {
+                        del.addEventListener('click', e => {
+                            e.stopPropagation();
+                            const dIdx = parseInt(del.dataset.idx);
+                            state.ytStations.splice(dIdx, 1);
+                            if (state.ytLastLoadedId && !state.ytStations.some(s => s.videoId === state.ytLastLoadedId)) {
+                                state.ytLastLoadedId = null;
+                            }
+                            save();
+                            renderYTStations();
+                        });
+                    }
+                });
+                const saveBtn = document.getElementById('ytSaveStation');
+                const saveInput = document.getElementById('ytSaveLabel');
+                if (saveBtn && saveInput) {
+                    const doSave = () => {
+                        const label = saveInput.value.trim() || 'Station';
+                        if (state.ytLastLoadedId && !state.ytStations.some(s => s.videoId === state.ytLastLoadedId)) {
+                            state.ytStations.push({ label, videoId: state.ytLastLoadedId });
+                            save();
+                            renderYTStations();
+                        }
+                    };
+                    saveBtn.addEventListener('click', doSave);
+                    saveInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault();
+                            doSave(); } });
+                }
             }
             $('#ytLoadBtn').addEventListener('click', () => {
                 const id = extractYouTubeId($('#ytUrlInput').value);
                 if (!id) { $('#ytUrlInput').style.borderColor = '#e05a3d';
                     setTimeout(() => { $('#ytUrlInput').style.borderColor = ''; }, 1200); return; }
                 if (!ytPlayer) { loadYouTubeAPI();
-                    pendingVideoId = id; return; }
-                if (ytReady) ytPlayer.loadVideoById(id);
+                    pendingVideoId = id; }
+                else if (ytReady) ytPlayer.loadVideoById(id);
                 else pendingVideoId = id;
+                state.ytLastLoadedId = id;
+                save();
+                renderYTStations();
             });
             $('#ytPlayBtn').addEventListener('click', () => { if (ytReady) ytPlayer.playVideo(); });
             $('#ytPauseBtn').addEventListener('click', () => { if (ytReady) ytPlayer.pauseVideo(); });
             $('#ytVolume').addEventListener('input', e => { if (ytReady) ytPlayer.setVolume(parseInt(e.target.value) || 0); });
+            if (state.ytStations && state.ytStations.length > 0) renderYTStations();
 
             // ===== EXPORT / IMPORT =====
             $('#exportBtn').addEventListener('click', () => {
@@ -6783,6 +7286,9 @@
             }
             if (sortByPriorityBtn) sortByPriorityBtn.style.display = state.taskPriority ? '' : 'none';
             if (quietHoursRangeRow) quietHoursRangeRow.style.display = state.quietHours ? '' : 'none';
+            applyAccessibility();
+            updateSkipButton();
+            updateTabsDisabled();
 
             // Restore timer after UI is ready
             setTimeout(() => {
@@ -6794,5 +7300,4 @@
 
         })();
     </script>
-
-<script src="code%20model_files/iframe_api_Tx9o"></script></body></html>
+</body></html>
