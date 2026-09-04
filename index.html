@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ripe — Focus Timer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Fraunces:opsz@9..144&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="code%20model_files/css2_Tx9o.css" rel="stylesheet">
 
-    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23e05a3d'/%3E%3Cstop offset='100%25' style='stop-color:%23b8402a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%231b1a1f'/%3E%3Cpath d='M32 12c7 9 13 15.5 13 23A13 13 0 1 1 19 35c0-7.5 6-14 13-23z' fill='url(%23g)'/%3E%3Cpath d='M32 22c3 4 6 7.5 6 11' stroke='%231b1a1f' stroke-width='2.4' stroke-linecap='round' fill='none' opacity='.5'/%3E%3C/svg%3E">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23e05a3d'/%3E%3Cstop offset='100%25' style='stop-color:%23b8402a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%231b1a1f'/%3E%3Cpath d='M32 12c7 9 13 15.5 13 23A13 13 0 1 1 19 35c0-7.5 6-14 13-23z' fill='url(%23g)'/%3E%3Cpath d='M32 22c3 4 6 7.5 6 11' stroke='%231b1a1f' stroke-width='2.4' stroke-linecap='round' fill='none' opacity='.5'/%3E%3C/svg%3E">
 
@@ -1248,7 +1246,11 @@
             display: block;
         }
         .brand .logo .pulse-line {
-            fill: var(--accent);
+            fill: var(--accent-focus);
+            transition: fill 0.4s ease;
+        }
+        .brand .logo .pulse-dot {
+            fill: var(--accent-focus);
             transition: fill 0.4s ease;
         }
         .brand .logo .bg-circle {
@@ -1446,61 +1448,6 @@
         .cycle-pips .pip.filled {
             background: var(--accent);
             border-color: var(--accent);
-        }
-
-        /* ===== CYCLE SETS — below ring, same size as pips ===== */
-        .cycle-sets-wrap {
-            margin-top: 18px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            transition: opacity 0.3s ease, max-height 0.3s ease;
-        }
-        .cycle-sets-wrap.hidden {
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            margin: 0;
-            pointer-events: none;
-        }
-        .cycle-sets-label {
-            font-size: 8px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--fg-dim-2);
-            font-weight: 600;
-            opacity: 0.6;
-        }
-        .cycle-sets-dots {
-            display: flex;
-            gap: 7px;
-        }
-        .cycle-sets-dots .set-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--bg-3);
-            border: 1px solid var(--line);
-            transition: background 0.4s ease, border-color 0.4s ease, transform 0.2s ease;
-        }
-        .cycle-sets-dots .set-dot.filled {
-            background: var(--accent);
-            border-color: var(--accent);
-            transform: scale(1.05);
-        }
-        .cycle-sets-dots .set-dot.goal-reached {
-            background: var(--accent);
-            border-color: var(--accent);
-            animation: goalPulse 1.2s ease-in-out infinite alternate;
-        }
-        @keyframes goalPulse {
-            0% {
-                box-shadow: 0 0 4px var(--accent);
-            }
-            100% {
-                box-shadow: 0 0 18px var(--accent);
-            }
         }
 
         /* Goal row */
@@ -1814,7 +1761,7 @@
             transform: scale(0.96);
         }
 
-        /* ===== TIMING SELECTOR ===== */
+        /* Timing selector - improved */
         .timing-selector {
             display: flex;
             gap: 4px;
@@ -1822,40 +1769,32 @@
             background: var(--bg-2);
             border: 1px solid var(--line);
             border-radius: 12px;
-            padding: 3px;
+            padding: 4px;
             flex-shrink: 0;
-            height: 50px;
-            box-sizing: border-box;
         }
         .timing-btn-select {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 6px;
-            padding: 0 16px;
+            padding: 8px 14px;
             border: none;
             background: transparent;
             color: var(--fg-dim);
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 13px;
+            transition: all 0.25s ease;
+            font-size: 12px;
             font-weight: 500;
             font-family: 'Inter', sans-serif;
-            height: 100%;
-            min-height: 40px;
-            min-width: 56px;
             position: relative;
-            white-space: nowrap;
         }
-        .timing-btn-select .timing-indicator {
+        .timing-indicator {
             display: inline-block;
             width: 12px;
             height: 12px;
             border-radius: 50%;
             flex-shrink: 0;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: transform 0.2s ease;
         }
         .timing-btn-select.today .timing-indicator {
             background: #4ade80;
@@ -1871,48 +1810,24 @@
             color: var(--fg);
             box-shadow: 0 0 0 2px var(--accent-focus), 0 0 0 4px var(--accent-soft);
         }
-        .timing-btn-select.active .timing-indicator {
-            transform: scale(1.1);
-        }
-        .timing-btn-select:hover:not(.active) {
+        .timing-btn-select:hover {
             color: var(--fg);
             background: var(--bg-3);
         }
         .timing-btn-select .timing-label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
-            letter-spacing: 0.2px;
         }
         @media (max-width: 520px) {
-            .timing-selector {
-                height: 44px;
-                padding: 2px;
-            }
-            .timing-btn-select {
-                padding: 0 12px;
-                font-size: 12px;
-                min-width: 44px;
-                min-height: 36px;
-            }
-            .timing-btn-select .timing-label {
-                font-size: 11px;
-            }
-            .timing-btn-select .timing-indicator {
-                width: 10px;
-                height: 10px;
-            }
-        }
-        @media (max-width: 400px) {
             .timing-btn-select .timing-label {
                 display: none;
             }
             .timing-btn-select {
-                padding: 0 8px;
-                min-width: 36px;
+                padding: 8px 10px;
             }
         }
 
-        /* Filter bar — with sort toggle */
+        /* Filter bar */
         .filter-bar {
             display: flex;
             gap: 6px;
@@ -1945,42 +1860,23 @@
             border-color: var(--accent);
             box-shadow: 0 2px 10px -4px var(--accent);
         }
-        .filter-btn.sort-toggle {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            background: var(--bg-3);
-            border-color: var(--line);
+        .sort-btn {
+            padding: 6px 14px;
+            border: 1px solid var(--line);
+            background: transparent;
             color: var(--fg-dim);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.25s ease;
             font-family: 'Inter', sans-serif;
-            font-weight: 500;
+            margin-left: auto;
         }
-        .filter-btn.sort-toggle:hover {
-            border-color: var(--fg-dim);
+        .sort-btn:hover {
+            border-color: var(--fg);
             color: var(--fg);
-        }
-        .filter-btn.sort-toggle.active {
-            background: var(--accent-soft);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-        .filter-btn.sort-toggle .sort-icon {
-            display: inline-block;
-            transition: transform 0.3s ease;
-        }
-        .filter-btn.sort-toggle.active .sort-icon {
-            transform: rotate(180deg);
-        }
-        .filter-btn.sort-toggle .sort-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
+            background: var(--bg-3);
         }
 
         /* ===== Stats Panel ===== */
@@ -2007,6 +1903,9 @@
             border: none;
             pointer-events: none;
         }
+        .history-graph.hidden {
+            display: none;
+        }
         .stat-item {
             display: flex;
             flex-direction: column;
@@ -2028,163 +1927,6 @@
             color: var(--accent);
             font-family: var(--font-mono);
             line-height: 1.2;
-        }
-
-        /* ===== BAR CHART — refined ===== */
-        .chart-section {
-            margin-top: 16px;
-            padding: 16px 8px 8px;
-            background: var(--bg-2);
-            border-radius: 12px;
-            border: 1px solid var(--line);
-            width: 100%;
-            box-sizing: border-box;
-            transition: opacity 0.3s ease, max-height 0.3s ease, padding 0.3s ease;
-            overflow: hidden;
-        }
-        .chart-section.hidden {
-            opacity: 0;
-            max-height: 0;
-            padding: 0 8px;
-            border: none;
-            pointer-events: none;
-            margin: 0;
-        }
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding: 0 4px;
-        }
-        .chart-header h4 {
-            font-family: 'Fraunces', serif;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--fg);
-            margin: 0;
-            letter-spacing: 0.2px;
-        }
-        .chart-header .chart-total {
-            font-size: 12px;
-            color: var(--fg-dim);
-            font-family: var(--font-mono);
-        }
-        .chart-header .chart-total b {
-            color: var(--accent);
-            font-weight: 600;
-        }
-        .chart-wrap {
-            position: relative;
-            width: 100%;
-            height: 120px;
-            padding: 0 2px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 6px;
-        }
-        .chart-bar-wrap {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            height: 100%;
-            justify-content: flex-end;
-            min-width: 0;
-        }
-        .chart-bar-track {
-            width: 100%;
-            max-width: 40px;
-            min-width: 16px;
-            height: 100%;
-            background: var(--bg-3);
-            border-radius: 4px 4px 0 0;
-            position: relative;
-            overflow: visible;
-            transition: background 0.3s ease;
-        }
-        .chart-bar-fill {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 0%;
-            background: var(--accent);
-            border-radius: 4px 4px 0 0;
-            transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s ease;
-            min-height: 2px;
-        }
-        .chart-bar-fill.zero {
-            opacity: 0.15;
-            background: var(--fg-dim-2);
-        }
-        .chart-bar-label {
-            font-size: 10px;
-            color: var(--fg-dim);
-            font-weight: 500;
-            text-align: center;
-            letter-spacing: 0.2px;
-            white-space: nowrap;
-            font-family: var(--font-mono);
-            transition: color 0.3s ease;
-        }
-        .chart-bar-label.today {
-            color: var(--accent);
-            font-weight: 600;
-        }
-        .chart-bar-value {
-            position: absolute;
-            top: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--fg);
-            font-family: var(--font-mono);
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-        .chart-bar-track:hover .chart-bar-value {
-            opacity: 1;
-            transform: translateX(-50%) translateY(-2px);
-        }
-        .chart-empty {
-            text-align: center;
-            color: var(--fg-dim);
-            font-size: 13px;
-            padding: 20px 0 12px;
-            font-style: italic;
-            width: 100%;
-        }
-        @media (max-width: 420px) {
-            .chart-wrap {
-                height: 90px;
-                gap: 3px;
-            }
-            .chart-bar-track {
-                min-width: 12px;
-                border-radius: 3px 3px 0 0;
-            }
-            .chart-bar-fill {
-                border-radius: 3px 3px 0 0;
-            }
-            .chart-bar-label {
-                font-size: 8px;
-            }
-            .chart-bar-value {
-                font-size: 8px;
-                top: -14px;
-            }
-            .chart-header h4 {
-                font-size: 13px;
-            }
-            .chart-header .chart-total {
-                font-size: 10px;
-            }
         }
 
         /* Timing dot on tasks */
@@ -2211,6 +1953,83 @@
         }
         .task-timing-dot:hover {
             transform: scale(1.4);
+        }
+
+        /* Priority dot on tasks */
+        .task-priority-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0;
+        }
+        .task-priority-dot.low {
+            background: var(--fg-dim-2);
+        }
+        .task-priority-dot.med {
+            background: var(--accent-long);
+        }
+        .task-priority-dot.high {
+            background: var(--accent-focus);
+        }
+        .task-priority-dot:hover {
+            transform: scale(1.3);
+        }
+
+        /* Quiet hours range inputs */
+        .quiet-hours-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--fg-dim);
+        }
+        .quiet-hours-range input[type="time"] {
+            background: var(--bg-3);
+            color: var(--fg);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 4px 6px;
+            font-family: var(--font-ui);
+        }
+
+        /* History graph — last 7 days */
+        .history-graph {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 6px;
+            height: 72px;
+            margin: 4px 0 20px;
+            padding: 10px 6px 0;
+            background: var(--bg-2);
+            border-radius: 12px;
+            border: 1px solid var(--line);
+        }
+        .history-graph .hg-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+        .history-graph .hg-bar {
+            width: 60%;
+            min-height: 2px;
+            border-radius: 3px 3px 0 0;
+            background: var(--accent-focus);
+            transition: height 0.3s ease;
+        }
+        .history-graph .hg-label {
+            font-size: 10px;
+            color: var(--fg-dim-2);
+            font-family: var(--font-ui);
         }
 
         /* Rename button on tasks */
@@ -2597,7 +2416,7 @@
             width: 100%;
         }
 
-        /* ===== sound mixer ===== */
+        /* ===== sound mixer — FIXED GLOW + SPACING ===== */
         .mixer-btn {
             position: fixed;
             bottom: 28px;
@@ -2614,7 +2433,8 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.25s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.4s ease, background 0.3s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25),
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.25),
                 0 0 0 1px rgba(255, 255, 255, 0.04) inset,
                 0 0 32px -4px var(--accent);
         }
@@ -2632,7 +2452,8 @@
         }
         .mixer-btn:hover {
             transform: scale(1.06) translateY(-2px);
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.30),
+            box-shadow:
+                0 8px 28px rgba(0, 0, 0, 0.30),
                 0 0 0 1px rgba(255, 255, 255, 0.06) inset,
                 0 0 44px -2px var(--accent);
         }
@@ -2642,7 +2463,8 @@
         }
         .mixer-btn:active {
             transform: scale(0.92);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20),
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.20),
                 0 0 0 1px rgba(255, 255, 255, 0.02) inset,
                 0 0 20px -6px var(--accent);
         }
@@ -3530,12 +3352,19 @@
             color: var(--fg);
         }
 
-        /* ===== responsive ===== */
+        /* ===== responsive — improved spacing ===== */
         @media (max-width: 520px) {
+            body {
+                padding: 0;
+            }
             .statbar {
                 gap: 14px;
                 font-size: 10px;
                 padding: 8px 14px;
+                flex-wrap: wrap;
+            }
+            .statbar .stat {
+                gap: 4px;
             }
             .brand {
                 top: 16px;
@@ -3557,6 +3386,16 @@
                 width: 38px;
                 height: 38px;
             }
+            .topbar-actions .btn-icon svg {
+                width: 16px;
+                height: 16px;
+            }
+            .topbar-actions .btn-icon .theme-preview {
+                width: 13px;
+                height: 13px;
+                bottom: -1px;
+                right: -1px;
+            }
             .ring-box {
                 width: calc(250px * var(--timer-scale, 1));
                 height: calc(250px * var(--timer-scale, 1));
@@ -3569,11 +3408,19 @@
             }
             .ring-center .session-label {
                 font-size: calc(10px * var(--timer-scale, 1));
+                letter-spacing: 1.5px;
             }
             .btn-main {
                 padding: 14px 32px;
                 font-size: 13px;
                 min-width: 100px;
+            }
+            .btn-main::before {
+                inset: -6px;
+                filter: blur(14px);
+            }
+            .btn-main:hover::before {
+                filter: blur(16px);
             }
             .btn-ghost {
                 width: 40px;
@@ -3591,6 +3438,10 @@
             .theme-grid {
                 grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
             }
+            .theme-grid .theme-swatch {
+                font-size: 7px;
+                padding: 4px 2px;
+            }
             .mixer-panel {
                 right: 12px;
                 width: 220px;
@@ -3603,6 +3454,10 @@
                 width: 46px;
                 height: 46px;
             }
+            .mixer-btn svg {
+                width: 19px;
+                height: 19px;
+            }
             .add-task input[type="text"] {
                 min-width: 100px;
                 font-size: 13px;
@@ -3612,6 +3467,10 @@
                 width: 44px;
                 padding: 11px 2px;
                 font-size: 13px;
+            }
+            .add-task .num-field .num-arrows button {
+                width: 22px;
+                height: 18px;
             }
             .add-task .add-btn {
                 padding: 0 16px;
@@ -3628,6 +3487,10 @@
                 font-size: 9px;
                 bottom: 16px;
             }
+            .scroll-cue svg {
+                width: 15px;
+                height: 15px;
+            }
             .est-line {
                 font-size: 13px;
             }
@@ -3640,6 +3503,13 @@
                 font-size: 12px;
                 padding: 8px 14px;
             }
+            .yt-controls input[type="text"] {
+                min-width: 70px;
+            }
+            .yt-controls button {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
             .completed-header .actions button {
                 font-size: 10px;
                 padding: 4px 10px;
@@ -3650,9 +3520,20 @@
             .modal .modal-actions .btn-revert {
                 flex: 1;
             }
+            .custom-theme-row .ct-color-group {
+                font-size: 8px;
+            }
+            .color-swatch-input {
+                width: 22px;
+                height: 22px;
+            }
             .bottom-actions .btn-bottom {
                 font-size: 11px;
                 padding: 8px 16px;
+            }
+            .bottom-actions .btn-bottom svg {
+                width: 12px;
+                height: 12px;
             }
             .statbar .stat-est-finish {
                 font-size: 9px;
@@ -3668,25 +3549,15 @@
             .stat-value {
                 font-size: 15px;
             }
-            .chart-wrap {
-                height: 80px;
-                gap: 4px;
+            .timing-btn-select .timing-label {
+                display: none;
             }
-            .chart-bar-track {
-                min-width: 10px;
+            .timing-btn-select {
+                padding: 8px 10px;
             }
-            .chart-bar-label {
-                font-size: 7px;
-            }
-            .cycle-sets-dots .set-dot {
-                width: 7px;
-                height: 7px;
-            }
-            .cycle-sets-label {
-                font-size: 7px;
-            }
-            .filter-btn.sort-toggle .sort-label {
-                font-size: 8px;
+            .timing-selector {
+                gap: 2px;
+                padding: 3px;
             }
         }
         @media (max-width: 380px) {
@@ -3708,6 +3579,10 @@
                 font-size: 12px;
                 min-width: 80px;
             }
+            .btn-main::before {
+                inset: -4px;
+                filter: blur(10px);
+            }
             .btn-ghost {
                 width: 36px;
                 height: 36px;
@@ -3719,17 +3594,9 @@
             .add-task .num-field input[type="number"] {
                 width: 36px;
             }
-            .chart-wrap {
-                height: 60px;
-                gap: 2px;
-            }
-            .chart-bar-track {
-                min-width: 6px;
-            }
-            .cycle-sets-dots .set-dot {
-                width: 6px;
-                height: 6px;
-                gap: 4px;
+            .add-task .num-field .num-arrows button {
+                width: 20px;
+                height: 16px;
             }
         }
 
@@ -3753,10 +3620,9 @@
 
     <!-- ===== STAT BAR ===== -->
     <div class="statbar show" id="statbar">
-        <div class="stat"><span class="dot"></span>Cycles today <b id="statCycles">0</b></div>
+        <div class="stat"><span class="dot" style="background: rgb(224, 90, 61);"></span>Cycles today <b id="statCycles">0</b></div>
         <div class="stat">Focused <b id="statFocused">0m</b></div>
-        <div class="stat">Est. remaining <b id="statRemaining">25m</b></div>
-        <div class="stat stat-est-finish" id="statEstFinish">⏱ finish at <b id="statFinishTime">--:--</b></div>
+        <div class="stat" id="statEstRemaining">Est. remaining <b id="statRemaining">25m</b></div>
         <button class="btn-toggle-info" id="toggleInfoBtn" title="Toggle info bar">−</button>
     </div>
 
@@ -3767,7 +3633,7 @@
                 <circle cx="12" cy="12" r="4"></circle>
                 <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
             </svg>
-            <span class="theme-preview" id="themePreviewDot"></span>
+            <span class="theme-preview" id="themePreviewDot" style="background: rgb(224, 90, 61);"></span>
         </button>
         <button class="btn-icon" id="settingsBtn" title="Settings">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
@@ -3804,20 +3670,14 @@
             <div class="timer-stage">
                 <div class="ring-box">
                     <svg class="ring" viewBox="0 0 200 200">
-                        <circle class="ring-bg" cx="100" cy="100" r="90"></circle>
-                        <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="90" style="stroke-dasharray: 565.487px;"></circle>
+                        <circle class="ring-bg" cx="100" cy="100" r="90" style="stroke: rgb(45, 42, 50);"></circle>
+                        <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="90" style="stroke-dasharray: 565.487px; stroke: rgb(224, 90, 61); stroke-dashoffset: 0px;"></circle>
                     </svg>
                     <div class="ring-center">
-                        <div class="time" id="timeDisplay">24:55</div>
+                        <div class="time" id="timeDisplay" style="font-family: &quot;Fraunces&quot;, serif;">25:00</div>
                         <div class="session-label" id="sessionLabel">Focus Session</div>
-                        <div class="cycle-pips" id="cyclePips"></div>
+                        <div class="cycle-pips" id="cyclePips" style="display: flex;"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
                     </div>
-                </div>
-
-                <!-- CYCLE SETS — below the ring, same size as pips -->
-                <div class="cycle-sets-wrap" id="cycleSetsWrap">
-                    <div class="cycle-sets-label">Cycle Sets</div>
-                    <div class="cycle-sets-dots" id="cycleSetsDots"></div>
                 </div>
 
                 <div class="controls">
@@ -3826,7 +3686,7 @@
                     </button>
                     <button class="btn-main" id="startBtn">
                         <svg id="startIcon" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg>
-                        <span id="startLabel">Resume</span>
+                        <span id="startLabel">Start</span>
                     </button>
                     <button class="btn-ghost" id="skipBtn" title="Skip">
                         <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
@@ -3857,20 +3717,14 @@
 
         <!-- Stats Panel -->
         <div id="stats-panel">
-            <div class="stat-item"><span class="stat-label">Today</span><span class="stat-value">0</span></div>
-            <div class="stat-item"><span class="stat-label">Week</span><span class="stat-value">0</span></div>
-            <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">0</span></div>
-            <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">0</span></div>
-        </div>
+                  <div class="stat-item"><span class="stat-label">Today</span><span class="stat-value">0</span></div>
+                  <div class="stat-item"><span class="stat-label">Week</span><span class="stat-value">0</span></div>
+                  <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">0</span></div>
+                  <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">0</span></div>
+                </div>
 
-        <!-- ===== BAR CHART ===== -->
-        <div class="chart-section" id="chartSection">
-            <div class="chart-header">
-                <h4>Focus History</h4>
-                <span class="chart-total"><b id="chartTotalSessions">0</b> sessions this week</span>
-            </div>
-            <div class="chart-wrap" id="chartWrap"><div class="chart-empty">No sessions recorded yet — start your first focus session!</div></div>
-        </div>
+        <!-- History Graph -->
+        <div id="historyGraph" class="history-graph"></div>
 
         <!-- Add Task -->
         <div class="add-task">
@@ -3899,20 +3753,38 @@
             <button class="add-btn" id="addTaskBtn">Add</button>
         </div>
 
-        <!-- Filter Buttons + Sort Toggle -->
+        <!-- Filter Buttons + Sort button -->
         <div class="filter-bar">
             <button type="button" class="filter-btn active" data-filter="all">All</button>
             <button type="button" class="filter-btn" data-filter="today">Today</button>
             <button type="button" class="filter-btn" data-filter="tomorrow">Tomorrow</button>
             <button type="button" class="filter-btn" data-filter="weekend">Weekend</button>
-            <button type="button" class="filter-btn sort-toggle" id="sortToggleBtn" title="Sort tasks by timing">
-                <span class="sort-icon">⇅</span>
-                <span class="sort-label">Sort</span>
-            </button>
+            <button type="button" class="sort-btn" id="sortByDayBtn">Sort by Day</button>
+            <button type="button" class="sort-btn" id="sortByPriorityBtn" style="display:none;">Sort by Priority</button>
         </div>
 
         <!-- Task List -->
-        <div class="task-list" id="taskList"></div>
+        <div class="task-list" id="taskList"><div class="task" data-id="vpwslgc" draggable="true">
+                <div class="task-row">
+                  <div class="drag-handle" title="Drag to reorder"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="1.5"></circle><circle cx="8" cy="12" r="1.5"></circle><circle cx="8" cy="18" r="1.5"></circle><circle cx="16" cy="6" r="1.5"></circle><circle cx="16" cy="12" r="1.5"></circle><circle cx="16" cy="18" r="1.5"></circle></svg></div>
+                  <div class="task-check " data-action="toggle">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <button class="task-timing-dot weekend" data-action="cycle-timing" title="Timing: weekend (click to cycle)"></button>
+                  <div class="task-title" data-action="activate" title="Click to focus this task">hi</div>
+                  <div class="task-pomos" data-action="edit-est" title="Click to edit estimate">0/1 <svg class="pomo-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4 3-7 7-7 11a7 7 0 0014 0c0-4-3-8-7-11z"></path></svg></div>
+                  <button class="task-rename" data-action="rename" title="Rename task"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                  
+                  <button class="task-del" data-action="delete" title="Delete">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                
+                <div class="task-notes">
+                  <span class="notes-label">Notes</span>
+                  <textarea placeholder="Jot down context, next steps…"></textarea>
+                </div>
+              </div></div>
         <div class="empty-tasks" id="emptyState" style="display: none;">No tasks yet — add one above and click it to make it active.</div>
 
         <!-- Completed -->
@@ -3939,6 +3811,7 @@
             </button>
             <button class="btn-bottom" id="exportBtn">Export data</button>
             <button class="btn-bottom" id="importBtn">Import data</button>
+            <button class="btn-bottom" id="exportCsvBtn">Export sessions (CSV)</button>
             <input type="file" id="importFile" accept=".json" style="display:none">
         </div>
 
@@ -3994,14 +3867,14 @@
         <div class="mixer-divider"></div>
         <div class="sound-row"><span>YouTube</span><input type="range" min="0" max="100" value="50" id="ytVolume"></div>
         <div class="yt-controls">
-            <input type="text" id="ytUrlInput" placeholder="Paste YouTube URL or ID">
+            <input type="text" id="ytUrlInput" placeholder="Paste YouTube URL or ID" value="https://www.youtube.com/watch?v=s1K00Fiz_0Q">
             <button id="ytLoadBtn">Load</button>
         </div>
         <div class="yt-controls">
             <button id="ytPlayBtn">▶ Play</button>
             <button id="ytPauseBtn">⏸ Pause</button>
         </div>
-        <div id="ytPlayerHolder"></div>
+        <div id="ytPlayerHolder"><iframe id="ytPlayerEl" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" title="YouTube video player" width="1" height="1" src="code%20model_files/a_Tx9o.htm"></iframe></div>
     </div>
 
     <!-- ===== SETTINGS MODAL ===== -->
@@ -4015,14 +3888,429 @@
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l.06.06A1.65 1.65 0 0019.32 9c.1.36.51.6 1 .6H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
                     Themes
                 </div>
-                <div class="theme-grid" id="themeGrid"></div>
+                <div class="theme-grid" id="themeGrid"><div class="theme-swatch active" data-theme="og-dark">
+                    OG Dark
+                    <div class="swatch-colors">
+                      <span style="background:#1b1a1f"></span>
+                      <span style="background:#e05a3d"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="og-light">
+                    OG Light
+                    <div class="swatch-colors">
+                      <span style="background:#f6f1e6"></span>
+                      <span style="background:#d14c30"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="dark">
+                    Dark
+                    <div class="swatch-colors">
+                      <span style="background:#1b1a1f"></span>
+                      <span style="background:#e05a3d"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="light">
+                    Light
+                    <div class="swatch-colors">
+                      <span style="background:#f6f1e6"></span>
+                      <span style="background:#d14c30"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="forest">
+                    Forest
+                    <div class="swatch-colors">
+                      <span style="background:#1a261e"></span>
+                      <span style="background:#7cb083"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="ocean">
+                    Ocean
+                    <div class="swatch-colors">
+                      <span style="background:#0e1f2b"></span>
+                      <span style="background:#5fa8d3"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="sunset">
+                    Sunset
+                    <div class="swatch-colors">
+                      <span style="background:#261a1a"></span>
+                      <span style="background:#e8856e"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="lavender">
+                    Lavender
+                    <div class="swatch-colors">
+                      <span style="background:#1e1a2a"></span>
+                      <span style="background:#b8a5e0"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="mint">
+                    Mint
+                    <div class="swatch-colors">
+                      <span style="background:#14201a"></span>
+                      <span style="background:#6fc9a8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="rose">
+                    Rose
+                    <div class="swatch-colors">
+                      <span style="background:#261a1f"></span>
+                      <span style="background:#e880a8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="amber">
+                    Amber
+                    <div class="swatch-colors">
+                      <span style="background:#1f1a12"></span>
+                      <span style="background:#e8b85a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="slate">
+                    Slate
+                    <div class="swatch-colors">
+                      <span style="background:#16181c"></span>
+                      <span style="background:#7a8a9a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="wine">
+                    Wine
+                    <div class="swatch-colors">
+                      <span style="background:#1e1218"></span>
+                      <span style="background:#d46a8a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="teal">
+                    Teal
+                    <div class="swatch-colors">
+                      <span style="background:#0e1e1e"></span>
+                      <span style="background:#4ab8b8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="peach">
+                    Peach
+                    <div class="swatch-colors">
+                      <span style="background:#221a14"></span>
+                      <span style="background:#e8a070"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="indigo">
+                    Indigo
+                    <div class="swatch-colors">
+                      <span style="background:#12101e"></span>
+                      <span style="background:#8a7ad8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="emerald">
+                    Emerald
+                    <div class="swatch-colors">
+                      <span style="background:#0e1a14"></span>
+                      <span style="background:#50c890"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="coral">
+                    Coral
+                    <div class="swatch-colors">
+                      <span style="background:#1f1412"></span>
+                      <span style="background:#e87a62"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="graphite">
+                    Graphite
+                    <div class="swatch-colors">
+                      <span style="background:#121212"></span>
+                      <span style="background:#888888"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="sand">
+                    Sand
+                    <div class="swatch-colors">
+                      <span style="background:#1e1a14"></span>
+                      <span style="background:#d4b870"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="plum">
+                    Plum
+                    <div class="swatch-colors">
+                      <span style="background:#1e1420"></span>
+                      <span style="background:#d480c8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="sky">
+                    Sky
+                    <div class="swatch-colors">
+                      <span style="background:#0e1a26"></span>
+                      <span style="background:#5ab0d4"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="cherry">
+                    Cherry
+                    <div class="swatch-colors">
+                      <span style="background:#1e1012"></span>
+                      <span style="background:#e06050"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="moss">
+                    Moss
+                    <div class="swatch-colors">
+                      <span style="background:#141c12"></span>
+                      <span style="background:#8aba6a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="stone">
+                    Stone
+                    <div class="swatch-colors">
+                      <span style="background:#161412"></span>
+                      <span style="background:#b0a090"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="blush">
+                    Blush
+                    <div class="swatch-colors">
+                      <span style="background:#1e161a"></span>
+                      <span style="background:#e898a8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="midnight">
+                    Midnight
+                    <div class="swatch-colors">
+                      <span style="background:#0c0e14"></span>
+                      <span style="background:#6a7a9a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="aurora">
+                    Aurora
+                    <div class="swatch-colors">
+                      <span style="background:#0e1a1a"></span>
+                      <span style="background:#4ad4d4"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="coffee">
+                    Coffee
+                    <div class="swatch-colors">
+                      <span style="background:#1a1410"></span>
+                      <span style="background:#c89060"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="candy">
+                    Candy
+                    <div class="swatch-colors">
+                      <span style="background:#1e1018"></span>
+                      <span style="background:#e870a8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="lime">
+                    Lime
+                    <div class="swatch-colors">
+                      <span style="background:#121c10"></span>
+                      <span style="background:#9ad46a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="sakura">
+                    Sakura
+                    <div class="swatch-colors">
+                      <span style="background:#1e141e"></span>
+                      <span style="background:#e880d4"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="charcoal">
+                    Charcoal
+                    <div class="swatch-colors">
+                      <span style="background:#0e0e10"></span>
+                      <span style="background:#909098"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="ivory">
+                    Ivory
+                    <div class="swatch-colors">
+                      <span style="background:#f4f0e6"></span>
+                      <span style="background:#b0a090"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="denim">
+                    Denim
+                    <div class="swatch-colors">
+                      <span style="background:#101a24"></span>
+                      <span style="background:#6a9ac8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="mango">
+                    Mango
+                    <div class="swatch-colors">
+                      <span style="background:#1e1a0e"></span>
+                      <span style="background:#e8c060"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="mocha">
+                    Mocha
+                    <div class="swatch-colors">
+                      <span style="background:#1a1412"></span>
+                      <span style="background:#c8907a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="silver">
+                    Silver
+                    <div class="swatch-colors">
+                      <span style="background:#18181a"></span>
+                      <span style="background:#a8a8b0"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="sunflower">
+                    Sunflower
+                    <div class="swatch-colors">
+                      <span style="background:#1e1a0a"></span>
+                      <span style="background:#f0d050"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="cotton">
+                    Cotton
+                    <div class="swatch-colors">
+                      <span style="background:#f0f0f0"></span>
+                      <span style="background:#8a8a8a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="obsidian">
+                    Obsidian
+                    <div class="swatch-colors">
+                      <span style="background:#08080a"></span>
+                      <span style="background:#5a5a6a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="twilight">
+                    Twilight
+                    <div class="swatch-colors">
+                      <span style="background:#14101e"></span>
+                      <span style="background:#9a8ad8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="honey">
+                    Honey
+                    <div class="swatch-colors">
+                      <span style="background:#1e180e"></span>
+                      <span style="background:#e8c850"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="mist">
+                    Mist
+                    <div class="swatch-colors">
+                      <span style="background:#141a1e"></span>
+                      <span style="background:#6aaac8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="berry">
+                    Berry
+                    <div class="swatch-colors">
+                      <span style="background:#1e1018"></span>
+                      <span style="background:#d86098"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="breeze">
+                    Breeze
+                    <div class="swatch-colors">
+                      <span style="background:#eaf0f5"></span>
+                      <span style="background:#5a8aaa"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="earl">
+                    Earl
+                    <div class="swatch-colors">
+                      <span style="background:#1a1612"></span>
+                      <span style="background:#c8a070"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="spice">
+                    Spice
+                    <div class="swatch-colors">
+                      <span style="background:#1e1410"></span>
+                      <span style="background:#e08860"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="glacier">
+                    Glacier
+                    <div class="swatch-colors">
+                      <span style="background:#0e1418"></span>
+                      <span style="background:#5ab8d4"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="flame">
+                    Flame
+                    <div class="swatch-colors">
+                      <span style="background:#1e0e0a"></span>
+                      <span style="background:#e87040"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="dream">
+                    Dream
+                    <div class="swatch-colors">
+                      <span style="background:#1a1622"></span>
+                      <span style="background:#b89ae0"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="frost">
+                    Frost
+                    <div class="swatch-colors">
+                      <span style="background:#eef2f4"></span>
+                      <span style="background:#6aaac8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="terra">
+                    Terra
+                    <div class="swatch-colors">
+                      <span style="background:#16120e"></span>
+                      <span style="background:#b09878"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="bloom">
+                    Bloom
+                    <div class="swatch-colors">
+                      <span style="background:#1e141a"></span>
+                      <span style="background:#e898b8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="vanilla">
+                    Vanilla
+                    <div class="swatch-colors">
+                      <span style="background:#fcf8f0"></span>
+                      <span style="background:#d4a060"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="sky-light">
+                    Sky Light
+                    <div class="swatch-colors">
+                      <span style="background:#f0f6fa"></span>
+                      <span style="background:#5a9ac8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="rose-light">
+                    Rose Light
+                    <div class="swatch-colors">
+                      <span style="background:#faf2f4"></span>
+                      <span style="background:#d87090"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="mint-light">
+                    Mint Light
+                    <div class="swatch-colors">
+                      <span style="background:#f0f8f2"></span>
+                      <span style="background:#5aaa7a"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="lavender-light">
+                    Lavender Light
+                    <div class="swatch-colors">
+                      <span style="background:#f6f2fa"></span>
+                      <span style="background:#9a7ac8"></span>
+                    </div>
+                  </div><div class="theme-swatch" data-theme="peach-light">
+                    Peach Light
+                    <div class="swatch-colors">
+                      <span style="background:#faf4ee"></span>
+                      <span style="background:#d48a60"></span>
+                    </div>
+                  </div></div>
 
                 <!-- Custom Themes -->
                 <div class="section-title">
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M14 2L8 8l6 6 6-6-6-6z"></path><path d="M8 8l-4 4 6 6 4-4"></path><line x1="16" y1="12" x2="20" y2="8"></line><line x1="8" y1="16" x2="4" y2="20"></line></svg>
                     Custom Themes
                 </div>
-                <div class="custom-theme-list" id="customThemeList"></div>
+                <div class="custom-theme-list" id="customThemeList"><div class="custom-theme-row">
+                        <input type="text" class="ct-name-input" value="Custom 1" maxlength="18" title="Rename theme">
+                        <div class="ct-colors">
+                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#e05a3d" title="Focus accent"></div>
+                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#8ea583" title="Short break accent"></div>
+                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#dba43f" title="Long break accent"></div>
+                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#1b1a1f" title="Background"></div>
+                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#242229" title="Panel"></div>
+                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#f4ede2" title="Text"></div>
+                        </div>
+                        <button type="button" class="ct-use">Use</button>
+                    </div><div class="custom-theme-row">
+                        <input type="text" class="ct-name-input" value="Custom 2" maxlength="18" title="Rename theme">
+                        <div class="ct-colors">
+                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#4a90d9" title="Focus accent"></div>
+                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#4a9a8a" title="Short break accent"></div>
+                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#d94a7a" title="Long break accent"></div>
+                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#1a1f26" title="Background"></div>
+                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#232a33" title="Panel"></div>
+                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#e8eef4" title="Text"></div>
+                        </div>
+                        <button type="button" class="ct-use">Use</button>
+                    </div><div class="custom-theme-row">
+                        <input type="text" class="ct-name-input" value="Custom 3" maxlength="18" title="Rename theme">
+                        <div class="ct-colors">
+                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#a05ad9" title="Focus accent"></div>
+                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#8ab8c8" title="Short break accent"></div>
+                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#5ad9a0" title="Long break accent"></div>
+                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#1f1a24" title="Background"></div>
+                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#2a2330" title="Panel"></div>
+                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#f0e8f4" title="Text"></div>
+                        </div>
+                        <button type="button" class="ct-use">Use</button>
+                    </div><div class="custom-theme-row">
+                        <input type="text" class="ct-name-input" value="Custom 4" maxlength="18" title="Rename theme">
+                        <div class="ct-colors">
+                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#3fae6a" title="Focus accent"></div>
+                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#7aaa8a" title="Short break accent"></div>
+                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#ae3f8f" title="Long break accent"></div>
+                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#141f18" title="Background"></div>
+                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#1e2e24" title="Panel"></div>
+                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#e6f2ea" title="Text"></div>
+                        </div>
+                        <button type="button" class="ct-use">Use</button>
+                    </div><div class="custom-theme-row">
+                        <input type="text" class="ct-name-input" value="Custom 5" maxlength="18" title="Rename theme">
+                        <div class="ct-colors">
+                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#d97a3f" title="Focus accent"></div>
+                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#b89a6a" title="Short break accent"></div>
+                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#3f6bd9" title="Long break accent"></div>
+                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#241a16" title="Background"></div>
+                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#332420" title="Panel"></div>
+                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#f5e8e0" title="Text"></div>
+                        </div>
+                        <button type="button" class="ct-use">Use</button>
+                    </div></div>
 
                 <!-- Timer -->
                 <div class="section-title">
@@ -4070,22 +4358,13 @@
                 <div class="field-row">
                     <label>Timer font</label>
                     <select id="setTimerFont">
-                        <option value="'Fraunces', serif" selected>Fraunces</option>
+                        <option value="'Fraunces', serif" selected="selected">Fraunces</option>
                         <option value="'JetBrains Mono', monospace">Mono</option>
                         <option value="'Inter', sans-serif">Inter</option>
                         <option value="Georgia, serif">Classic Serif</option>
                         <option value="'Playfair Display', serif">Playfair Display</option>
                         <option value="'Source Code Pro', monospace">Source Code Pro</option>
                     </select>
-                </div>
-                <!-- ===== CYCLE SETS (new) ===== -->
-                <div class="field-row">
-                    <label>Cycle sets (goal)</label>
-                    <div class="stepper">
-                        <button type="button" id="cycleSetsDown"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-                        <span id="cycleSetsVal">3</span>
-                        <button type="button" id="cycleSetsUp"><svg viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"></polyline></svg></button>
-                    </div>
                 </div>
 
                 <!-- Alarm -->
@@ -4144,6 +4423,22 @@
                     <label>Only show goal during long breaks</label>
                     <div class="toggle" id="setGoalOnlyLong"></div>
                 </div>
+                <div class="field-row">
+                    <label>Task priority markers</label>
+                    <div class="toggle" id="setTaskPriority"></div>
+                </div>
+                <div class="field-row">
+                    <label>Quiet hours (mute alarm sound)</label>
+                    <div class="toggle" id="setQuietHours"></div>
+                </div>
+                <div class="field-row" id="quietHoursRangeRow">
+                    <label>Quiet hours range</label>
+                    <div class="quiet-hours-range">
+                        <input type="time" id="setQuietHoursStart" value="22:00">
+                        <span>to</span>
+                        <input type="time" id="setQuietHoursEnd" value="08:00">
+                    </div>
+                </div>
 
                 <!-- Preferences -->
                 <div class="section-title">
@@ -4191,11 +4486,11 @@
         </div>
     </div>
 
-    <script>
+    <script type="text/javascript" id="www-widgetapi-script" src="code%20model_files/www-widgetapi_Tx9o.js" async=""></script><script>
         (function() {
             'use strict';
 
-            // ===== THEME DATA =====
+            // ===== THEMES =====
             const THEMES = [
                 'og-dark', 'og-light', 'dark', 'light', 'forest', 'ocean', 'sunset', 'lavender',
                 'mint', 'rose', 'amber', 'slate', 'wine', 'teal',
@@ -4357,8 +4652,10 @@
                 dailyGoal: 0,
                 goalOnlyLong: false,
                 hideStats: false,
-                cycleSets: 3,
-                sortByTiming: true
+                taskPriority: false,
+                quietHours: false,
+                quietHoursStart: '22:00',
+                quietHoursEnd: '08:00'
             };
 
             // ===== STATE =====
@@ -4409,24 +4706,27 @@
                     { name: 'Custom 5', bg: '#241a16', bg2: '#332420', fg: '#f5e8e0', focus: '#d97a3f',
                         short: '#b89a6a', long: '#3f6bd9' }
                 ],
-                cycleSets: 3,
-                sortByTiming: true,
-                infoBarHidden: false,
-                taskFilter: 'all',
-                renameTargetId: null,
-                _loading: false,
-                savedYtId: null,
-                savedYtUrl: null,
                 timerStartTime: null,
                 timerInitialRemaining: 0,
                 timerPausedRemaining: 0,
                 timerPausedAt: null,
                 timerHiddenAt: null,
                 timerIntervalId: null,
+                alarmActive: false,
+                alarmRepeatCount: 0,
+                alarmTimeoutId: null,
+                alarmDismissed: false,
+                alarmSnoozeTimeout: null,
                 timerLastSavedAt: null,
-                finishTime: null,
-                todayDate: new Date().toDateString(),
-                lastCheckedDate: new Date().toDateString()
+                infoBarHidden: false,
+                taskFilter: 'all',
+                renameTargetId: null,
+                _loading: false,
+                taskPriority: false,
+                quietHours: false,
+                quietHoursStart: '22:00',
+                quietHoursEnd: '08:00',
+                lastRolloverDate: null
             };
 
             // ===== PERSISTENCE =====
@@ -4434,7 +4734,6 @@
                 state.todayDate = state.todayDate || new Date().toDateString();
                 const data = {
                     todayDate: state.todayDate,
-                    lastCheckedDate: state.lastCheckedDate,
                     durations: state.durations,
                     cyclesBeforeLong: state.cyclesBeforeLong,
                     autostart: state.autostart,
@@ -4468,19 +4767,25 @@
                     hideStats: state.hideStats,
                     infoBarHidden: state.infoBarHidden,
                     taskFilter: state.taskFilter,
-                    cycleSets: state.cycleSets,
-                    sortByTiming: state.sortByTiming,
-                    savedYtId: state.savedYtId,
-                    savedYtUrl: state.savedYtUrl,
-                    // Timer persistence
                     running: state.running,
                     remaining: state.remaining,
                     timerPausedRemaining: state.timerPausedRemaining,
                     timerLastSavedAt: state.timerLastSavedAt,
                     timerStartTime: state.timerStartTime,
-                    timerInitialRemaining: state.timerInitialRemaining
+                    timerInitialRemaining: state.timerInitialRemaining,
+                    timerPausedAt: state.timerPausedAt,
+                    timerHiddenAt: state.timerHiddenAt,
+                    taskPriority: state.taskPriority,
+                    quietHours: state.quietHours,
+                    quietHoursStart: state.quietHoursStart,
+                    quietHoursEnd: state.quietHoursEnd,
+                    lastRolloverDate: state.lastRolloverDate
                 };
-                localStorage.setItem('ripe_state', JSON.stringify(data));
+                try {
+                    localStorage.setItem('ripe_state', JSON.stringify(data));
+                } catch (err) {
+                    console.warn('Ripe: could not save state', err);
+                }
             }
 
             function load() {
@@ -4505,8 +4810,7 @@
                         state.timerScale = raw.timerScale ?? 1.0;
                         state.hideFocusedBadge = raw.hideFocusedBadge ?? false;
                         state.hideScrollCue = raw.hideScrollCue ?? false;
-                        state.todayDate = raw.todayDate || new Date().toDateString();
-                        state.lastCheckedDate = raw.lastCheckedDate || new Date().toDateString();
+                        state.todayDate = raw.todayDate || null;
                         state.soundTheme = raw.soundTheme || 'default';
                         state.sessionHistory = raw.sessionHistory || [];
                         state.focusStreak = raw.focusStreak || 0;
@@ -4521,17 +4825,19 @@
                         state.hideStats = raw.hideStats ?? false;
                         state.infoBarHidden = raw.infoBarHidden ?? false;
                         state.taskFilter = raw.taskFilter || 'all';
-                        state.cycleSets = raw.cycleSets ?? 3;
-                        state.sortByTiming = raw.sortByTiming ?? true;
-                        state.savedYtId = raw.savedYtId || null;
-                        state.savedYtUrl = raw.savedYtUrl || null;
                         state.running = raw.running ?? false;
                         state.remaining = raw.remaining ?? (state.durations[state.mode] || 25 * 60);
                         state.timerPausedRemaining = raw.timerPausedRemaining ?? 0;
                         state.timerLastSavedAt = raw.timerLastSavedAt ?? null;
                         state.timerStartTime = raw.timerStartTime ?? null;
                         state.timerInitialRemaining = raw.timerInitialRemaining ?? 0;
-
+                        state.timerPausedAt = raw.timerPausedAt ?? null;
+                        state.timerHiddenAt = raw.timerHiddenAt ?? null;
+                        state.taskPriority = raw.taskPriority ?? false;
+                        state.quietHours = raw.quietHours ?? false;
+                        state.quietHoursStart = raw.quietHoursStart || '22:00';
+                        state.quietHoursEnd = raw.quietHoursEnd || '08:00';
+                        state.lastRolloverDate = raw.lastRolloverDate || null;
                         const _today = new Date().toDateString();
                         if (state.todayDate !== _today) {
                             state.cycleCount = 0;
@@ -4539,25 +4845,42 @@
                             state.todayDate = _today;
                             updateFocusStreak();
                         }
-                        // Daily task flip: tomorrow → today at midnight
-                        if (state.lastCheckedDate !== _today) {
-                            state.tasks.forEach(t => {
-                                if (t.timing === 'tomorrow') t.timing = 'today';
-                            });
-                            state.lastCheckedDate = _today;
-                            save();
-                        }
                         if (raw.customThemes && raw.customThemes.length === 5) {
                             state.customThemes = raw.customThemes.map(t => {
-                                if (t.accent && !t.focus) return { ...t, focus: t.accent, short: t.accent };
+                                if (t.accent && !t.focus) {
+                                    return { ...t, focus: t.accent, short: t.accent };
+                                }
                                 return t;
                             });
                         }
                     }
                 } catch (_) { /* ignore */ }
-                state.remaining = state.durations[state.mode] || 25 * 60;
+                // Only fall back to a fresh duration if nothing valid was restored above
+                if (!(state.remaining > 0)) {
+                    state.remaining = state.durations[state.mode] || 25 * 60;
+                }
             }
             load();
+
+            // ===== DAY ROLLOVER =====
+            function checkDayRollover() {
+                const today = new Date().toDateString();
+                if (state.lastRolloverDate === today) return;
+                state.cycleCount = 0;
+                state.totalFocusedSec = 0;
+                state.todayDate = today;
+                updateFocusStreak();
+                const dow = new Date().getDay();
+                const isWeekend = dow === 0 || dow === 6;
+                state.tasks.forEach(t => {
+                    if (!t.done) {
+                        if (t.timing === 'tomorrow') t.timing = 'today';
+                        else if (t.timing === 'weekend' && isWeekend) t.timing = 'today';
+                    }
+                });
+                state.lastRolloverDate = today;
+                save();
+            }
 
             // ===== DOM REFS =====
             const $ = (s) => document.querySelector(s);
@@ -4570,8 +4893,6 @@
             const skipBtn = $('#skipBtn');
             const ringFg = $('#ringFg');
             const cyclePips = $('#cyclePips');
-            const cycleSetsWrap = $('#cycleSetsWrap');
-            const cycleSetsDots = $('#cycleSetsDots');
             const estLine = $('#estLine');
             const taskList = $('#taskList');
             const emptyState = $('#emptyState');
@@ -4588,7 +4909,6 @@
             const statCycles = $('#statCycles');
             const statFocused = $('#statFocused');
             const statRemaining = $('#statRemaining');
-            const statFinishTime = $('#statFinishTime');
             const modalBackdrop = $('#modalBackdrop');
             const themeGrid = $('#themeGrid');
             const settingsBtn = $('#settingsBtn');
@@ -4613,18 +4933,71 @@
             const renameInput = $('#renameInput');
             const renameConfirmBtn = $('#renameConfirmBtn');
             const renameCancelBtn = $('#renameCancelBtn');
-            const chartWrap = $('#chartWrap');
-            const chartTotalSessions = $('#chartTotalSessions');
-            const chartSection = $('#chartSection');
-            const sortToggleBtn = $('#sortToggleBtn');
-            const cycleSetsVal = $('#cycleSetsVal');
+            const sortByDayBtn = $('#sortByDayBtn');
+            const sortByPriorityBtn = $('#sortByPriorityBtn');
+            const quietHoursRangeRow = $('#quietHoursRangeRow');
 
             const RADIUS = 90;
             const CIRC = 2 * Math.PI * RADIUS;
             ringFg.style.strokeDasharray = CIRC;
             timeDisplay.style.fontFamily = state.timerFont;
 
-            // ===== HELPERS =====
+            // ===== DAILY GOAL RENDER =====
+            function renderGoal() {
+                const goal = state.dailyGoal;
+                const showGoal = goal > 0 && (!state.goalOnlyLong || state.mode === 'long');
+                if (!showGoal) {
+                    goalRow.style.display = 'none';
+                    return;
+                }
+                goalRow.style.display = 'flex';
+                const filled = Math.min(state.cycleCount, goal);
+                goalDots.innerHTML = '';
+                for (let i = 0; i < goal; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'goal-dot' + (i < filled ? ' filled' : '');
+                    goalDots.appendChild(dot);
+                }
+            }
+
+            // ===== SCROLL CUE =====
+            function updateScrollCue() {
+                if (!scrollCue) return;
+                if (state.hideScrollCue) {
+                    scrollCue.classList.add('hidden');
+                    return;
+                }
+                const tasksSection = document.querySelector('.tasks-section');
+                if (!tasksSection) return;
+                const rect = tasksSection.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 40) {
+                    scrollCue.classList.add('hidden');
+                } else {
+                    scrollCue.classList.remove('hidden');
+                }
+            }
+
+            const tasksSectionEl = document.querySelector('.tasks-section');
+            if (tasksSectionEl && scrollCue) {
+                const observer = new IntersectionObserver((entries) => {
+                    if (state.hideScrollCue) { scrollCue.classList.add('hidden'); return; }
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) scrollCue.classList.add('hidden');
+                        else scrollCue.classList.remove('hidden');
+                    });
+                }, { threshold: 0.02, rootMargin: '0px 0px -40px 0px' });
+                observer.observe(tasksSectionEl);
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        if (state.hideScrollCue) scrollCue.classList.add('hidden');
+                        else updateScrollCue();
+                    }, 100);
+                });
+            }
+
+            // ----- hex -> RGB helper -----
             function hexToRgb(hex) {
                 hex = hex.replace('#', '');
                 if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
@@ -4634,27 +5007,14 @@
                 return [r, g, b];
             }
 
-            function escapeHtml(s) { const d = document.createElement('div');
-                d.textContent = s; return d.innerHTML; }
-
-            function uid() { return Math.random().toString(36).slice(2, 9); }
-
-            const POMO_ICON =
-                '<svg class="pomo-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4 3-7 7-7 11a7 7 0 0014 0c0-4-3-8-7-11z"/></svg>';
-
-            function fmt(sec) {
-                const m = String(Math.floor(sec / 60)).padStart(2, '0');
-                const s = String(Math.floor(sec % 60)).padStart(2, '0');
-                return m + ':' + s;
-            }
-
             function updateAccentSoft() {
                 const style = getComputedStyle(document.body);
                 const accent = style.getPropertyValue('--accent').trim();
                 if (!accent) return;
                 let rgb;
-                if (accent.startsWith('#')) rgb = hexToRgb(accent);
-                else {
+                if (accent.startsWith('#')) {
+                    rgb = hexToRgb(accent);
+                } else {
                     const m = accent.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
                     if (m) rgb = [parseInt(m[1]), parseInt(m[2]), parseInt(m[3])];
                     else rgb = [224, 90, 61];
@@ -4663,71 +5023,7 @@
                 document.body.style.setProperty('--accent-rgb', `${rgb[0]}, ${rgb[1]}, ${rgb[2]}`);
             }
 
-            function getCyclesRemaining() {
-                let total = 0;
-                state.tasks.forEach(t => {
-                    if (!t.done && t.est > 0) total += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
-                });
-                if (state.mode === 'pomodoro' && state.remaining > 0) total += 1;
-                return total;
-            }
-
-            function getTaskTimingOrder() {
-                const now = new Date();
-                const dayOfWeek = now.getDay();
-                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-                if (isWeekend) return { weekend: 0, today: 1, tomorrow: 2 };
-                return { today: 0, tomorrow: 1, weekend: 2 };
-            }
-
-            function activeTask() { return state.tasks.find(t => t.id === state.activeTaskId); }
-
-            function getTodayStats() {
-                const today = new Date().toDateString();
-                const todayStart = new Date(today).getTime();
-                const todayEnd = todayStart + 86400000;
-                return state.sessionHistory.filter(s => {
-                    const t = new Date(s.timestamp).getTime();
-                    return t >= todayStart && t < todayEnd;
-                });
-            }
-
-            function getWeekStats() {
-                const weekAgo = Date.now() - (7 * 86400000);
-                return state.sessionHistory.filter(s => new Date(s.timestamp).getTime() > weekAgo);
-            }
-
-            function totalRemainingMinutes() {
-                let rem = 0;
-                state.tasks.forEach(t => {
-                    if (!t.done && t.est > 0) rem += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
-                });
-                if (rem <= 0) return 0;
-                let minutes = 0;
-                if (state.mode === 'pomodoro') { minutes += state.remaining / 60;
-                    rem -= 1; } else minutes += state.remaining / 60;
-                let pos = state.cycleCount % state.cyclesBeforeLong;
-                for (let i = 0; i < rem; i++) {
-                    minutes += state.durations.pomodoro / 60;
-                    pos++;
-                    minutes += (pos % state.cyclesBeforeLong === 0) ? state.durations.long / 60 : state.durations.short / 60;
-                }
-                return Math.max(0, minutes);
-            }
-
-            function updateFocusStreak() {
-                const today = new Date().toDateString();
-                const yesterday = new Date(Date.now() - 86400000).toDateString();
-                if (state.lastFocusDate === today) return;
-                if (state.lastFocusDate === yesterday && state.cycleCount > 0) state.focusStreak++;
-                else if (state.lastFocusDate !== today) {
-                    if (state.cycleCount > 0) state.focusStreak = 1;
-                    else state.focusStreak = 0;
-                }
-                if (state.cycleCount > 0) state.lastFocusDate = today;
-            }
-
-            // ===== THEME =====
+            // ===== APPLY THEME =====
             function isCustomTheme(name) { return typeof name === 'string' && name.indexOf('custom') === 0; }
 
             function rgbToHsl(r, g, b) {
@@ -4819,9 +5115,8 @@
                     el.classList.toggle('active', el.dataset.theme === name);
                 });
                 buildCustomThemeList();
-                const colors = isCustomTheme(name) ? [state.customThemes[parseInt(name.replace('custom', ''), 10) ||
-                        0
-                    ]?.bg || '#1b1a1f', state.customThemes[parseInt(name.replace('custom', ''), 10) || 0]?.focus ||
+                const colors = isCustomTheme(name) ? [state.customThemes[parseInt(name.replace('custom', ''), 10) || 0]
+                        ?.bg || '#1b1a1f', state.customThemes[parseInt(name.replace('custom', ''), 10) || 0]?.focus ||
                         '#e05a3d'
                     ] :
                     (THEME_COLORS[name] || ['#333', '#666']);
@@ -4873,6 +5168,34 @@
                 });
             }
 
+            function cycleTheme() {
+                const idx = THEMES.indexOf(state.theme);
+                const next = THEMES[(idx + 1) % THEMES.length];
+                applyTheme(next);
+                $$('.theme-grid .theme-swatch').forEach(el => {
+                    el.classList.toggle('active', el.dataset.theme === next);
+                });
+            }
+
+            themeToggleBtn.addEventListener('click', cycleTheme);
+
+            // ===== INFO BAR TOGGLE =====
+            if (toggleInfoBtn) {
+                toggleInfoBtn.addEventListener('click', () => {
+                    state.infoBarHidden = !state.infoBarHidden;
+                    statbar.classList.toggle('show', !state.infoBarHidden);
+                    toggleInfoBtn.textContent = state.infoBarHidden ? '+' : '−';
+                    save();
+                });
+                if (state.infoBarHidden) {
+                    statbar.classList.remove('show');
+                    toggleInfoBtn.textContent = '+';
+                } else {
+                    statbar.classList.add('show');
+                    toggleInfoBtn.textContent = '−';
+                }
+            }
+
             function buildThemeGrid() {
                 themeGrid.innerHTML = '';
                 THEMES.forEach(name => {
@@ -4903,10 +5226,15 @@
             function applyTimerScale(scale) {
                 state.timerScale = Math.min(1.5, Math.max(0.5, scale));
                 document.body.style.setProperty('--timer-scale', state.timerScale);
-                if (timerScaleSlider) timerScaleSlider.value = Math.round(state.timerScale * 100);
-                if (timerScaleLabel) timerScaleLabel.textContent = Math.round(state.timerScale * 100) + '%';
+                if (timerScaleSlider) {
+                    timerScaleSlider.value = Math.round(state.timerScale * 100);
+                }
+                if (timerScaleLabel) {
+                    timerScaleLabel.textContent = Math.round(state.timerScale * 100) + '%';
+                }
                 save();
             }
+
             timerScaleSlider.addEventListener('input', function() {
                 const val = parseInt(this.value) / 100;
                 applyTimerScale(val);
@@ -4931,7 +5259,6 @@
                 if (resetTime) state.remaining = state.durations[mode];
                 sessionLabel.textContent = labels[mode];
                 renderPips();
-                renderCycleSets();
                 render();
                 ringFg.style.stroke = getComputedStyle(document.body).getPropertyValue('--accent').trim();
                 updateAccentSoft();
@@ -4940,7 +5267,6 @@
                 state.timerPausedRemaining = 0;
                 state.timerPausedAt = null;
                 renderGoal();
-                renderChart();
             }
 
             $('#tabs').addEventListener('click', e => {
@@ -4951,6 +5277,25 @@
             });
 
             // ===== RENDER =====
+            function fmt(sec) {
+                const m = String(Math.floor(sec / 60)).padStart(2, '0');
+                const s = String(Math.floor(sec % 60)).padStart(2, '0');
+                return m + ':' + s;
+            }
+
+            function getCyclesRemaining() {
+                let total = 0;
+                state.tasks.forEach(t => {
+                    if (!t.done && t.est > 0) {
+                        total += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
+                    }
+                });
+                if (state.mode === 'pomodoro' && state.remaining > 0) {
+                    total += 1;
+                }
+                return total;
+            }
+
             function render() {
                 const showCycles = state.showCyclesLeft && state.mode === 'pomodoro';
                 let displayText;
@@ -4977,26 +5322,30 @@
                 renderEstLine();
                 renderStats();
                 updateStats();
-                updateFinishTime();
                 renderGoal();
-                if (state.hideStats) statsPanel.classList.add('hidden');
-                else statsPanel.classList.remove('hidden');
+                if (state.hideStats) {
+                    statsPanel.classList.add('hidden'); const hg1=document.getElementById('historyGraph'); if(hg1) hg1.classList.add('hidden');
+                } else {
+                    statsPanel.classList.remove('hidden'); const hg2=document.getElementById('historyGraph'); if(hg2) hg2.classList.remove('hidden');
+                }
                 document.title = (state.running ? fmt(state.remaining) + ' · ' : '') + 'Ripe — Focus Timer';
                 timeDisplay.style.fontFamily = state.timerFont;
                 const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim();
                 ringFg.style.stroke = accent;
                 const dot = document.querySelector('.statbar .dot');
                 if (dot) dot.style.background = accent;
-                if (themePreviewDot) {
+                const previewDot = document.querySelector('.theme-preview');
+                if (previewDot) {
                     const colors = THEME_COLORS[state.theme] || ['#333', '#666'];
-                    themePreviewDot.style.background = colors[1];
+                    previewDot.style.background = colors[1];
                 }
                 updateAccentSoft();
-                if (state.hideFocusedBadge) estLine.classList.add('hide-badge');
-                else estLine.classList.remove('hide-badge');
+                if (state.hideFocusedBadge) {
+                    estLine.classList.add('hide-badge');
+                } else {
+                    estLine.classList.remove('hide-badge');
+                }
                 updateScrollCue();
-                renderChart();
-                renderCycleSets();
             }
 
             function renderPips() {
@@ -5010,78 +5359,61 @@
                 cyclePips.style.display = (state.mode !== 'pomodoro' || state.showCycleFocus) ? 'flex' : 'none';
             }
 
-            // ===== CYCLE SETS =====
-            function renderCycleSets() {
-                const totalSets = state.cycleSets || 3;
-                const setsCompleted = Math.floor(state.cycleCount / state.cyclesBeforeLong);
-                const allDone = setsCompleted >= totalSets;
+            function activeTask() { return state.tasks.find(t => t.id === state.activeTaskId); }
 
-                if (totalSets <= 0 || state.mode !== 'pomodoro') {
-                    cycleSetsWrap.classList.add('hidden');
-                    return;
-                }
-                cycleSetsWrap.classList.remove('hidden');
-
-                cycleSetsDots.innerHTML = '';
-                for (let i = 0; i < totalSets; i++) {
-                    const dot = document.createElement('div');
-                    dot.className = 'set-dot';
-                    if (i < setsCompleted) {
-                        dot.classList.add('filled');
-                        if (allDone && i === totalSets - 1) dot.classList.add('goal-reached');
-                    }
-                    cycleSetsDots.appendChild(dot);
-                }
+            function recordSession() {
+                const session = {
+                    mode: state.mode,
+                    timestamp: new Date().toISOString(),
+                    taskId: state.activeTaskId,
+                    taskTitle: activeTask()?.title || 'Unnamed'
+                };
+                state.sessionHistory.push(session);
+                if (state.sessionHistory.length > 1000) state.sessionHistory.shift();
             }
 
-            // ===== GOAL ROW =====
-            function renderGoal() {
-                const goal = state.dailyGoal;
-                const showGoal = goal > 0 && (!state.goalOnlyLong || state.mode === 'long');
-                if (!showGoal) { goalRow.style.display = 'none'; return; }
-                goalRow.style.display = 'flex';
-                const filled = Math.min(state.cycleCount, goal);
-                goalDots.innerHTML = '';
-                for (let i = 0; i < goal; i++) {
-                    const dot = document.createElement('div');
-                    dot.className = 'goal-dot' + (i < filled ? ' filled' : '');
-                    goalDots.appendChild(dot);
+            function updateFocusStreak() {
+                const today = new Date().toDateString();
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                if (state.lastFocusDate === today) return;
+                if (state.lastFocusDate === yesterday && state.cycleCount > 0) {
+                    state.focusStreak++;
+                } else if (state.lastFocusDate !== today) {
+                    if (state.cycleCount > 0) state.focusStreak = 1;
+                    else state.focusStreak = 0;
                 }
+                if (state.cycleCount > 0) state.lastFocusDate = today;
             }
 
-            // ===== FINISH TIME =====
-            function updateFinishTime() {
-                if (!state.running || state.remaining <= 0) {
-                    state.finishTime = null;
-                    statFinishTime.textContent = '--:--';
-                    return;
-                }
-                const now = new Date();
-                const finish = new Date(now.getTime() + state.remaining * 1000);
-                const h = String(finish.getHours()).padStart(2, '0');
-                const m = String(finish.getMinutes()).padStart(2, '0');
-                statFinishTime.textContent = h + ':' + m;
+            function getTodayStats() {
+                const today = new Date().toDateString();
+                const todayStart = new Date(today).getTime();
+                const todayEnd = todayStart + 86400000;
+                return state.sessionHistory.filter(s => {
+                    const t = new Date(s.timestamp).getTime();
+                    return t >= todayStart && t < todayEnd;
+                });
             }
 
-            // ===== SCROLL CUE =====
-            function updateScrollCue() {
-                if (!scrollCue) return;
-                if (state.hideScrollCue) { scrollCue.classList.add('hidden'); return; }
-                const tasksSection = document.querySelector('.tasks-section');
-                if (!tasksSection) return;
-                const rect = tasksSection.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 40) scrollCue.classList.add('hidden');
-                else scrollCue.classList.remove('hidden');
+            function getWeekStats() {
+                const now = Date.now();
+                const weekAgo = now - (7 * 86400000);
+                return state.sessionHistory.filter(s => new Date(s.timestamp).getTime() > weekAgo);
             }
 
-            // ===== RENDER EST LINE =====
+            function escapeHtml(s) { const d = document.createElement('div');
+                d.textContent = s; return d.innerHTML; }
+
             function renderEstLine() {
                 const t = activeTask();
                 if (!t) {
                     estLine.textContent = 'No active task selected';
                     estLine.classList.remove('visible');
-                    if (state.hideFocusedBadge) estLine.classList.add('hide-badge');
-                    else estLine.classList.remove('hide-badge');
+                    if (state.hideFocusedBadge) {
+                        estLine.classList.add('hide-badge');
+                    } else {
+                        estLine.classList.remove('hide-badge');
+                    }
                     return;
                 }
                 const done = t.completedPomos || 0;
@@ -5097,82 +5429,424 @@
                   </span>
                 `;
                 estLine.classList.add('visible');
-                if (state.hideFocusedBadge) estLine.classList.add('hide-badge');
-                else estLine.classList.remove('hide-badge');
+                if (state.hideFocusedBadge) {
+                    estLine.classList.add('hide-badge');
+                } else {
+                    estLine.classList.remove('hide-badge');
+                }
             }
 
-            // ===== STATS =====
+            function totalRemainingMinutes() {
+                // Filter by current filter first
+                const filter = state.taskFilter || 'all';
+                const tasks = filter === 'all' ? state.tasks : state.tasks.filter(t => (t.timing || 'today') === filter);
+
+                let rem = 0;
+                tasks.forEach(t => {
+                    if (!t.done && t.est > 0) {
+                        rem += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
+                    }
+                });
+                if (rem <= 0) return 0;
+                let minutes = 0;
+                if (state.mode === 'pomodoro') {
+                    minutes += state.remaining / 60;
+                    rem -= 1;
+                } else {
+                    minutes += state.remaining / 60;
+                }
+                let pos = state.cycleCount % state.cyclesBeforeLong;
+                for (let i = 0; i < rem; i++) {
+                    minutes += state.durations.pomodoro / 60;
+                    pos++;
+                    minutes += (pos % state.cyclesBeforeLong === 0) ? state.durations.long / 60 : state.durations.short / 60;
+                }
+                return Math.max(0, minutes);
+            }
+
             function renderStats() {
                 statCycles.textContent = state.cycleCount;
                 statFocused.textContent = Math.round(state.totalFocusedSec / 60) + 'm';
-                statRemaining.textContent = Math.round(totalRemainingMinutes()) + 'm';
+                const remaining = totalRemainingMinutes();
+                statRemaining.textContent = Math.round(remaining) + 'm';
             }
 
-            function updateStats() {
-                const today = getTodayStats();
-                const week = getWeekStats();
-                const streakDisplay = state.focusStreak > 0 ? state.focusStreak + ' day' + (state.focusStreak > 1 ?
-                    's' : '') + ' 🔥' : '0';
-                statsPanel.innerHTML = `
-                  <div class="stat-item"><span class="stat-label">Today</span><span class="stat-value">${today.length}</span></div>
-                  <div class="stat-item"><span class="stat-label">Week</span><span class="stat-value">${week.length}</span></div>
-                  <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">${streakDisplay}</span></div>
-                  <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">${state.sessionHistory.length}</span></div>
-                `;
-                renderChart();
-            }
-
-            // ===== BAR CHART =====
-            function renderChart() {
-                if (!chartWrap) return;
-                const now = new Date();
-                const days = [];
-                for (let i = 6; i >= 0; i--) {
-                    const d = new Date(now);
-                    d.setDate(d.getDate() - i);
-                    const dateStr = d.toDateString();
-                    const count = state.sessionHistory.filter(s => {
-                        const sd = new Date(s.timestamp);
-                        return sd.toDateString() === dateStr;
-                    }).length;
-                    days.push({ date: d, dateStr, count, label: i === 0 ? 'Today' : d.toLocaleDateString('en', {
-                            weekday: 'short' }) });
+            // ===== STAT BAR SCROLL =====
+            let statbarVisible = false;
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY || window.pageYOffset;
+                const show = scrollY > 180;
+                if (show !== statbarVisible) {
+                    statbarVisible = show;
+                    statbar.classList.toggle('show', show);
                 }
-                const maxCount = Math.max(1, ...days.map(d => d.count));
-                const total = days.reduce((sum, d) => sum + d.count, 0);
-                if (chartTotalSessions) chartTotalSessions.textContent = total;
+                updateScrollCue();
+            });
+            setTimeout(() => {
+                statbarVisible = (window.scrollY || window.pageYOffset) > 180;
+                statbar.classList.toggle('show', statbarVisible);
+                updateScrollCue();
+            }, 50);
 
-                chartWrap.innerHTML = '';
-                if (total === 0) {
-                    chartWrap.innerHTML =
-                        '<div class="chart-empty">No sessions recorded yet — start your first focus session!</div>';
+            // ===== TIMER — ROBUST BACKGROUND TICKING =====
+            let timerTickInterval = null;
+            let timerLastTick = 0;
+
+            function timerTick() {
+                if (!state.running) return;
+                const now = performance.now();
+                if (state.timerStartTime === null) {
+                    state.timerStartTime = now;
+                    state.timerInitialRemaining = state.remaining;
+                }
+                const elapsed = (now - state.timerStartTime) / 1000;
+                let remaining = state.timerInitialRemaining - elapsed;
+                if (remaining <= 0) {
+                    state.remaining = 0;
+                    render();
+                    completeSession();
                     return;
                 }
-
-                days.forEach((day, idx) => {
-                    const pct = Math.max(2, (day.count / maxCount) * 100);
-                    const wrap = document.createElement('div');
-                    wrap.className = 'chart-bar-wrap';
-                    const track = document.createElement('div');
-                    track.className = 'chart-bar-track';
-                    const fill = document.createElement('div');
-                    fill.className = 'chart-bar-fill' + (day.count === 0 ? ' zero' : '');
-                    fill.style.height = pct + '%';
-                    const val = document.createElement('span');
-                    val.className = 'chart-bar-value';
-                    val.textContent = day.count;
-                    track.appendChild(fill);
-                    track.appendChild(val);
-                    const label = document.createElement('div');
-                    label.className = 'chart-bar-label' + (idx === 6 ? ' today' : '');
-                    label.textContent = day.label;
-                    wrap.appendChild(track);
-                    wrap.appendChild(label);
-                    chartWrap.appendChild(wrap);
-                });
+                state.remaining = remaining;
+                render();
+                // save periodically (every 5s) to recover from crashes
+                if (Date.now() - (state.timerLastSavedAt || 0) > 5000) {
+                    state.timerLastSavedAt = Date.now();
+                    save();
+                }
             }
 
+            function start() {
+                if (state.running) return;
+                // If we have a paused timer, resume it
+                if (state.timerPausedRemaining > 0 && state.timerPausedAt !== null) {
+                    state.timerStartTime = performance.now();
+                    state.timerInitialRemaining = state.timerPausedRemaining;
+                    state.timerPausedRemaining = 0;
+                    state.timerPausedAt = null;
+                } else {
+                    state.timerStartTime = performance.now();
+                    state.timerInitialRemaining = state.remaining;
+                }
+                state.running = true;
+                requestNotifyPermission();
+                if (timerTickInterval) clearInterval(timerTickInterval);
+                timerTickInterval = setInterval(timerTick, 200); // 200ms for smooth background updates
+                timerTick();
+                render();
+                state.timerLastSavedAt = Date.now();
+                save();
+            }
+
+            function pause() {
+                if (!state.running) return;
+                state.running = false;
+                if (timerTickInterval) {
+                    clearInterval(timerTickInterval);
+                    timerTickInterval = null;
+                }
+                state.timerPausedRemaining = state.remaining;
+                state.timerPausedAt = performance.now();
+                render();
+                state.timerLastSavedAt = Date.now();
+                save();
+            }
+
+            function reset() {
+                pause();
+                state.remaining = state.durations[state.mode];
+                state.timerStartTime = null;
+                state.timerInitialRemaining = 0;
+                state.timerPausedRemaining = 0;
+                state.timerPausedAt = null;
+                render();
+            }
+
+            // Visibility change — catch up time lost while tab was hidden
+            function handleVisibilityChange() {
+                if (document.hidden) {
+                    state.timerHiddenAt = performance.now();
+                } else {
+                    if (state.running && state.timerHiddenAt !== null) {
+                        // Time was hidden, we just need to tick to catch up — no adjustment needed
+                        state.timerHiddenAt = null;
+                        timerTick();
+                    } else {
+                        state.timerHiddenAt = null;
+                        // If timer is running, sync up anyway
+                        if (state.running) {
+                            timerTick();
+                        }
+                    }
+                }
+            }
+
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+
+            // ===== BACKGROUND TIMER PERSISTENCE =====
+            window.addEventListener('beforeunload', () => {
+                if (state.running || state.timerPausedRemaining > 0) {
+                    state.timerLastSavedAt = Date.now();
+                    save();
+                }
+            });
+
+            // Restore timer on load with full recovery
+            function restoreTimer() {
+                if (state._loading) return;
+                state._loading = true;
+
+                // If we have a saved running state or paused state, recover it
+                if (state.timerLastSavedAt && state.remaining > 0) {
+                    const timePassed = Math.floor((Date.now() - state.timerLastSavedAt) / 1000);
+                    if (timePassed > 0) {
+                        state.remaining = Math.max(0, state.remaining - timePassed);
+                        if (state.remaining === 0 && state.running) {
+                            state.running = false;
+                            completeSession();
+                            state._loading = false;
+                            return;
+                        }
+                        if (state.remaining <= 0) {
+                            state.remaining = 0;
+                            state.running = false;
+                            render();
+                            state._loading = false;
+                            return;
+                        }
+                    }
+                    if (state.running) {
+                        state.timerStartTime = performance.now();
+                        state.timerInitialRemaining = state.remaining;
+                        if (timerTickInterval) clearInterval(timerTickInterval);
+                        timerTickInterval = setInterval(timerTick, 200);
+                        timerTick();
+                    } else if (state.timerPausedRemaining > 0) {
+                        state.remaining = state.timerPausedRemaining;
+                        render();
+                    }
+                } else {
+                    // If state says running but we have no saved time, reset
+                    if (state.running) {
+                        state.running = false;
+                        state.remaining = state.durations[state.mode];
+                        render();
+                    }
+                }
+                state._loading = false;
+            }
+
+            // ===== COMPLETE SESSION =====
+            function completeSession() {
+                pause();
+                notifySessionEnd(state.mode);
+                if (state.alarmSound && !state.masterMute) {
+                    triggerAlarm(state.mode);
+                }
+                if (state.mode === 'pomodoro') {
+                    state.cycleCount++;
+                    recordSession();
+                    const t = activeTask();
+                    if (t) {
+                        if (t.est === 0) {
+                            t.untimedProgress = (t.untimedProgress || 0) + 1;
+                        } else {
+                            t.completedPomos = (t.completedPomos || 0) + 1;
+                            if (t.completedPomos >= t.est) t.done = true;
+                        }
+                    }
+                    renderTasks();
+                    if (t && t.est === 0) {
+                        switchMode('pomodoro');
+                        if (state.autostart) {
+                            setTimeout(start, 500);
+                        }
+                        save();
+                        return;
+                    }
+                    const next = (state.cycleCount % state.cyclesBeforeLong === 0) ? 'long' : 'short';
+                    switchMode(next);
+                } else {
+                    switchMode('pomodoro');
+                }
+                save();
+                if (state.autostart) start();
+                else render();
+            }
+
+            function requestNotifyPermission() {
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+            }
+
+            function notifySessionEnd(mode) {
+                if (!('Notification' in window) || Notification.permission !== 'granted') return;
+                const msg = mode === 'pomodoro' ? 'Focus session complete — take a break.' : 'Break over — back to it.';
+                try { new Notification('Ripe', { body: msg }); } catch (_) {}
+            }
+
+            // ===== ALARM SYSTEM =====
+            let alarmCtx = null;
+            let alarmGainNode = null;
+            let alarmOscillators = [];
+            let alarmRepeatTimer = null;
+            let alarmSnoozeTimer = null;
+            let alarmDismissedFlag = false;
+            let alarmCurrentRepeat = 0;
+            let alarmMaxRepeats = 3;
+            let alarmRepeatUntilDismiss = false;
+            let alarmVolumeValue = 80;
+
+            function isQuietHours() {
+                if (!state.quietHours) return false;
+                const now = new Date();
+                const cur = now.getHours() * 60 + now.getMinutes();
+                const [sh, sm] = (state.quietHoursStart || '22:00').split(':').map(Number);
+                const [eh, em] = (state.quietHoursEnd || '08:00').split(':').map(Number);
+                const start = sh * 60 + sm;
+                const end = eh * 60 + em;
+                if (start === end) return false;
+                if (start < end) return cur >= start && cur < end;
+                return cur >= start || cur < end; // range wraps past midnight
+            }
+
+            function triggerAlarm(mode) {
+                if (state.masterMute) return;
+                const msg = mode === 'pomodoro' ? 'Focus session complete — take a break.' : 'Break over — back to it.';
+                alarmMsg.textContent = msg;
+                alarmOverlay.classList.add('show');
+                alarmDismissedFlag = false;
+                alarmCurrentRepeat = 0;
+                alarmMaxRepeats = state.alarmRepeats;
+                alarmRepeatUntilDismiss = state.alarmRepeatUntilDismiss;
+                alarmVolumeValue = state.alarmVolume;
+                if (!isQuietHours()) playAlarmSound();
+            }
+
+            function playAlarmSound() {
+                if (state.masterMute) return;
+                if (isQuietHours()) return;
+                try {
+                    alarmCtx = alarmCtx || new(window.AudioContext || window.webkitAudioContext)();
+                    if (alarmCtx.state === 'suspended') alarmCtx.resume();
+                    const now = alarmCtx.currentTime;
+                    const vol = Math.min(1, Math.max(0, alarmVolumeValue / 100));
+                    if (!alarmGainNode) {
+                        alarmGainNode = alarmCtx.createGain();
+                        alarmGainNode.connect(alarmCtx.destination);
+                    }
+                    alarmGainNode.gain.setValueAtTime(vol * 0.6, now);
+                    alarmGainNode.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+
+                    const freqs = [523, 659, 784, 659, 523, 392, 523];
+                    freqs.forEach((f, i) => {
+                        const osc = alarmCtx.createOscillator();
+                        const g = alarmCtx.createGain();
+                        osc.type = (i % 2 === 0) ? 'sine' : 'square';
+                        osc.frequency.value = f;
+                        const startTime = now + i * 0.12;
+                        g.gain.setValueAtTime(0, startTime);
+                        g.gain.linearRampToValueAtTime(vol * 0.25, startTime + 0.02);
+                        g.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+                        osc.connect(g);
+                        g.connect(alarmGainNode);
+                        osc.start(startTime);
+                        osc.stop(startTime + 0.35);
+                        alarmOscillators.push(osc);
+                    });
+
+                    const totalDuration = freqs.length * 0.12 + 0.4;
+                    if (alarmRepeatTimer) clearTimeout(alarmRepeatTimer);
+                    alarmRepeatTimer = setTimeout(() => {
+                        if (alarmDismissedFlag) return;
+                        alarmCurrentRepeat++;
+                        const shouldRepeat = alarmRepeatUntilDismiss || alarmCurrentRepeat < alarmMaxRepeats;
+                        if (shouldRepeat && !alarmDismissedFlag) {
+                            playAlarmSound();
+                        }
+                    }, totalDuration * 1000 + 800);
+
+                } catch (_) { /* ignore */ }
+            }
+
+            function dismissAlarm() {
+                alarmDismissedFlag = true;
+                alarmOverlay.classList.remove('show');
+                if (alarmRepeatTimer) {
+                    clearTimeout(alarmRepeatTimer);
+                    alarmRepeatTimer = null;
+                }
+                if (alarmSnoozeTimer) {
+                    clearTimeout(alarmSnoozeTimer);
+                    alarmSnoozeTimer = null;
+                }
+                alarmOscillators.forEach(osc => {
+                    try { osc.stop(); } catch (_) {}
+                });
+                alarmOscillators = [];
+                if (alarmGainNode) {
+                    try { alarmGainNode.gain.setValueAtTime(0, alarmCtx?.currentTime || 0); } catch (_) {}
+                }
+            }
+
+            function snoozeAlarm() {
+                dismissAlarm();
+                alarmSnoozeTimer = setTimeout(() => {
+                    if (!alarmDismissedFlag) {
+                        triggerAlarm(state.mode === 'pomodoro' ? 'pomodoro' : 'short');
+                    }
+                }, 120000);
+            }
+
+            alarmDismiss.addEventListener('click', dismissAlarm);
+            alarmSnooze.addEventListener('click', snoozeAlarm);
+
+            // ===== SKIP =====
+            function skip() {
+                pause();
+                if (state.mode === 'pomodoro') {
+                    const next = (state.cycleCount % state.cyclesBeforeLong === state.cyclesBeforeLong - 1) ? 'long' :
+                        'short';
+                    switchMode(next);
+                } else {
+                    switchMode('pomodoro');
+                }
+                save();
+            }
+
+            startBtn.addEventListener('click', () => state.running ? pause() : start());
+            resetBtn.addEventListener('click', reset);
+            skipBtn.addEventListener('click', skip);
+
+            // ===== KEYBOARD =====
+            document.addEventListener('keydown', e => {
+                if (!state.keyboardShortcuts) return;
+                if (modalBackdrop.classList.contains('show')) return;
+                if (confirmDialog.classList.contains('show')) return;
+                if (renameBackdrop.classList.contains('show')) return;
+                if (alarmOverlay.classList.contains('show')) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        dismissAlarm();
+                    }
+                    return;
+                }
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')
+                    return;
+                if (e.key === ' ' || e.key === 'Space') {
+                    e.preventDefault();
+                    state.running ? pause() : start();
+                }
+                if (e.key === 'r' || e.key === 'R') { reset(); }
+                if (e.key === 's' || e.key === 'S') { skip(); }
+            });
+
             // ===== TASKS =====
+            function uid() { return Math.random().toString(36).slice(2, 9); }
+            const POMO_ICON =
+                '<svg class="pomo-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4 3-7 7-7 11a7 7 0 0014 0c0-4-3-8-7-11z"/></svg>';
+
             function taskRowHTML(t, isCompleted) {
                 const done = t.done || false;
                 const isActive = t.id === state.activeTaskId && !done;
@@ -5186,8 +5860,9 @@
                     `<div class="task-pomos" style="display:none;"></div>`;
                 const timing = t.timing || 'today';
                 const timingDotClass = `task-timing-dot ${timing}`;
-                const timingDot = !isCompleted ? `<button class="${timingDotClass}" data-action="cycle-timing" title="Timing: ${timing} (click to cycle)"></button>` :
-                    '';
+                const timingDot = !isCompleted ? `<button class="${timingDotClass}" data-action="cycle-timing" title="Timing: ${timing} (click to cycle)"></button>` : '';
+                const priority = t.priority || 'low';
+                const priorityDot = (state.taskPriority && !isCompleted) ? `<button class="task-priority-dot ${priority}" data-action="cycle-priority" title="Priority: ${priority} (click to cycle)"></button>` : '';
 
                 return `
                 <div class="task-row">
@@ -5195,6 +5870,7 @@
                   <div class="task-check ${done?'done':''}" data-action="toggle">
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
+                  ${priorityDot}
                   ${timingDot}
                   <div class="task-title" data-action="activate" title="Click to focus this task">${escapeHtml(t.title)}</div>
                   ${pomosHTML}
@@ -5213,6 +5889,7 @@
             }
 
             function wireTaskEvents(el, t) {
+                // Toggle complete
                 el.querySelector('[data-action=toggle]').addEventListener('click', e => {
                     e.stopPropagation();
                     t.done = !t.done;
@@ -5222,6 +5899,7 @@
                     render();
                 });
 
+                // Activate task (click on title)
                 const titleEl = el.querySelector('[data-action=activate]');
                 if (titleEl) {
                     titleEl.addEventListener('click', function(e) {
@@ -5234,6 +5912,7 @@
                     });
                 }
 
+                // Timing cycle — just change the day, no sorting
                 const timingBtn = el.querySelector('[data-action=cycle-timing]');
                 if (timingBtn) {
                     timingBtn.addEventListener('click', e => {
@@ -5241,12 +5920,27 @@
                         const timings = ['today', 'tomorrow', 'weekend'];
                         const idx = timings.indexOf(t.timing || 'today');
                         t.timing = timings[(idx + 1) % timings.length];
+                        // Save and re-render without sorting
                         save();
                         renderTasks();
                         render();
                     });
                 }
 
+                // Cycle priority
+                const priorityBtn = el.querySelector('[data-action=cycle-priority]');
+                if (priorityBtn) {
+                    priorityBtn.addEventListener('click', e => {
+                        e.stopPropagation();
+                        const levels = ['low', 'med', 'high'];
+                        const idx = levels.indexOf(t.priority || 'low');
+                        t.priority = levels[(idx + 1) % levels.length];
+                        save();
+                        renderTasks();
+                    });
+                }
+
+                // Rename task
                 const renameBtn = el.querySelector('[data-action=rename]');
                 if (renameBtn) {
                     renameBtn.addEventListener('click', e => {
@@ -5254,11 +5948,14 @@
                         state.renameTargetId = t.id;
                         renameInput.value = t.title;
                         renameBackdrop.classList.add('show');
-                        setTimeout(() => { renameInput.focus();
-                            renameInput.select(); }, 50);
+                        setTimeout(() => {
+                            renameInput.focus();
+                            renameInput.select();
+                        }, 50);
                     });
                 }
 
+                // Undo completed
                 const undoBtn = el.querySelector('[data-action=undo]');
                 if (undoBtn) {
                     undoBtn.addEventListener('click', e => {
@@ -5270,6 +5967,7 @@
                     });
                 }
 
+                // Delete task
                 el.querySelector('[data-action=delete]').addEventListener('click', e => {
                     e.stopPropagation();
                     state.tasks = state.tasks.filter(x => x.id !== t.id);
@@ -5279,12 +5977,14 @@
                     render();
                 });
 
+                // Notes
                 const notes = el.querySelector('textarea');
                 if (notes) {
                     notes.addEventListener('input', e => { t.notes = e.target.value;
                         save(); });
                 }
 
+                // Edit estimate
                 const pomosEl = el.querySelector('[data-action=edit-est]');
                 if (pomosEl) {
                     pomosEl.addEventListener('click', e => {
@@ -5314,22 +6014,47 @@
                 }
             }
 
+            // ===== SORT BY DAY =====
+            function sortTasksByDay() {
+                const order = { today: 0, tomorrow: 1, weekend: 2 };
+                // Separate done and active
+                const doneTasks = state.tasks.filter(t => t.done);
+                const activeTasks = state.tasks.filter(t => !t.done);
+                // Sort active by day, preserving existing order within each day group
+                activeTasks.sort((a, b) => {
+                    const aOrder = order[a.timing || 'today'] ?? 3;
+                    const bOrder = order[b.timing || 'today'] ?? 3;
+                    if (aOrder !== bOrder) return aOrder - bOrder;
+                    // If same day, keep original order (based on current array position)
+                    return state.tasks.indexOf(a) - state.tasks.indexOf(b);
+                });
+                state.tasks = [...activeTasks, ...doneTasks];
+                save();
+            }
+
+            function sortByPriority() {
+                const order = { high: 0, med: 1, low: 2 };
+                const doneTasks = state.tasks.filter(t => t.done);
+                const activeTasks = state.tasks.filter(t => !t.done);
+                activeTasks.sort((a, b) => (order[a.priority || 'low'] - order[b.priority || 'low']));
+                state.tasks = [...activeTasks, ...doneTasks];
+                save();
+            }
+
+            // ===== RENDER TASKS =====
             function renderTasks() {
                 const filter = state.taskFilter || 'all';
-                const timingOrder = getTaskTimingOrder();
 
+                // Separate active and completed
                 let active = state.tasks.filter(t => !t.done);
-                if (filter !== 'all') active = active.filter(t => (t.timing || 'today') === filter);
+                const completed = state.tasks.filter(t => t.done);
 
-                if (state.sortByTiming && filter === 'all') {
-                    active.sort((a, b) => {
-                        const aOrder = timingOrder[a.timing || 'today'] ?? 3;
-                        const bOrder = timingOrder[b.timing || 'today'] ?? 3;
-                        return aOrder - bOrder;
-                    });
+                // Apply filter to active tasks
+                if (filter !== 'all') {
+                    active = active.filter(t => (t.timing || 'today') === filter);
                 }
 
-                const completed = state.tasks.filter(t => t.done);
+                // No automatic sorting — tasks stay in the order they are in state.tasks
 
                 taskList.innerHTML = '';
                 taskList.classList.toggle('hide-pomos', !state.showTaskPomos);
@@ -5343,23 +6068,36 @@
                     el.draggable = true;
                     el.innerHTML = taskRowHTML(t, false);
                     wireTaskEvents(el, t);
-                    el.addEventListener('dragstart', () => { setTimeout(() => el.classList.add('dragging'), 0); });
-                    el.addEventListener('dragend', () => {
+
+                    // Drag events — manual reordering
+                    el.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.effectAllowed = 'move';
+                        el.classList.add('dragging');
+                    });
+                    el.addEventListener('dragend', (e) => {
                         el.classList.remove('dragging');
+                        // Save the new order after drag
                         const ids = [...taskList.querySelectorAll('.task[data-id]')].map(n => n.dataset.id);
-                        const doneTasks = state.tasks.filter(x => x.done);
-                        const ordered = ids.map(id => active.find(x => x.id === id) || state.tasks.find(x =>
-                            x.id === id)).filter(Boolean);
-                        state.tasks = [...ordered, ...doneTasks];
+                        const ordered = ids.map(id => state.tasks.find(x => x.id === id)).filter(Boolean);
+                        // Move done tasks to the end
+                        const doneTasks = ordered.filter(t => t.done);
+                        const activeTasks = ordered.filter(t => !t.done);
+                        state.tasks = [...activeTasks, ...doneTasks];
                         save();
+                        renderTasks();
                     });
                     taskList.appendChild(el);
                 });
 
+                // Render completed tasks
                 completedList.innerHTML = '';
                 completedList.classList.toggle('hide-pomos', !state.showTaskPomos);
                 completedSection.style.display = completed.length ? 'block' : 'none';
-                completed.forEach(t => {
+                // Sort completed by completion time (most recent first)
+                const sortedCompleted = [...completed].sort((a, b) => {
+                    return (b.completedAt || 0) - (a.completedAt || 0);
+                });
+                sortedCompleted.forEach(t => {
                     const el = document.createElement('div');
                     el.className = 'task completed';
                     el.dataset.id = t.id;
@@ -5367,14 +6105,12 @@
                     wireTaskEvents(el, t);
                     completedList.appendChild(el);
                 });
-
-                if (sortToggleBtn) {
-                    sortToggleBtn.classList.toggle('active', state.sortByTiming && filter === 'all');
-                }
             }
 
+            // Drag and drop support on taskList
             taskList.addEventListener('dragover', e => {
                 e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
                 const dragging = taskList.querySelector('.dragging');
                 if (!dragging) return;
                 const after = getDragAfterElement(taskList, e.clientY);
@@ -5416,7 +6152,9 @@
             clearAllTasksBottomBtn.addEventListener('click', showConfirmDialog);
             confirmCancel.addEventListener('click', hideConfirmDialog);
             confirmProceed.addEventListener('click', clearAllTasks);
-            confirmDialog.addEventListener('click', e => { if (e.target === confirmDialog) hideConfirmDialog(); });
+            confirmDialog.addEventListener('click', e => {
+                if (e.target === confirmDialog) hideConfirmDialog();
+            });
 
             resetCyclesBtn.addEventListener('click', () => {
                 state.cycleCount = 0;
@@ -5424,26 +6162,44 @@
                 save();
                 renderStats();
                 renderPips();
-                renderCycleSets();
                 render();
-                renderChart();
             });
 
-            // ===== ADD TASK =====
-            let currentTiming = 'today';
+            $('#addTaskBtn').addEventListener('click', addTask);
+            $('#taskInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
 
-            function updateTimingButtons() {
-                $$('.timing-btn-select').forEach(btn => btn.classList.remove('active'));
-                const target = document.querySelector(`.timing-btn-select[data-timing="${currentTiming}"]`);
-                if (target) target.classList.add('active');
-            }
-            $$('.timing-btn-select').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    currentTiming = btn.dataset.timing;
-                    updateTimingButtons();
-                });
+            // ===== RENAME MODAL =====
+            renameConfirmBtn.addEventListener('click', () => {
+                const newName = renameInput.value.trim();
+                if (newName && state.renameTargetId) {
+                    const task = state.tasks.find(t => t.id === state.renameTargetId);
+                    if (task) {
+                        task.title = newName;
+                        save();
+                        renderTasks();
+                        render();
+                    }
+                }
+                renameBackdrop.classList.remove('show');
+                state.renameTargetId = null;
             });
-            updateTimingButtons();
+
+            renameCancelBtn.addEventListener('click', () => {
+                renameBackdrop.classList.remove('show');
+                state.renameTargetId = null;
+            });
+
+            renameBackdrop.addEventListener('click', e => {
+                if (e.target === renameBackdrop) {
+                    renameBackdrop.classList.remove('show');
+                    state.renameTargetId = null;
+                }
+            });
+
+            renameInput.addEventListener('keydown', e => {
+                if (e.key === 'Enter') renameConfirmBtn.click();
+                if (e.key === 'Escape') renameCancelBtn.click();
+            });
 
             function addTask() {
                 const input = $('#taskInput');
@@ -5454,7 +6210,7 @@
                 const est = isNaN(val) ? 1 : Math.max(0, val);
                 const timing = currentTiming || 'today';
                 const t = { id: uid(), title, est, completedPomos: 0, untimedProgress: 0, done: false, notes: '',
-                    timing };
+                    timing, completedAt: null };
                 state.tasks.push(t);
                 if (!state.activeTaskId) state.activeTaskId = t.id;
                 input.value = '';
@@ -5466,58 +6222,7 @@
                 render();
             }
 
-            $('#addTaskBtn').addEventListener('click', addTask);
-            $('#taskInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
-
-            // ===== FILTER & SORT TOGGLE =====
-            $$('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (btn.classList.contains('sort-toggle')) return;
-                    $$('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    state.taskFilter = btn.dataset.filter;
-                    save();
-                    renderTasks();
-                });
-            });
-
-            if (sortToggleBtn) {
-                sortToggleBtn.addEventListener('click', () => {
-                    state.sortByTiming = !state.sortByTiming;
-                    sortToggleBtn.classList.toggle('active', state.sortByTiming && state.taskFilter === 'all');
-                    save();
-                    renderTasks();
-                });
-                sortToggleBtn.classList.toggle('active', state.sortByTiming && state.taskFilter === 'all');
-            }
-
-            // ===== RENAME MODAL =====
-            renameConfirmBtn.addEventListener('click', () => {
-                const newName = renameInput.value.trim();
-                if (newName && state.renameTargetId) {
-                    const task = state.tasks.find(t => t.id === state.renameTargetId);
-                    if (task) { task.title = newName;
-                        save();
-                        renderTasks();
-                        render(); }
-                }
-                renameBackdrop.classList.remove('show');
-                state.renameTargetId = null;
-            });
-            renameCancelBtn.addEventListener('click', () => {
-                renameBackdrop.classList.remove('show');
-                state.renameTargetId = null;
-            });
-            renameBackdrop.addEventListener('click', e => {
-                if (e.target === renameBackdrop) { renameBackdrop.classList.remove('show');
-                    state.renameTargetId = null; }
-            });
-            renameInput.addEventListener('keydown', e => {
-                if (e.key === 'Enter') renameConfirmBtn.click();
-                if (e.key === 'Escape') renameCancelBtn.click();
-            });
-
-            // ===== ARROW BUTTONS =====
+            // ===== ARROW BUTTON FIX =====
             document.querySelectorAll('.num-arrows button').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const inp = document.getElementById(btn.dataset.target);
@@ -5532,334 +6237,11 @@
                 });
             });
 
-            // ============================================================
-            // ===== ROBUST TIMER — survives tab close / minimize =====
-            // ============================================================
-            let timerTickInterval = null;
-
-            function timerTick() {
-                if (!state.running) return;
-                const now = performance.now();
-                if (state.timerStartTime === null) {
-                    state.timerStartTime = now;
-                    state.timerInitialRemaining = state.remaining;
-                }
-                const elapsed = (now - state.timerStartTime) / 1000;
-                let remaining = state.timerInitialRemaining - elapsed;
-                if (remaining <= 0) {
-                    state.remaining = 0;
-                    render();
-                    completeSession();
-                    return;
-                }
-                state.remaining = remaining;
-                render();
-                // persist state periodically so tab close recovery is accurate
-                if (state.timerLastSavedAt === null || (Date.now() - state.timerLastSavedAt) > 2000) {
-                    state.timerLastSavedAt = Date.now();
-                    save();
-                }
-            }
-
-            function start() {
-                if (state.running) return;
-                // resume from paused state or fresh start
-                if (state.timerPausedRemaining > 0 && state.timerPausedAt !== null) {
-                    state.timerStartTime = performance.now();
-                    state.timerInitialRemaining = state.timerPausedRemaining;
-                    state.timerPausedRemaining = 0;
-                    state.timerPausedAt = null;
-                } else {
-                    state.timerStartTime = performance.now();
-                    state.timerInitialRemaining = state.remaining;
-                }
-                state.running = true;
-                state.timerLastSavedAt = Date.now();
-                requestNotifyPermission();
-                if (timerTickInterval) clearInterval(timerTickInterval);
-                timerTickInterval = setInterval(timerTick, 500);
-                timerTick();
-                render();
-                save();
-            }
-
-            function pause() {
-                if (!state.running) return;
-                state.running = false;
-                if (timerTickInterval) { clearInterval(timerTickInterval);
-                    timerTickInterval = null; }
-                state.timerPausedRemaining = state.remaining;
-                state.timerPausedAt = performance.now();
-                state.timerLastSavedAt = Date.now();
-                render();
-                save();
-            }
-
-            function reset() {
-                pause();
-                state.remaining = state.durations[state.mode];
-                state.timerStartTime = null;
-                state.timerInitialRemaining = 0;
-                state.timerPausedRemaining = 0;
-                state.timerPausedAt = null;
-                state.timerLastSavedAt = null;
-                render();
-                save();
-            }
-
-            function skip() {
-                pause();
-                if (state.mode === 'pomodoro') {
-                    const next = (state.cycleCount % state.cyclesBeforeLong === state.cyclesBeforeLong - 1) ? 'long' :
-                        'short';
-                    switchMode(next);
-                } else switchMode('pomodoro');
-                save();
-            }
-
-            startBtn.addEventListener('click', () => state.running ? pause() : start());
-            resetBtn.addEventListener('click', reset);
-            skipBtn.addEventListener('click', skip);
-
-            // ===== VISIBILITY: handle tab minimize / switch =====
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    state.timerHiddenAt = performance.now();
-                } else {
-                    if (state.running && state.timerHiddenAt !== null) {
-                        const hiddenDuration = (performance.now() - state.timerHiddenAt) / 1000;
-                        if (state.timerStartTime !== null) {
-                            state.timerStartTime += hiddenDuration * 1000;
-                        }
-                        state.timerHiddenAt = null;
-                        timerTick();
-                    } else {
-                        state.timerHiddenAt = null;
-                    }
-                }
-            });
-
-            // ===== BEFORE UNLOAD: persist timer state =====
-            window.addEventListener('beforeunload', () => {
-                if (state.running || state.timerPausedRemaining > 0) {
-                    state.timerLastSavedAt = Date.now();
-                    save();
-                }
-            });
-
-            // ===== RESTORE TIMER ON LOAD =====
-            function restoreTimer() {
-                if (state._loading) return;
-                state._loading = true;
-                // If there's a saved running state, recover it
-                if (state.running && state.timerLastSavedAt) {
-                    const timePassed = Math.floor((Date.now() - state.timerLastSavedAt) / 1000);
-                    if (timePassed > 0 && state.remaining > 0) {
-                        state.remaining = Math.max(0, state.remaining - timePassed);
-                        if (state.remaining <= 0) {
-                            state.remaining = 0;
-                            state.running = false;
-                            render();
-                            state._loading = false;
-                            completeSession();
-                            return;
-                        }
-                    }
-                    if (state.remaining > 0) {
-                        state.timerStartTime = performance.now();
-                        state.timerInitialRemaining = state.remaining;
-                        if (timerTickInterval) clearInterval(timerTickInterval);
-                        timerTickInterval = setInterval(timerTick, 500);
-                        timerTick();
-                    } else {
-                        state.running = false;
-                        render();
-                    }
-                } else if (state.timerPausedRemaining > 0) {
-                    state.remaining = state.timerPausedRemaining;
-                    render();
-                } else if (state.remaining <= 0) {
-                    state.remaining = state.durations[state.mode] || 25 * 60;
-                    render();
-                }
-                state._loading = false;
-            }
-
-            // ===== COMPLETE SESSION =====
-            function completeSession() {
-                pause();
-                notifySessionEnd(state.mode);
-                if (state.alarmSound && !state.masterMute) triggerAlarm(state.mode);
-                if (state.mode === 'pomodoro') {
-                    state.cycleCount++;
-                    recordSession();
-                    const t = activeTask();
-                    if (t) {
-                        if (t.est === 0) t.untimedProgress = (t.untimedProgress || 0) + 1;
-                        else {
-                            t.completedPomos = (t.completedPomos || 0) + 1;
-                            if (t.completedPomos >= t.est) t.done = true;
-                        }
-                    }
-                    renderTasks();
-                    if (t && t.est === 0) { switchMode('pomodoro'); if (state.autostart) setTimeout(start, 500);
-                        save(); return; }
-                    const next = (state.cycleCount % state.cyclesBeforeLong === 0) ? 'long' : 'short';
-                    switchMode(next);
-                } else switchMode('pomodoro');
-                save();
-                if (state.autostart) {
-                    setTimeout(start, 500);
-                } else {
-                    render();
-                }
-                renderCycleSets();
-                renderChart();
-            }
-
-            function requestNotifyPermission() {
-                if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
-            }
-
-            function notifySessionEnd(mode) {
-                if (!('Notification' in window) || Notification.permission !== 'granted') return;
-                const msg = mode === 'pomodoro' ? 'Focus session complete — take a break.' : 'Break over — back to it.';
-                try { new Notification('Ripe', { body: msg }); } catch (_) {}
-            }
-
-            function recordSession() {
-                const session = {
-                    mode: state.mode,
-                    timestamp: new Date().toISOString(),
-                    taskId: state.activeTaskId,
-                    taskTitle: activeTask()?.title || 'Unnamed'
-                };
-                state.sessionHistory.push(session);
-                if (state.sessionHistory.length > 1000) state.sessionHistory.shift();
-                save();
-            }
-
-            // ============================================================
-            // ===== ENHANCED ALARM =====
-            // ============================================================
-            let alarmCtx = null,
-                alarmGainNode = null,
-                alarmOscillators = [],
-                alarmRepeatTimer = null,
-                alarmSnoozeTimer = null,
-                alarmDismissedFlag = false,
-                alarmCurrentRepeat = 0,
-                alarmMaxRepeats = 3,
-                alarmRepeatUntilDismiss = false,
-                alarmVolumeValue = 80;
-
-            function triggerAlarm(mode) {
-                if (state.masterMute) return;
-                const msg = mode === 'pomodoro' ? 'Focus session complete — take a break.' : 'Break over — back to it.';
-                alarmMsg.textContent = msg;
-                alarmOverlay.classList.add('show');
-                alarmDismissedFlag = false;
-                alarmCurrentRepeat = 0;
-                alarmMaxRepeats = state.alarmRepeats;
-                alarmRepeatUntilDismiss = state.alarmRepeatUntilDismiss;
-                alarmVolumeValue = state.alarmVolume;
-                playAlarmSound();
-                // Also show a notification
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    try { new Notification('Ripe', { body: msg, silent: true }); } catch (_) {}
-                }
-            }
-
-            function playAlarmSound() {
-                if (state.masterMute) return;
-                try {
-                    alarmCtx = alarmCtx || new(window.AudioContext || window.webkitAudioContext)();
-                    if (alarmCtx.state === 'suspended') alarmCtx.resume();
-                    const now = alarmCtx.currentTime;
-                    const vol = Math.min(1, Math.max(0, alarmVolumeValue / 100));
-                    if (!alarmGainNode) { alarmGainNode = alarmCtx.createGain();
-                        alarmGainNode.connect(alarmCtx.destination); }
-                    alarmGainNode.gain.setValueAtTime(vol * 0.5, now);
-                    alarmGainNode.gain.exponentialRampToValueAtTime(0.001, now + 1.6);
-
-                    // Pleasant alarm pattern: ascending then descending
-                    const pattern = [523, 587, 659, 784, 659, 587, 523, 659, 784, 880, 784, 659];
-                    pattern.forEach((f, i) => {
-                        const osc = alarmCtx.createOscillator();
-                        const g = alarmCtx.createGain();
-                        osc.type = (i % 3 === 0) ? 'sine' : (i % 3 === 1) ? 'triangle' : 'sine';
-                        osc.frequency.value = f;
-                        const startTime = now + i * 0.10;
-                        g.gain.setValueAtTime(0, startTime);
-                        g.gain.linearRampToValueAtTime(vol * 0.2, startTime + 0.03);
-                        g.gain.exponentialRampToValueAtTime(0.001, startTime + 0.18);
-                        osc.connect(g);
-                        g.connect(alarmGainNode);
-                        osc.start(startTime);
-                        osc.stop(startTime + 0.18);
-                        alarmOscillators.push(osc);
-                    });
-
-                    const totalDuration = pattern.length * 0.10 + 0.6;
-                    if (alarmRepeatTimer) clearTimeout(alarmRepeatTimer);
-                    alarmRepeatTimer = setTimeout(() => {
-                        if (alarmDismissedFlag) return;
-                        alarmCurrentRepeat++;
-                        const shouldRepeat = alarmRepeatUntilDismiss || alarmCurrentRepeat < alarmMaxRepeats;
-                        if (shouldRepeat && !alarmDismissedFlag) playAlarmSound();
-                    }, totalDuration * 1000 + 600);
-                } catch (_) { /* ignore */ }
-            }
-
-            function dismissAlarm() {
-                alarmDismissedFlag = true;
-                alarmOverlay.classList.remove('show');
-                if (alarmRepeatTimer) { clearTimeout(alarmRepeatTimer);
-                    alarmRepeatTimer = null; }
-                if (alarmSnoozeTimer) { clearTimeout(alarmSnoozeTimer);
-                    alarmSnoozeTimer = null; }
-                alarmOscillators.forEach(osc => { try { osc.stop(); } catch (_) {} });
-                alarmOscillators = [];
-                if (alarmGainNode) { try { alarmGainNode.gain.setValueAtTime(0, alarmCtx?.currentTime || 0); } catch (
-                    _) {} }
-            }
-
-            function snoozeAlarm() {
-                dismissAlarm();
-                alarmSnoozeTimer = setTimeout(() => {
-                    if (!alarmDismissedFlag) triggerAlarm(state.mode === 'pomodoro' ? 'pomodoro' : 'short');
-                }, 120000);
-            }
-
-            alarmDismiss.addEventListener('click', dismissAlarm);
-            alarmSnooze.addEventListener('click', snoozeAlarm);
-
-            // ===== KEYBOARD =====
-            document.addEventListener('keydown', e => {
-                if (!state.keyboardShortcuts) return;
-                if (modalBackdrop.classList.contains('show')) return;
-                if (confirmDialog.classList.contains('show')) return;
-                if (renameBackdrop.classList.contains('show')) return;
-                if (alarmOverlay.classList.contains('show')) {
-                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault();
-                        dismissAlarm(); }
-                    return;
-                }
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')
-                    return;
-                if (e.key === ' ' || e.key === 'Space') { e.preventDefault();
-                    state.running ? pause() : start(); }
-                if (e.key === 'r' || e.key === 'R') reset();
-                if (e.key === 's' || e.key === 'S') skip();
-            });
-
-            // ===== SETTINGS =====
+            // ===== SETTINGS — LIVE UPDATES =====
             let pendingCycles = state.cyclesBeforeLong;
+            const cyclesVal = $('#cyclesVal');
             let pendingAlarmRepeats = state.alarmRepeats;
-            let pendingCycleSets = state.cycleSets;
-            const cyclesValEl = $('#cyclesVal');
-            const alarmRepeatsValEl = $('#alarmRepeatsVal');
-            const cycleSetsValEl = $('#cycleSetsVal');
+            const alarmRepeatsVal = $('#alarmRepeatsVal');
 
             function applySettingsLive() {
                 const p = Math.max(1, parseInt($('#setPomodoro').value) || 25);
@@ -5869,7 +6251,6 @@
                 state.durations.short = s * 60;
                 state.durations.long = l * 60;
                 state.cyclesBeforeLong = pendingCycles;
-                state.cycleSets = pendingCycleSets;
                 state.timerFont = $('#setTimerFont').value;
                 state.autostart = $('#setAutostart').classList.contains('on');
                 state.alarmSound = $('#setAlarmSound').classList.contains('on');
@@ -5885,20 +6266,27 @@
                 state.dailyGoal = Math.max(0, parseInt($('#setDailyGoal').value) || 0);
                 state.goalOnlyLong = $('#setGoalOnlyLong').classList.contains('on');
                 state.hideStats = $('#setHideStats').classList.contains('on');
+                state.taskPriority = $('#setTaskPriority').classList.contains('on');
+                state.quietHours = $('#setQuietHours').classList.contains('on');
+                state.quietHoursStart = $('#setQuietHoursStart').value || '22:00';
+                state.quietHoursEnd = $('#setQuietHoursEnd').value || '08:00';
+                if (quietHoursRangeRow) quietHoursRangeRow.style.display = state.quietHours ? '' : 'none';
+                if (sortByPriorityBtn) sortByPriorityBtn.style.display = state.taskPriority ? '' : 'none';
                 $('#alarmVolumeLabel').textContent = state.alarmVolume + '%';
                 alarmVolumeValue = state.alarmVolume;
                 timeDisplay.style.fontFamily = state.timerFont;
                 state.remaining = state.durations[state.mode];
                 renderPips();
-                renderCycleSets();
                 renderTasks();
                 renderEstLine();
                 render();
                 applyModeClass();
                 updateScrollCue();
-                if (state.hideStats) statsPanel.classList.add('hidden');
-                else statsPanel.classList.remove('hidden');
-                renderChart();
+                if (state.hideStats) {
+                    statsPanel.classList.add('hidden'); const hg1=document.getElementById('historyGraph'); if(hg1) hg1.classList.add('hidden');
+                } else {
+                    statsPanel.classList.remove('hidden'); const hg2=document.getElementById('historyGraph'); if(hg2) hg2.classList.remove('hidden');
+                }
                 save();
             }
 
@@ -5916,49 +6304,48 @@
             });
             ['setKeyboardShortcuts', 'setAutostart', 'setAlarmSound', 'setMasterMute', 'setShowActiveTaskProgress',
                 'setHideFocusedBadge', 'setHideScrollCue', 'setShowCyclesLeft', 'setAlarmRepeatUntilDismiss',
-                'setGoalOnlyLong', 'setHideStats'
+                'setGoalOnlyLong', 'setHideStats', 'setTaskPriority', 'setQuietHours'
             ].forEach(id => {
                 $(`#${id}`).addEventListener('click', function() {
                     this.classList.toggle('on');
                     applySettingsLive();
                 });
             });
+            $('#setQuietHoursStart').addEventListener('change', applySettingsLive);
+            $('#setQuietHoursEnd').addEventListener('change', applySettingsLive);
 
-            $('#cyclesUp').addEventListener('click', () => { pendingCycles = Math.min(12, pendingCycles + 1);
-                cyclesValEl.textContent = pendingCycles;
-                applySettingsLive(); });
-            $('#cyclesDown').addEventListener('click', () => { pendingCycles = Math.max(1, pendingCycles - 1);
-                cyclesValEl.textContent = pendingCycles;
-                applySettingsLive(); });
+            $('#cyclesUp').addEventListener('click', () => {
+                pendingCycles = Math.min(12, pendingCycles + 1);
+                cyclesVal.textContent = pendingCycles;
+                applySettingsLive();
+            });
+            $('#cyclesDown').addEventListener('click', () => {
+                pendingCycles = Math.max(1, pendingCycles - 1);
+                cyclesVal.textContent = pendingCycles;
+                applySettingsLive();
+            });
 
-            $('#alarmRepeatsUp').addEventListener('click', () => { pendingAlarmRepeats = Math.min(20, pendingAlarmRepeats +
-                    1);
-                alarmRepeatsValEl.textContent = pendingAlarmRepeats;
+            $('#alarmRepeatsUp').addEventListener('click', () => {
+                pendingAlarmRepeats = Math.min(20, pendingAlarmRepeats + 1);
+                alarmRepeatsVal.textContent = pendingAlarmRepeats;
                 state.alarmRepeats = pendingAlarmRepeats;
-                save(); });
-            $('#alarmRepeatsDown').addEventListener('click', () => { pendingAlarmRepeats = Math.max(0, pendingAlarmRepeats -
-                    1);
-                alarmRepeatsValEl.textContent = pendingAlarmRepeats;
+                save();
+            });
+            $('#alarmRepeatsDown').addEventListener('click', () => {
+                pendingAlarmRepeats = Math.max(0, pendingAlarmRepeats - 1);
+                alarmRepeatsVal.textContent = pendingAlarmRepeats;
                 state.alarmRepeats = pendingAlarmRepeats;
-                save(); });
-
-            $('#cycleSetsUp').addEventListener('click', () => { pendingCycleSets = Math.min(10, pendingCycleSets + 1);
-                cycleSetsValEl.textContent = pendingCycleSets;
-                applySettingsLive(); });
-            $('#cycleSetsDown').addEventListener('click', () => { pendingCycleSets = Math.max(1, pendingCycleSets - 1);
-                cycleSetsValEl.textContent = pendingCycleSets;
-                applySettingsLive(); });
+                save();
+            });
 
             function openModal() {
                 $('#setPomodoro').value = state.durations.pomodoro / 60;
                 $('#setShort').value = state.durations.short / 60;
                 $('#setLong').value = state.durations.long / 60;
                 pendingCycles = state.cyclesBeforeLong;
-                cyclesValEl.textContent = pendingCycles;
+                cyclesVal.textContent = pendingCycles;
                 pendingAlarmRepeats = state.alarmRepeats;
-                alarmRepeatsValEl.textContent = pendingAlarmRepeats;
-                pendingCycleSets = state.cycleSets;
-                cycleSetsValEl.textContent = pendingCycleSets;
+                alarmRepeatsVal.textContent = pendingAlarmRepeats;
                 $('#alarmVolume').value = state.alarmVolume;
                 $('#alarmVolumeLabel').textContent = state.alarmVolume + '%';
                 $('#setTimerFont').value = state.timerFont;
@@ -5974,6 +6361,12 @@
                 $('#setAlarmRepeatUntilDismiss').classList.toggle('on', state.alarmRepeatUntilDismiss);
                 $('#setGoalOnlyLong').classList.toggle('on', state.goalOnlyLong);
                 $('#setHideStats').classList.toggle('on', state.hideStats);
+                $('#setTaskPriority').classList.toggle('on', state.taskPriority);
+                $('#setQuietHours').classList.toggle('on', state.quietHours);
+                $('#setQuietHoursStart').value = state.quietHoursStart || '22:00';
+                $('#setQuietHoursEnd').value = state.quietHoursEnd || '08:00';
+                if (quietHoursRangeRow) quietHoursRangeRow.style.display = state.quietHours ? '' : 'none';
+                if (sortByPriorityBtn) sortByPriorityBtn.style.display = state.taskPriority ? '' : 'none';
                 timerScaleSlider.value = Math.round(state.timerScale * 100);
                 timerScaleLabel.textContent = Math.round(state.timerScale * 100) + '%';
                 $$('.theme-grid .theme-swatch').forEach(el => {
@@ -5990,15 +6383,14 @@
                 applySettingsLive();
                 modalBackdrop.classList.remove('show');
             }
+
             closeModalBtn.addEventListener('click', closeModalAndApply);
-            modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModalAndApply(); });
 
             revertDefaultsBtn.addEventListener('click', () => {
                 state.durations.pomodoro = DEFAULTS.pomodoro * 60;
                 state.durations.short = DEFAULTS.short * 60;
                 state.durations.long = DEFAULTS.long * 60;
                 state.cyclesBeforeLong = DEFAULTS.cyclesBeforeLong;
-                state.cycleSets = DEFAULTS.cycleSets;
                 state.timerFont = DEFAULTS.timerFont;
                 state.autostart = DEFAULTS.autostart;
                 state.alarmSound = DEFAULTS.alarmSound;
@@ -6014,11 +6406,13 @@
                 state.dailyGoal = DEFAULTS.dailyGoal;
                 state.goalOnlyLong = DEFAULTS.goalOnlyLong;
                 state.hideStats = DEFAULTS.hideStats;
-                state.sortByTiming = DEFAULTS.sortByTiming;
+                state.taskPriority = DEFAULTS.taskPriority;
+                state.quietHours = DEFAULTS.quietHours;
+                state.quietHoursStart = DEFAULTS.quietHoursStart;
+                state.quietHoursEnd = DEFAULTS.quietHoursEnd;
                 state.remaining = state.durations[state.mode];
                 pendingCycles = DEFAULTS.cyclesBeforeLong;
                 pendingAlarmRepeats = DEFAULTS.alarmRepeats;
-                pendingCycleSets = DEFAULTS.cycleSets;
                 applyTheme(DEFAULTS.theme);
                 state.timerScale = DEFAULTS.timerScale;
                 applyTimerScale(state.timerScale);
@@ -6026,9 +6420,8 @@
                 $('#setPomodoro').value = DEFAULTS.pomodoro;
                 $('#setShort').value = DEFAULTS.short;
                 $('#setLong').value = DEFAULTS.long;
-                cyclesValEl.textContent = pendingCycles;
-                alarmRepeatsValEl.textContent = pendingAlarmRepeats;
-                cycleSetsValEl.textContent = pendingCycleSets;
+                cyclesVal.textContent = pendingCycles;
+                alarmRepeatsVal.textContent = pendingAlarmRepeats;
                 $('#alarmVolume').value = DEFAULTS.alarmVolume;
                 $('#alarmVolumeLabel').textContent = DEFAULTS.alarmVolume + '%';
                 $('#setTimerFont').value = DEFAULTS.timerFont;
@@ -6044,10 +6437,14 @@
                 $('#setAlarmRepeatUntilDismiss').classList.toggle('on', DEFAULTS.alarmRepeatUntilDismiss);
                 $('#setGoalOnlyLong').classList.toggle('on', DEFAULTS.goalOnlyLong);
                 $('#setHideStats').classList.toggle('on', DEFAULTS.hideStats);
+                $('#setTaskPriority').classList.toggle('on', DEFAULTS.taskPriority);
+                $('#setQuietHours').classList.toggle('on', DEFAULTS.quietHours);
+                $('#setQuietHoursStart').value = DEFAULTS.quietHoursStart;
+                $('#setQuietHoursEnd').value = DEFAULTS.quietHoursEnd;
+                if (quietHoursRangeRow) quietHoursRangeRow.style.display = DEFAULTS.quietHours ? '' : 'none';
+                if (sortByPriorityBtn) sortByPriorityBtn.style.display = DEFAULTS.taskPriority ? '' : 'none';
                 timerScaleSlider.value = Math.round(DEFAULTS.timerScale * 100);
                 timerScaleLabel.textContent = Math.round(DEFAULTS.timerScale * 100) + '%';
-                if (sortToggleBtn) sortToggleBtn.classList.toggle('active', DEFAULTS.sortByTiming && state
-                    .taskFilter === 'all');
 
                 $$('.theme-grid .theme-swatch').forEach(el => {
                     el.classList.toggle('active', el.dataset.theme === DEFAULTS.theme);
@@ -6055,17 +6452,20 @@
                 buildCustomThemeList();
                 timeDisplay.style.fontFamily = state.timerFont;
                 renderPips();
-                renderCycleSets();
                 renderTasks();
                 renderEstLine();
                 render();
                 applyModeClass();
                 updateScrollCue();
-                if (state.hideStats) statsPanel.classList.add('hidden');
-                else statsPanel.classList.remove('hidden');
-                renderChart();
+                if (state.hideStats) {
+                    statsPanel.classList.add('hidden'); const hg1=document.getElementById('historyGraph'); if(hg1) hg1.classList.add('hidden');
+                } else {
+                    statsPanel.classList.remove('hidden'); const hg2=document.getElementById('historyGraph'); if(hg2) hg2.classList.remove('hidden');
+                }
                 save();
             });
+
+            modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModalAndApply(); });
 
             // ===== SOUND MIXER =====
             mixerBtn.addEventListener('click', () => {
@@ -6073,8 +6473,7 @@
                 mixerPanel.classList.toggle('show');
             });
             document.addEventListener('click', e => {
-                if (!mixerPanel.contains(e.target) && !mixerBtn.contains(e.target)) mixerPanel.classList.remove(
-                'show');
+                if (!mixerPanel.contains(e.target) && !mixerBtn.contains(e.target)) mixerPanel.classList.remove('show');
             });
 
             const soundNodes = {};
@@ -6092,9 +6491,14 @@
                 let lastOut = 0;
                 for (let i = 0; i < bufferSize; i++) {
                     const white = Math.random() * 2 - 1;
-                    if (color === 'brown') { lastOut = (lastOut + 0.02 * white) / 1.02;
-                        data[i] = lastOut * 3.5; } else if (color === 'pink') data[i] = white * 0.5;
-                    else data[i] = white;
+                    if (color === 'brown') {
+                        lastOut = (lastOut + 0.02 * white) / 1.02;
+                        data[i] = lastOut * 3.5;
+                    } else if (color === 'pink') {
+                        data[i] = white * 0.5;
+                    } else {
+                        data[i] = white;
+                    }
                 }
                 return buffer;
             }
@@ -6107,29 +6511,39 @@
                 gain.gain.value = 0;
                 let filter = ctx.createBiquadFilter();
                 let source;
-                if (name === 'white') { source = ctx.createBufferSource();
+                if (name === 'white') {
+                    source = ctx.createBufferSource();
                     source.buffer = makeNoiseBuffer(ctx, 'white');
                     source.loop = true;
                     filter.type = 'lowpass';
-                    filter.frequency.value = 6000; } else if (name === 'brown') { source = ctx.createBufferSource();
+                    filter.frequency.value = 6000;
+                } else if (name === 'brown') {
+                    source = ctx.createBufferSource();
                     source.buffer = makeNoiseBuffer(ctx, 'brown');
                     source.loop = true;
                     filter.type = 'lowpass';
-                    filter.frequency.value = 1200; } else if (name === 'rain') { source = ctx.createBufferSource();
+                    filter.frequency.value = 1200;
+                } else if (name === 'rain') {
+                    source = ctx.createBufferSource();
                     source.buffer = makeNoiseBuffer(ctx, 'white');
                     source.loop = true;
                     filter.type = 'bandpass';
                     filter.frequency.value = 3000;
-                    filter.Q.value = 0.6; } else if (name === 'cafe') { source = ctx.createBufferSource();
+                    filter.Q.value = 0.6;
+                } else if (name === 'cafe') {
+                    source = ctx.createBufferSource();
                     source.buffer = makeNoiseBuffer(ctx, 'pink');
                     source.loop = true;
                     filter.type = 'lowpass';
-                    filter.frequency.value = 1800; }
-                if (source) { source.connect(filter);
+                    filter.frequency.value = 1800;
+                }
+                if (source) {
+                    source.connect(filter);
                     filter.connect(gain);
                     gain.connect(ctx.destination);
                     source.start();
-                    soundNodes[name] = { source, gain, filter }; }
+                    soundNodes[name] = { source, gain, filter };
+                }
             }
 
             document.querySelectorAll('.sound-row input[type=range]').forEach(range => {
@@ -6186,27 +6600,16 @@
                         onReady: () => {
                             ytReady = true;
                             ytPlayer.setVolume(parseInt($('#ytVolume').value) || 50);
-                            if (state.savedYtId) {
-                                const input = $('#ytUrlInput');
-                                input.value = state.savedYtUrl || state.savedYtId;
-                                ytPlayer.loadVideoById(state.savedYtId);
-                            } else if (pendingVideoId) { ytPlayer.loadVideoById(pendingVideoId);
+                            if (pendingVideoId) { ytPlayer.loadVideoById(pendingVideoId);
                                 pendingVideoId = null; }
                         }
                     }
                 });
             }
-
-            function saveYtLink(id, url) { state.savedYtId = id;
-                state.savedYtUrl = url || id;
-                save(); }
-
             $('#ytLoadBtn').addEventListener('click', () => {
-                const raw = $('#ytUrlInput').value.trim();
-                const id = extractYouTubeId(raw);
+                const id = extractYouTubeId($('#ytUrlInput').value);
                 if (!id) { $('#ytUrlInput').style.borderColor = '#e05a3d';
                     setTimeout(() => { $('#ytUrlInput').style.borderColor = ''; }, 1200); return; }
-                saveYtLink(id, raw);
                 if (!ytPlayer) { loadYouTubeAPI();
                     pendingVideoId = id; return; }
                 if (ytReady) ytPlayer.loadVideoById(id);
@@ -6214,12 +6617,7 @@
             });
             $('#ytPlayBtn').addEventListener('click', () => { if (ytReady) ytPlayer.playVideo(); });
             $('#ytPauseBtn').addEventListener('click', () => { if (ytReady) ytPlayer.pauseVideo(); });
-            $('#ytVolume').addEventListener('input', e => {
-                const vol = parseInt(e.target.value) || 0;
-                if (ytReady) ytPlayer.setVolume(vol);
-            });
-
-            setTimeout(() => { if (state.savedYtId && !ytPlayer) loadYouTubeAPI(); }, 300);
+            $('#ytVolume').addEventListener('input', e => { if (ytReady) ytPlayer.setVolume(parseInt(e.target.value) || 0); });
 
             // ===== EXPORT / IMPORT =====
             $('#exportBtn').addEventListener('click', () => {
@@ -6236,68 +6634,165 @@
                 if (!file) return;
                 const reader = new FileReader();
                 reader.onload = () => {
-                    try { JSON.parse(reader.result);
+                    try {
+                        JSON.parse(reader.result);
                         localStorage.setItem('ripe_state', reader.result);
-                        location.reload(); } catch (_) { alert('Invalid backup file.'); }
+                        location.reload();
+                    } catch (_) {
+                        alert('Invalid backup file.');
+                    }
                 };
                 reader.readAsText(file);
                 e.target.value = '';
             });
 
-            // ===== SCROLL CUE =====
+            function exportCSV() {
+                const rows = [['timestamp', 'mode', 'taskTitle']];
+                (state.sessionHistory || []).forEach(s => {
+                    rows.push([
+                        s.timestamp || '',
+                        s.mode || '',
+                        (s.taskTitle || '').replace(/"/g, '""')
+                    ]);
+                });
+                const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `ripe-sessions-${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+            }
+            const exportCsvBtn = $('#exportCsvBtn');
+            if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportCSV);
+
+            // ===== SCROLL CUE CLICK =====
             scrollCue.addEventListener('click', () => {
                 document.querySelector('.tasks-section').scrollIntoView({ behavior: 'smooth' });
             });
 
-            // ===== INFO BAR TOGGLE =====
-            if (toggleInfoBtn) {
-                toggleInfoBtn.addEventListener('click', () => {
-                    state.infoBarHidden = !state.infoBarHidden;
-                    statbar.classList.toggle('show', !state.infoBarHidden);
-                    toggleInfoBtn.textContent = state.infoBarHidden ? '+' : '−';
-                    save();
-                });
-                if (state.infoBarHidden) { statbar.classList.remove('show');
-                    toggleInfoBtn.textContent = '+'; } else { statbar.classList.add('show');
-                    toggleInfoBtn.textContent = '−'; }
+            // ===== TIMING BUTTONS =====
+            let currentTiming = 'today';
+
+            function updateTimingButtons() {
+                $$('.timing-btn-select').forEach(btn => btn.classList.remove('active'));
+                const target = document.querySelector(`.timing-btn-select[data-timing="${currentTiming}"]`);
+                if (target) target.classList.add('active');
             }
 
-            // ===== CYCLE THEME =====
-            themeToggleBtn.addEventListener('click', () => {
-                const idx = THEMES.indexOf(state.theme);
-                const next = THEMES[(idx + 1) % THEMES.length];
-                applyTheme(next);
-                $$('.theme-grid .theme-swatch').forEach(el => {
-                    el.classList.toggle('active', el.dataset.theme === next);
+            $$('.timing-btn-select').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentTiming = btn.dataset.timing;
+                    updateTimingButtons();
                 });
             });
 
+            updateTimingButtons();
+
+            // ===== FILTER BUTTONS =====
+            $$('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    $$('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.taskFilter = btn.dataset.filter;
+                    // When filter changes, sort by day (group by day)
+                    sortTasksByDay();
+                    save();
+                    renderTasks();
+                    renderStats();
+                });
+            });
+
+            // ===== SORT BUTTON =====
+            sortByDayBtn.addEventListener('click', () => {
+                sortTasksByDay();
+                renderTasks();
+                renderStats();
+            });
+
+            if (sortByPriorityBtn) {
+                sortByPriorityBtn.addEventListener('click', () => {
+                    sortByPriority();
+                    renderTasks();
+                    renderStats();
+                });
+            }
+
+            // ===== UPDATE STATS =====
+            function getLast7DaysData() {
+                const days = [];
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    const dayStart = new Date(d.toDateString()).getTime();
+                    const dayEnd = dayStart + 86400000;
+                    const count = state.sessionHistory.filter(s => {
+                        const t = new Date(s.timestamp).getTime();
+                        return t >= dayStart && t < dayEnd && s.mode === 'pomodoro';
+                    }).length;
+                    days.push({ label: d.toLocaleDateString(undefined, { weekday: 'short' })[0], count });
+                }
+                return days;
+            }
+
+            function renderHistory() {
+                const el = document.getElementById('historyGraph');
+                if (!el) return;
+                const days = getLast7DaysData();
+                const max = Math.max(1, ...days.map(d => d.count));
+                el.innerHTML = days.map(d => `
+                    <div class="hg-col" title="${d.count} focus session${d.count === 1 ? '' : 's'}">
+                        <div class="hg-bar" style="height:${Math.max(4, Math.round((d.count / max) * 100))}%"></div>
+                        <div class="hg-label">${d.label}</div>
+                    </div>
+                `).join('');
+            }
+
+            function updateStats() {
+                const stats = document.getElementById('stats-panel');
+                if (!stats) return;
+                const today = getTodayStats();
+                const week = getWeekStats();
+                const streakDisplay = state.focusStreak > 0 ? state.focusStreak + ' day' + (state.focusStreak > 1 ?
+                    's' : '') + ' 🔥' : '0';
+                stats.innerHTML = `
+                  <div class="stat-item"><span class="stat-label">Today</span><span class="stat-value">${today.length}</span></div>
+                  <div class="stat-item"><span class="stat-label">Week</span><span class="stat-value">${week.length}</span></div>
+                  <div class="stat-item"><span class="stat-label">Streak</span><span class="stat-value">${streakDisplay}</span></div>
+                  <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value">${state.sessionHistory.length}</span></div>
+                `;
+                renderHistory();
+            }
+
             // ===== INIT =====
+            checkDayRollover();
             switchMode('pomodoro', false);
             renderPips();
-            renderCycleSets();
             renderTasks();
             render();
             updateStats();
             const colors = THEME_COLORS[state.theme] || ['#333', '#666'];
             themePreviewDot.style.background = colors[1];
+
             alarmVolumeValue = state.alarmVolume;
             alarmMaxRepeats = state.alarmRepeats;
             alarmRepeatUntilDismiss = state.alarmRepeatUntilDismiss;
-            if (state.hideStats) statsPanel.classList.add('hidden');
-            if (sortToggleBtn) sortToggleBtn.classList.toggle('active', state.sortByTiming && state.taskFilter === 'all');
 
+            if (state.hideStats) {
+                statsPanel.classList.add('hidden'); const hg1=document.getElementById('historyGraph'); if(hg1) hg1.classList.add('hidden');
+            }
+            if (sortByPriorityBtn) sortByPriorityBtn.style.display = state.taskPriority ? '' : 'none';
+            if (quietHoursRangeRow) quietHoursRangeRow.style.display = state.quietHours ? '' : 'none';
+
+            // Restore timer after UI is ready
             setTimeout(() => {
                 applyTheme(state.theme);
                 applyTimerScale(state.timerScale);
                 updateScrollCue();
                 restoreTimer();
-                if (state.savedYtUrl) $('#ytUrlInput').value = state.savedYtUrl;
-                renderChart();
-                renderCycleSets();
             }, 50);
 
         })();
     </script>
-</body>
-</html>
+
+<script src="code%20model_files/iframe_api_Tx9o"></script></body></html>
