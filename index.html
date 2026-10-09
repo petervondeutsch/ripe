@@ -3870,6 +3870,119 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--fg-dim);
         }
+
+        /* ===== v2: UX additions ===== */
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        .task-list[hidden] { display: none; }
+        body.f-chips .timing-btn-select.weekend .timing-indicator { background: #6366f1; }
+        body.f-a11y .task [role="button"]:focus-visible,
+        body.f-a11y .task [role="checkbox"]:focus-visible,
+        body.f-a11y .task button:focus-visible,
+        body.f-a11y .toast button:focus-visible,
+        body.f-a11y .sweep-banner button:focus-visible,
+        body.f-a11y .completed-toggle:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+        .task-group + .task-group { margin-top: 6px; }
+        .task-group-header {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--fg-dim); font-weight: 600; margin: 16px 2px 8px;
+        }
+        .task-group:first-child .task-group-header { margin-top: 4px; }
+        .task-group-header .gdot { width: 8px; height: 8px; border-radius: 50%; }
+        .task-group-header .gdot.today { background: #4ade80; }
+        .task-group-header .gdot.tomorrow { background: #60a5fa; }
+        .task-group-header .gdot.weekend { background: #6366f1; }
+        .task-group-header .count {
+            font-family: var(--font-mono); background: var(--bg-3); border-radius: 10px;
+            padding: 1px 8px; font-size: 10px; letter-spacing: 0;
+        }
+        .task-group-list { display: flex; flex-direction: column; gap: 8px; }
+
+        .timing-chip {
+            border: 1px solid var(--line); background: var(--bg-3); color: var(--fg-dim);
+            border-radius: 20px; padding: 2px 9px 2px 7px; font-size: 10.5px; font-weight: 600;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;
+            font-family: 'Inter', sans-serif; transition: border-color 0.2s ease, color 0.2s ease;
+        }
+        .timing-chip::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--fg-dim-2); }
+        .timing-chip.today::before { background: #4ade80; }
+        .timing-chip.tomorrow::before { background: #60a5fa; }
+        .timing-chip.weekend::before { background: #6366f1; }
+        .timing-chip:hover { color: var(--fg); border-color: var(--fg-dim); }
+
+        .carry-chip {
+            font-size: 10px; color: var(--accent-long); border: 1px dashed var(--line);
+            border-radius: 20px; padding: 1px 8px; flex-shrink: 0; white-space: nowrap;
+        }
+        .task-focus-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; padding: 0; border: none; background: transparent;
+            color: var(--fg-dim-2); cursor: pointer; border-radius: 6px; flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        .task-focus-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .task-focus-btn:hover { color: var(--accent); background: var(--accent-soft); }
+        .task-focus-btn.on { color: var(--accent); }
+        .note-indicator { display: inline-flex; color: var(--fg-dim); flex-shrink: 0; }
+        .note-indicator svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .est-dots { display: inline-flex; gap: 3px; align-items: center; }
+        .est-dot { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--accent); }
+        .est-dot.filled { background: var(--accent); }
+        .task-row .task-title-input { flex: 1; min-width: 0; }
+        .task-move { display: none; flex-direction: column; gap: 1px; flex-shrink: 0; }
+        .task-move button {
+            border: none; background: transparent; color: var(--fg-dim); font-size: 9px;
+            line-height: 1; padding: 3px 5px; cursor: pointer; border-radius: 4px;
+        }
+        .task-move button:active { background: var(--accent-soft); color: var(--accent); }
+        @media (hover: none) {
+            body.f-touch .task-move { display: flex; }
+            body.f-touch .task-del, body.f-touch .task-undo { opacity: 0.7; }
+            body.f-touch .drag-handle { display: none; }
+        }
+
+        .plan-summary {
+            font-size: 12px; color: var(--fg-dim); font-family: var(--font-mono);
+            margin: 0 2px 12px; line-height: 1.5;
+        }
+        .plan-summary.warn { color: var(--accent-long); }
+        .sweep-banner {
+            display: none; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+            background: var(--accent-soft); border: 1px solid var(--line); border-radius: 12px;
+            padding: 10px 14px; margin-bottom: 12px; font-size: 13px; color: var(--fg);
+        }
+        .sweep-banner.show { display: flex; }
+        .sweep-banner .sweep-actions { display: flex; gap: 8px; }
+        .sweep-banner button {
+            background: var(--bg-2); border: 1px solid var(--line); color: var(--fg);
+            border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 600;
+            cursor: pointer; font-family: 'Inter', sans-serif;
+        }
+        .sweep-banner button:hover { border-color: var(--accent); color: var(--accent); }
+        .completed-toggle {
+            background: none; border: none; color: var(--fg-dim); cursor: pointer; padding: 4px 2px;
+            font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+        .completed-toggle:hover { color: var(--fg); }
+        .save-indicator { text-align: center; font-size: 11px; color: var(--fg-dim-2); margin-top: 14px; min-height: 1em; }
+        .save-indicator.error { color: #e05a3d; }
+        .toast {
+            position: fixed; left: 50%; bottom: 24px; z-index: 90;
+            transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none;
+            background: var(--bg-3); color: var(--fg); border: 1px solid var(--line);
+            border-radius: 12px; padding: 10px 14px; display: flex; gap: 14px; align-items: center;
+            font-size: 13px; box-shadow: 0 12px 40px var(--shadow);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+        .toast button {
+            background: none; border: none; color: var(--accent); font-weight: 700; cursor: pointer;
+            font-size: 13px; font-family: 'Inter', sans-serif; padding: 2px 4px;
+        }
     </style>
 </head>
 <body data-theme="og-dark" class="mode-focus" style="--accent-soft: rgba(224, 90, 61, 0.14); --accent-rgb: 224, 90, 61; --timer-scale: 1;">
@@ -4023,6 +4136,16 @@
             <button type="button" class="sort-btn" id="sortByPriorityBtn" style="display:none;">Sort by Priority</button>
         </div>
 
+        <!-- Carried-over banner + plan summary -->
+        <div class="sweep-banner" id="sweepBanner">
+            <span id="sweepText"></span>
+            <div class="sweep-actions">
+                <button type="button" id="sweepKeep">Keep for today</button>
+                <button type="button" id="sweepMove">Move to tomorrow</button>
+            </div>
+        </div>
+        <div class="plan-summary" id="planSummary" style="display:none;"></div>
+
         <!-- Task List -->
         <div class="task-list" id="taskList"></div>
         <div class="empty-tasks" id="emptyState" style="display: none;">No tasks yet — add one above and click it to make it active.</div>
@@ -4030,7 +4153,7 @@
         <!-- Completed -->
         <div class="completed-section" id="completedSection" style="display:none;">
             <div class="completed-header">
-                <span>Completed</span>
+                <button type="button" class="completed-toggle" id="completedToggle" aria-expanded="true">Completed</button>
                 <div class="actions">
                     <button id="clearCompletedBtn">Clear all</button>
                     <button id="clearAllTasksBtn" class="danger">Clear all tasks</button>
@@ -4047,13 +4170,15 @@
             </button>
             <button class="btn-bottom danger" id="clearAllTasksBottomBtn">
                 <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                Clear all tasks
+                <span id="clearAllBottomLabel">Clear all tasks</span>
             </button>
             <button class="btn-bottom" id="exportBtn">Export data</button>
             <button class="btn-bottom" id="importBtn">Import data</button>
             <button class="btn-bottom" id="exportCsvBtn">Export sessions (CSV)</button>
+            <button class="btn-bottom" id="restoreBackupBtn">Restore daily backup</button>
             <input type="file" id="importFile" accept=".json" style="display:none">
         </div>
+        <div class="save-indicator" id="saveIndicator"></div>
 
         <footer>Ripe — a focused clone of the pomodoro timer concept, built for you. <button type="button" id="openPrinciplesBtn" class="footer-link-btn">Design principles</button></footer>
     </div>
@@ -4061,8 +4186,8 @@
     <!-- ===== CONFIRMATION DIALOG ===== -->
     <div class="confirm-dialog" id="confirmDialog">
         <div class="box">
-            <h4>Clear all tasks?</h4>
-            <p>This will permanently remove <strong>all</strong> tasks — both active and completed. This action cannot be undone.</p>
+            <h4 id="confirmTitle">Clear all tasks?</h4>
+            <p id="confirmText">This will permanently remove <strong>all</strong> tasks — both active and completed. This action cannot be undone.</p>
             <div class="actions">
                 <button class="btn-cancel" id="confirmCancel">Cancel</button>
                 <button class="btn-danger" id="confirmProceed">Clear all</button>
@@ -4117,6 +4242,12 @@
         </div>
     </div>
 
+    <!-- ===== TOAST (undo) ===== -->
+    <div class="toast" id="toast" role="status" aria-live="polite">
+        <span id="toastMsg"></span>
+        <button type="button" id="toastUndo">Undo</button>
+    </div>
+
     <!-- ===== ALARM OVERLAY ===== -->
     <div class="alarm-overlay" id="alarmOverlay">
         <div class="alarm-box">
@@ -4164,429 +4295,16 @@
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l.06.06A1.65 1.65 0 0019.32 9c.1.36.51.6 1 .6H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
                     Themes
                 </div>
-                <div class="theme-grid" id="themeGrid"><div class="theme-swatch active" data-theme="og-dark">
-                    OG Dark
-                    <div class="swatch-colors">
-                      <span style="background:#1b1a1f"></span>
-                      <span style="background:#e05a3d"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="og-light">
-                    OG Light
-                    <div class="swatch-colors">
-                      <span style="background:#f6f1e6"></span>
-                      <span style="background:#d14c30"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="dark">
-                    Dark
-                    <div class="swatch-colors">
-                      <span style="background:#1b1a1f"></span>
-                      <span style="background:#e05a3d"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="light">
-                    Light
-                    <div class="swatch-colors">
-                      <span style="background:#f6f1e6"></span>
-                      <span style="background:#d14c30"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="forest">
-                    Forest
-                    <div class="swatch-colors">
-                      <span style="background:#1a261e"></span>
-                      <span style="background:#7cb083"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="ocean">
-                    Ocean
-                    <div class="swatch-colors">
-                      <span style="background:#0e1f2b"></span>
-                      <span style="background:#5fa8d3"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="sunset">
-                    Sunset
-                    <div class="swatch-colors">
-                      <span style="background:#261a1a"></span>
-                      <span style="background:#e8856e"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="lavender">
-                    Lavender
-                    <div class="swatch-colors">
-                      <span style="background:#1e1a2a"></span>
-                      <span style="background:#b8a5e0"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="mint">
-                    Mint
-                    <div class="swatch-colors">
-                      <span style="background:#14201a"></span>
-                      <span style="background:#6fc9a8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="rose">
-                    Rose
-                    <div class="swatch-colors">
-                      <span style="background:#261a1f"></span>
-                      <span style="background:#e880a8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="amber">
-                    Amber
-                    <div class="swatch-colors">
-                      <span style="background:#1f1a12"></span>
-                      <span style="background:#e8b85a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="slate">
-                    Slate
-                    <div class="swatch-colors">
-                      <span style="background:#16181c"></span>
-                      <span style="background:#7a8a9a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="wine">
-                    Wine
-                    <div class="swatch-colors">
-                      <span style="background:#1e1218"></span>
-                      <span style="background:#d46a8a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="teal">
-                    Teal
-                    <div class="swatch-colors">
-                      <span style="background:#0e1e1e"></span>
-                      <span style="background:#4ab8b8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="peach">
-                    Peach
-                    <div class="swatch-colors">
-                      <span style="background:#221a14"></span>
-                      <span style="background:#e8a070"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="indigo">
-                    Indigo
-                    <div class="swatch-colors">
-                      <span style="background:#12101e"></span>
-                      <span style="background:#8a7ad8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="emerald">
-                    Emerald
-                    <div class="swatch-colors">
-                      <span style="background:#0e1a14"></span>
-                      <span style="background:#50c890"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="coral">
-                    Coral
-                    <div class="swatch-colors">
-                      <span style="background:#1f1412"></span>
-                      <span style="background:#e87a62"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="graphite">
-                    Graphite
-                    <div class="swatch-colors">
-                      <span style="background:#121212"></span>
-                      <span style="background:#888888"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="sand">
-                    Sand
-                    <div class="swatch-colors">
-                      <span style="background:#1e1a14"></span>
-                      <span style="background:#d4b870"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="plum">
-                    Plum
-                    <div class="swatch-colors">
-                      <span style="background:#1e1420"></span>
-                      <span style="background:#d480c8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="sky">
-                    Sky
-                    <div class="swatch-colors">
-                      <span style="background:#0e1a26"></span>
-                      <span style="background:#5ab0d4"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="cherry">
-                    Cherry
-                    <div class="swatch-colors">
-                      <span style="background:#1e1012"></span>
-                      <span style="background:#e06050"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="moss">
-                    Moss
-                    <div class="swatch-colors">
-                      <span style="background:#141c12"></span>
-                      <span style="background:#8aba6a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="stone">
-                    Stone
-                    <div class="swatch-colors">
-                      <span style="background:#161412"></span>
-                      <span style="background:#b0a090"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="blush">
-                    Blush
-                    <div class="swatch-colors">
-                      <span style="background:#1e161a"></span>
-                      <span style="background:#e898a8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="midnight">
-                    Midnight
-                    <div class="swatch-colors">
-                      <span style="background:#0c0e14"></span>
-                      <span style="background:#6a7a9a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="aurora">
-                    Aurora
-                    <div class="swatch-colors">
-                      <span style="background:#0e1a1a"></span>
-                      <span style="background:#4ad4d4"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="coffee">
-                    Coffee
-                    <div class="swatch-colors">
-                      <span style="background:#1a1410"></span>
-                      <span style="background:#c89060"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="candy">
-                    Candy
-                    <div class="swatch-colors">
-                      <span style="background:#1e1018"></span>
-                      <span style="background:#e870a8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="lime">
-                    Lime
-                    <div class="swatch-colors">
-                      <span style="background:#121c10"></span>
-                      <span style="background:#9ad46a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="sakura">
-                    Sakura
-                    <div class="swatch-colors">
-                      <span style="background:#1e141e"></span>
-                      <span style="background:#e880d4"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="charcoal">
-                    Charcoal
-                    <div class="swatch-colors">
-                      <span style="background:#0e0e10"></span>
-                      <span style="background:#909098"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="ivory">
-                    Ivory
-                    <div class="swatch-colors">
-                      <span style="background:#f4f0e6"></span>
-                      <span style="background:#b0a090"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="denim">
-                    Denim
-                    <div class="swatch-colors">
-                      <span style="background:#101a24"></span>
-                      <span style="background:#6a9ac8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="mango">
-                    Mango
-                    <div class="swatch-colors">
-                      <span style="background:#1e1a0e"></span>
-                      <span style="background:#e8c060"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="mocha">
-                    Mocha
-                    <div class="swatch-colors">
-                      <span style="background:#1a1412"></span>
-                      <span style="background:#c8907a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="silver">
-                    Silver
-                    <div class="swatch-colors">
-                      <span style="background:#18181a"></span>
-                      <span style="background:#a8a8b0"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="sunflower">
-                    Sunflower
-                    <div class="swatch-colors">
-                      <span style="background:#1e1a0a"></span>
-                      <span style="background:#f0d050"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="cotton">
-                    Cotton
-                    <div class="swatch-colors">
-                      <span style="background:#f0f0f0"></span>
-                      <span style="background:#8a8a8a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="obsidian">
-                    Obsidian
-                    <div class="swatch-colors">
-                      <span style="background:#08080a"></span>
-                      <span style="background:#5a5a6a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="twilight">
-                    Twilight
-                    <div class="swatch-colors">
-                      <span style="background:#14101e"></span>
-                      <span style="background:#9a8ad8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="honey">
-                    Honey
-                    <div class="swatch-colors">
-                      <span style="background:#1e180e"></span>
-                      <span style="background:#e8c850"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="mist">
-                    Mist
-                    <div class="swatch-colors">
-                      <span style="background:#141a1e"></span>
-                      <span style="background:#6aaac8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="berry">
-                    Berry
-                    <div class="swatch-colors">
-                      <span style="background:#1e1018"></span>
-                      <span style="background:#d86098"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="breeze">
-                    Breeze
-                    <div class="swatch-colors">
-                      <span style="background:#eaf0f5"></span>
-                      <span style="background:#5a8aaa"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="earl">
-                    Earl
-                    <div class="swatch-colors">
-                      <span style="background:#1a1612"></span>
-                      <span style="background:#c8a070"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="spice">
-                    Spice
-                    <div class="swatch-colors">
-                      <span style="background:#1e1410"></span>
-                      <span style="background:#e08860"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="glacier">
-                    Glacier
-                    <div class="swatch-colors">
-                      <span style="background:#0e1418"></span>
-                      <span style="background:#5ab8d4"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="flame">
-                    Flame
-                    <div class="swatch-colors">
-                      <span style="background:#1e0e0a"></span>
-                      <span style="background:#e87040"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="dream">
-                    Dream
-                    <div class="swatch-colors">
-                      <span style="background:#1a1622"></span>
-                      <span style="background:#b89ae0"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="frost">
-                    Frost
-                    <div class="swatch-colors">
-                      <span style="background:#eef2f4"></span>
-                      <span style="background:#6aaac8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="terra">
-                    Terra
-                    <div class="swatch-colors">
-                      <span style="background:#16120e"></span>
-                      <span style="background:#b09878"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="bloom">
-                    Bloom
-                    <div class="swatch-colors">
-                      <span style="background:#1e141a"></span>
-                      <span style="background:#e898b8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="vanilla">
-                    Vanilla
-                    <div class="swatch-colors">
-                      <span style="background:#fcf8f0"></span>
-                      <span style="background:#d4a060"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="sky-light">
-                    Sky Light
-                    <div class="swatch-colors">
-                      <span style="background:#f0f6fa"></span>
-                      <span style="background:#5a9ac8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="rose-light">
-                    Rose Light
-                    <div class="swatch-colors">
-                      <span style="background:#faf2f4"></span>
-                      <span style="background:#d87090"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="mint-light">
-                    Mint Light
-                    <div class="swatch-colors">
-                      <span style="background:#f0f8f2"></span>
-                      <span style="background:#5aaa7a"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="lavender-light">
-                    Lavender Light
-                    <div class="swatch-colors">
-                      <span style="background:#f6f2fa"></span>
-                      <span style="background:#9a7ac8"></span>
-                    </div>
-                  </div><div class="theme-swatch" data-theme="peach-light">
-                    Peach Light
-                    <div class="swatch-colors">
-                      <span style="background:#faf4ee"></span>
-                      <span style="background:#d48a60"></span>
-                    </div>
-                  </div></div>
+                <!-- Theme swatches are generated by buildThemeGrid() in the script below -->
+                <div class="theme-grid" id="themeGrid"></div>
 
                 <!-- Custom Themes -->
                 <div class="section-title">
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M14 2L8 8l6 6 6-6-6-6z"></path><path d="M8 8l-4 4 6 6 4-4"></path><line x1="16" y1="12" x2="20" y2="8"></line><line x1="8" y1="16" x2="4" y2="20"></line></svg>
                     Custom Themes
                 </div>
-                <div class="custom-theme-list" id="customThemeList"><div class="custom-theme-row">
-                        <input type="text" class="ct-name-input" value="Custom 1" maxlength="18" title="Rename theme">
-                        <div class="ct-colors">
-                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#e05a3d" title="Focus accent"></div>
-                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#8ea583" title="Short break accent"></div>
-                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#dba43f" title="Long break accent"></div>
-                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#1b1a1f" title="Background"></div>
-                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#242229" title="Panel"></div>
-                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#f4ede2" title="Text"></div>
-                        </div>
-                        <button type="button" class="ct-use">Use</button>
-                    </div><div class="custom-theme-row">
-                        <input type="text" class="ct-name-input" value="Custom 2" maxlength="18" title="Rename theme">
-                        <div class="ct-colors">
-                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#4a90d9" title="Focus accent"></div>
-                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#4a9a8a" title="Short break accent"></div>
-                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#d94a7a" title="Long break accent"></div>
-                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#1a1f26" title="Background"></div>
-                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#232a33" title="Panel"></div>
-                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#e8eef4" title="Text"></div>
-                        </div>
-                        <button type="button" class="ct-use">Use</button>
-                    </div><div class="custom-theme-row">
-                        <input type="text" class="ct-name-input" value="Custom 3" maxlength="18" title="Rename theme">
-                        <div class="ct-colors">
-                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#a05ad9" title="Focus accent"></div>
-                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#8ab8c8" title="Short break accent"></div>
-                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#5ad9a0" title="Long break accent"></div>
-                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#1f1a24" title="Background"></div>
-                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#2a2330" title="Panel"></div>
-                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#f0e8f4" title="Text"></div>
-                        </div>
-                        <button type="button" class="ct-use">Use</button>
-                    </div><div class="custom-theme-row">
-                        <input type="text" class="ct-name-input" value="Custom 4" maxlength="18" title="Rename theme">
-                        <div class="ct-colors">
-                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#3fae6a" title="Focus accent"></div>
-                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#7aaa8a" title="Short break accent"></div>
-                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#ae3f8f" title="Long break accent"></div>
-                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#141f18" title="Background"></div>
-                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#1e2e24" title="Panel"></div>
-                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#e6f2ea" title="Text"></div>
-                        </div>
-                        <button type="button" class="ct-use">Use</button>
-                    </div><div class="custom-theme-row">
-                        <input type="text" class="ct-name-input" value="Custom 5" maxlength="18" title="Rename theme">
-                        <div class="ct-colors">
-                            <div class="ct-color-group"><span>F</span><input type="color" class="color-swatch-input" data-key="focus" value="#d97a3f" title="Focus accent"></div>
-                            <div class="ct-color-group"><span>S</span><input type="color" class="color-swatch-input" data-key="short" value="#b89a6a" title="Short break accent"></div>
-                            <div class="ct-color-group"><span>L</span><input type="color" class="color-swatch-input" data-key="long" value="#3f6bd9" title="Long break accent"></div>
-                            <div class="ct-color-group"><span>Bg</span><input type="color" class="color-swatch-input" data-key="bg" value="#241a16" title="Background"></div>
-                            <div class="ct-color-group"><span>P</span><input type="color" class="color-swatch-input" data-key="bg2" value="#332420" title="Panel"></div>
-                            <div class="ct-color-group"><span>T</span><input type="color" class="color-swatch-input" data-key="fg" value="#f5e8e0" title="Text"></div>
-                        </div>
-                        <button type="button" class="ct-use">Use</button>
-                    </div></div>
+                <!-- Custom theme rows are generated by buildCustomThemeList() in the script below -->
+                <div class="custom-theme-list" id="customThemeList"></div>
 
                 <!-- Timer -->
                 <div class="section-title">
@@ -4770,6 +4488,16 @@
                 <div class="field-row">
                     <label>Hide stats panel</label>
                     <div class="toggle" id="setHideStats"></div>
+                </div>
+
+                <!-- Task manager extras (all off = original behaviour) -->
+                <div class="section-title">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
+                    Task manager extras
+                </div>
+                <div id="flagRows"></div>
+                <div class="field-row">
+                    <label style="font-size:11px;color:var(--fg-dim-2);font-weight:400;">Everything in this section is off by default. With all of it off, the task manager behaves exactly like the original.</label>
                 </div>
 
                 <div class="modal-actions">
@@ -5032,8 +4760,110 @@
                 sessionPauseCount: 0,
                 lastResumeData: null,
                 ytStations: [],
-                ytLastLoadedId: null
+                ytLastLoadedId: null,
+                flags: {},
+                lastAddTiming: 'today',
+                lastAddEst: 1,
+                completedCollapsed: true
             };
+
+            // FIX (storage): set to true right before we reload after an import, so the
+            // beforeunload handler doesn't overwrite the freshly imported data with the old in-memory state.
+            let skipUnloadSave = false;
+
+            // ===== TASK-MANAGER EXTRAS: every option is off by default (= original behaviour) =====
+            const FLAGS = [
+                ['autoNextTask', 'Auto-select next task when one finishes'],
+                ['undoToast', 'Undo toast after deleting / clearing tasks'],
+                ['touchControls', 'Touch controls (move arrows, always-visible delete)'],
+                ['dragHandleOnly', 'Drag rows only by their handle'],
+                ['a11yTasks', 'Keyboard & screen-reader support on tasks'],
+                ['shortcutN', 'Press N to jump to the add-task box'],
+                ['dayGroups', 'Group tasks under Today / Tomorrow / Weekend headers'],
+                ['timingChips', 'Labeled day chips instead of colored dots'],
+                ['carryMarkers', 'Mark tasks carried over from yesterday + sweep banner'],
+                ['focusButton', 'Focus button on each task'],
+                ['inlineRename', 'Rename inline (double-click) instead of popup'],
+                ['quickAdd', 'Quick-add syntax (@tmrw, @wknd, x3)'],
+                ['rememberAdd', 'Remember last day & estimate in the add form'],
+                ['estDots', 'Show estimates as dots'],
+                ['noteIndicator', 'Note icon on tasks that have notes'],
+                ['completedCollapse', 'Collapsible completed list + clearer button names'],
+                ['planSummary', "Today's plan & time-left summary"],
+                ['saveIndicator', '"Saved" indicator & storage-full warning'],
+                ['dailyBackup', 'Daily automatic backup (+ restore button)'],
+                ['importConfirm', 'Confirm before importing a backup'],
+                ['restoreFilter', 'Remember the active day filter after reload']
+            ];
+            function flag(key) { return !!(state.flags && state.flags[key]); }
+
+            function buildFlagRows() {
+                const wrap = document.getElementById('flagRows');
+                if (!wrap) return;
+                wrap.innerHTML = '';
+                FLAGS.forEach(([key, label]) => {
+                    const row = document.createElement('div');
+                    row.className = 'field-row';
+                    const lab = document.createElement('label');
+                    lab.textContent = label;
+                    const tg = document.createElement('div');
+                    tg.className = 'toggle' + (flag(key) ? ' on' : '');
+                    tg.setAttribute('role', 'switch');
+                    tg.setAttribute('aria-checked', String(flag(key)));
+                    tg.setAttribute('aria-label', label);
+                    tg.addEventListener('click', () => {
+                        state.flags[key] = !flag(key);
+                        tg.classList.toggle('on', flag(key));
+                        tg.setAttribute('aria-checked', String(flag(key)));
+                        onFlagChanged(key);
+                    });
+                    row.appendChild(lab);
+                    row.appendChild(tg);
+                    wrap.appendChild(row);
+                });
+            }
+
+            function onFlagChanged(key) {
+                if (key === 'rememberAdd' && flag(key)) {
+                    state.lastAddTiming = currentTiming;
+                    state.lastAddEst = parseInt(document.getElementById('taskEstimate').value);
+                    if (isNaN(state.lastAddEst)) state.lastAddEst = 1;
+                }
+                if (key === 'restoreFilter') syncFilterButtons();
+                save();
+                applyFlags();
+            }
+
+            function syncFilterButtons() {
+                if (!flag('restoreFilter')) return;
+                document.querySelectorAll('.filter-btn').forEach(b =>
+                    b.classList.toggle('active', b.dataset.filter === (state.taskFilter || 'all')));
+            }
+
+            // Everything that is not re-rendered by renderTasks(): body classes, labels, visibility
+            function applyFlagsUI() {
+                const b = document.body;
+                b.classList.toggle('f-touch', flag('touchControls'));
+                b.classList.toggle('f-a11y', flag('a11yTasks'));
+                b.classList.toggle('f-chips', flag('timingChips'));
+                const q = (id) => document.getElementById(id);
+                if (q('sortByDayBtn')) q('sortByDayBtn').style.display = flag('dayGroups') ? 'none' : '';
+                if (q('saveIndicator')) q('saveIndicator').style.display = flag('saveIndicator') ? '' : 'none';
+                if (q('restoreBackupBtn')) q('restoreBackupBtn').style.display = flag('dailyBackup') ? '' : 'none';
+                if (q('taskInput')) q('taskInput').placeholder = flag('quickAdd') ?
+                    'What are you working on?  (tip: add @tmrw, @wknd or x3)' : 'What are you working on?';
+                if (q('taskEstimate')) q('taskEstimate').title = flag('estDots') ?
+                    'Estimated pomodoros (0 = flow / untimed)' : 'Estimated pomodoros (0 = untimed)';
+                const cl = flag('completedCollapse');
+                if (q('clearCompletedBtn')) q('clearCompletedBtn').textContent = cl ? 'Clear completed' : 'Clear all';
+                if (q('clearAllTasksBtn')) q('clearAllTasksBtn').textContent = cl ? 'Delete everything' : 'Clear all tasks';
+                if (q('clearAllBottomLabel')) q('clearAllBottomLabel').textContent = cl ? 'Delete everything' : 'Clear all tasks';
+            }
+            function applyFlags() {
+                applyFlagsUI();
+                renderTasks();
+                render();
+            }
 
             // ===== PERSISTENCE =====
             function save() {
@@ -5094,16 +4924,48 @@
                     ytLastLoadedId: state.ytLastLoadedId,
                     lastResumeData: state.lastResumeData,
                     sessionPauseCount: state.sessionPauseCount,
-                    activeTaskId: state.activeTaskId
+                    activeTaskId: state.activeTaskId,
+                    flags: state.flags,
+                    lastAddTiming: state.lastAddTiming,
+                    lastAddEst: state.lastAddEst,
+                    completedCollapsed: state.completedCollapsed
                 };
                 try {
                     localStorage.setItem('ripe_state', JSON.stringify(data));
+                    markSaved(true);
                 } catch (err) {
                     console.warn('Ripe: could not save state', err);
+                    markSaved(false);
+                }
+            }
+
+            // Small "Saved 14:32" indicator; turns into a warning if the browser refuses to store the data.
+            function markSaved(ok) {
+                const el = document.getElementById('saveIndicator');
+                if (!el || !flag('saveIndicator')) return;
+                if (ok) {
+                    el.className = 'save-indicator';
+                    el.textContent = 'Saved ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                } else {
+                    el.className = 'save-indicator error';
+                    el.textContent = '⚠ Couldn\'t save — browser storage may be full or blocked. Use “Export data” to keep a copy.';
                 }
             }
 
             function load() {
+                // Rolling daily backup: the first time the app opens each day, keep a copy of the saved data
+                // as it was at the end of the previous session ("Restore daily backup" button).
+                try {
+                    const rawStr = localStorage.getItem('ripe_state');
+                    const todayStr = new Date().toDateString();
+                    if (rawStr && localStorage.getItem('ripe_backup_date') !== todayStr) {
+                        const parsed = JSON.parse(rawStr);
+                        if (parsed && Array.isArray(parsed.tasks) && parsed.flags && parsed.flags.dailyBackup) {
+                            localStorage.setItem('ripe_backup', rawStr);
+                            localStorage.setItem('ripe_backup_date', todayStr);
+                        }
+                    }
+                } catch (_) { /* ignore */ }
                 try {
                     const raw = JSON.parse(localStorage.getItem('ripe_state'));
                     if (raw) {
@@ -5152,7 +5014,10 @@
                         state.quietHours = raw.quietHours ?? false;
                         state.quietHoursStart = raw.quietHoursStart || '22:00';
                         state.quietHoursEnd = raw.quietHoursEnd || '08:00';
-                        state.lastRolloverDate = raw.lastRolloverDate || null;
+                        // FIX (day rollover): older saves have no lastRolloverDate. Fall back to the last day the
+                        // app was saved on (todayDate) so "tomorrow" tasks are rolled correctly instead of being
+                        // treated as if the rollover never happened.
+                        state.lastRolloverDate = raw.lastRolloverDate || raw.todayDate || null;
                         state.strictBreaks = raw.strictBreaks ?? false;
                         state.voiceAnnounce = raw.voiceAnnounce ?? false;
                         state.highContrast = raw.highContrast ?? false;
@@ -5161,6 +5026,10 @@
                         state.ytLastLoadedId = raw.ytLastLoadedId || null;
                         state.lastResumeData = raw.lastResumeData || null;
                         state.sessionPauseCount = raw.sessionPauseCount || 0;
+                        state.flags = (raw.flags && typeof raw.flags === 'object') ? raw.flags : {};
+                        state.lastAddTiming = raw.lastAddTiming || 'today';
+                        state.lastAddEst = raw.lastAddEst ?? 1;
+                        state.completedCollapsed = raw.completedCollapsed ?? true;
                         // Restore active task, but only if it still exists (task may have been deleted)
                         state.activeTaskId = (raw.activeTaskId && state.tasks.some(t => t.id === raw.activeTaskId && !t.done)) ?
                             raw.activeTaskId : null;
@@ -5189,23 +5058,53 @@
             load();
 
             // ===== DAY ROLLOVER =====
+            // Returns true if a new day was processed (so callers know to re-render).
             function checkDayRollover() {
-                const today = new Date().toDateString();
-                if (state.lastRolloverDate === today) return;
+                const now = new Date();
+                const today = now.toDateString();
+                if (state.lastRolloverDate === today) return false;
+
                 state.cycleCount = 0;
                 state.totalFocusedSec = 0;
                 state.todayDate = today;
                 updateFocusStreak();
-                const dow = new Date().getDay();
-                const isWeekend = dow === 0 || dow === 6;
-                state.tasks.forEach(t => {
-                    if (!t.done) {
-                        if (t.timing === 'tomorrow') t.timing = 'today';
-                        else if (t.timing === 'weekend' && isWeekend) t.timing = 'today';
+
+                const todayMidnight = new Date(now);
+                todayMidnight.setHours(0, 0, 0, 0);
+                const last = state.lastRolloverDate ? new Date(state.lastRolloverDate) : null;
+                const lastValid = !!last && !isNaN(last.getTime());
+
+                // Guard against the system clock moving backwards: only roll tasks forward
+                // when the last rollover really was before today.
+                const movedForward = !lastValid || last.getTime() < todayMidnight.getTime();
+
+                if (movedForward) {
+                    // Did a weekend day pass since the last rollover (including today)?
+                    // Covers the case where the app wasn't opened at all over the weekend.
+                    const dow = now.getDay();
+                    let weekendReached = (dow === 0 || dow === 6);
+                    if (lastValid && !weekendReached) {
+                        const d = new Date(last);
+                        d.setHours(0, 0, 0, 0);
+                        for (let i = 0; i < 7 && d.getTime() < todayMidnight.getTime(); i++) {
+                            d.setDate(d.getDate() + 1);
+                            const w = d.getDay();
+                            if (w === 0 || w === 6) { weekendReached = true; break; }
+                        }
                     }
-                });
+
+                    state.tasks.forEach(t => {
+                        delete t.carry;
+                        if (t.done) return;
+                        if (t.timing === 'tomorrow') { t.timing = 'today'; t.carry = 'scheduled'; }
+                        else if (t.timing === 'weekend' && weekendReached) { t.timing = 'today'; t.carry = 'scheduled'; }
+                        else if ((t.timing || 'today') === 'today') t.carry = 'yesterday'; // unfinished from yesterday
+                    });
+                }
+
                 state.lastRolloverDate = today;
                 save();
+                return true;
             }
 
             // ===== DOM REFS =====
@@ -5721,6 +5620,19 @@
 
             function activeTask() { return state.tasks.find(t => t.id === state.activeTaskId); }
 
+            // Pick the next unfinished task after the one that just finished (list order, wrapping around).
+            // Prefers tasks visible under the current day filter; falls back to any unfinished task.
+            function pickNextTaskId(finishedId) {
+                const idx = state.tasks.findIndex(t => t.id === finishedId);
+                const ordered = idx === -1 ? state.tasks.slice() :
+                    [...state.tasks.slice(idx + 1), ...state.tasks.slice(0, idx)];
+                const open = ordered.filter(t => !t.done && t.id !== finishedId);
+                const filter = state.taskFilter || 'all';
+                const inView = filter === 'all' ? open : open.filter(t => (t.timing || 'today') === filter);
+                const next = inView[0] || open[0];
+                return next ? next.id : null;
+            }
+
             function recordSession() {
                 const session = {
                     mode: state.mode,
@@ -5966,11 +5878,44 @@
                 save();
             }
 
+            // ===== MIDNIGHT ROLLOVER + MULTI-TAB SYNC (new) =====
+            // Re-runs the day rollover and refreshes everything that depends on it.
+            function refreshIfNewDay() {
+                if (checkDayRollover()) {
+                    renderPips();
+                    renderTasks();
+                    render();
+                    updateStats();
+                } else {
+                    renderPlan(); // keeps "time left today" fresh
+                }
+            }
+
+            // FIX (storage): every tab keeps its own in-memory copy of the state and rewrites the whole
+            // 'ripe_state' blob on every save (including the 5-second timer autosave). A second/stale tab
+            // therefore silently overwrote newer tasks. Now, whenever another tab changes the stored tasks,
+            // this tab adopts them, so a stale tab can no longer clobber them.
+            function syncTasksFromStorage() {
+                try {
+                    const raw = JSON.parse(localStorage.getItem('ripe_state'));
+                    if (!raw || !Array.isArray(raw.tasks)) return;
+                    if (JSON.stringify(raw.tasks) === JSON.stringify(state.tasks)) return;
+                    state.tasks = raw.tasks;
+                    state.activeTaskId = (raw.activeTaskId && state.tasks.some(t => t.id === raw.activeTaskId && !t.done)) ?
+                        raw.activeTaskId : null;
+                    renderTasks();
+                    render();
+                } catch (_) { /* ignore */ }
+            }
+
             // Visibility change — catch up time lost while tab was hidden
             function handleVisibilityChange() {
                 if (document.hidden) {
                     state.timerHiddenAt = performance.now();
                 } else {
+                    // Coming back to the tab: the day may have changed and other tabs may have edited tasks.
+                    syncTasksFromStorage();
+                    refreshIfNewDay();
                     if (state.running && state.timerHiddenAt !== null) {
                         // Time was hidden, we just need to tick to catch up — no adjustment needed
                         state.timerHiddenAt = null;
@@ -5987,8 +5932,16 @@
 
             document.addEventListener('visibilitychange', handleVisibilityChange);
 
+            window.addEventListener('storage', e => {
+                if (e.key === 'ripe_state') syncTasksFromStorage();
+            });
+
+            // Catch midnight while the page stays open
+            setInterval(refreshIfNewDay, 30000);
+
             // ===== BACKGROUND TIMER PERSISTENCE =====
             window.addEventListener('beforeunload', () => {
+                if (skipUnloadSave) return;
                 if (state.running || state.timerPausedRemaining > 0) {
                     state.timerLastSavedAt = Date.now();
                     save();
@@ -6066,7 +6019,11 @@
                     const t = activeTask();
                     if (t) {
                         t.completedPomos = (t.completedPomos || 0) + 1;
-                        if (t.completedPomos >= t.est) t.done = true;
+                        if (t.completedPomos >= t.est) {
+                            t.done = true;
+                            t.completedAt = Date.now();
+                            if (flag('autoNextTask') && state.activeTaskId === t.id) state.activeTaskId = pickNextTaskId(t.id);
+                        }
                     }
                     renderTasks();
                     const next = (state.cycleCount % state.cyclesBeforeLong === 0) ? 'long' : 'short';
@@ -6266,6 +6223,14 @@
                 }
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')
                     return;
+                if (flag('shortcutN') && (e.key === 'n' || e.key === 'N') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    e.preventDefault();
+                    const ti = $('#taskInput');
+                    ti.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    ti.focus();
+                    return;
+                }
+                if (flag('a11yTasks') && (e.key === ' ' || e.key === 'Space') && e.target.closest && e.target.closest('.task')) return; // let task controls handle Space
                 if (e.key === ' ' || e.key === 'Space') {
                     e.preventDefault();
                     state.running ? pause() : start();
@@ -6279,36 +6244,72 @@
             const POMO_ICON =
                 '<svg class="pomo-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4 3-7 7-7 11a7 7 0 0014 0c0-4-3-8-7-11z"/></svg>';
 
+            const TIMING_ORDER = ['today', 'tomorrow', 'weekend'];
+            const TIMING_LABELS = { today: 'Today', tomorrow: 'Tomorrow', weekend: 'Weekend' };
+            const TIMING_SHORT = { today: 'Today', tomorrow: 'Tmrw', weekend: 'Wknd' };
+            function timingOf(t) { return TIMING_ORDER.includes(t.timing) ? t.timing : 'today'; }
+
+            // Estimate display: original "2/4 🔥" text, or dots when the option is on
+            function estDisplayHTML(t) {
+                if (!flag('estDots')) {
+                    return (t.est === 0 ? (t.untimedProgress || 0) + '∞' : (t.completedPomos || 0) + '/' + (t.est || 1)) + ' ' + POMO_ICON;
+                }
+                if (t.est === 0) return (t.untimedProgress || 0) + '∞ flow';
+                const est = t.est || 1;
+                const done = t.completedPomos || 0;
+                if (est > 8) return done + '/' + est + ' ' + POMO_ICON;
+                let dots = '';
+                for (let i = 0; i < est; i++) dots += `<span class="est-dot${i < done ? ' filled' : ''}"></span>`;
+                return `<span class="est-dots" aria-hidden="true">${dots}</span><span class="sr-only">${done} of ${est} pomodoros</span>`;
+            }
+
             function taskRowHTML(t, isCompleted) {
                 const done = t.done || false;
                 const isActive = t.id === state.activeTaskId && !done;
                 const showPomos = state.showTaskPomos && (!isActive || state.showActivePomos);
-                const isUntimed = t.est === 0;
-                const est = isUntimed ? 0 : (t.est || 1);
-                const untimedProgress = t.untimedProgress || 0;
-                const displayProgress = isUntimed ? untimedProgress + '∞' : (t.completedPomos || 0) + '/' + est;
+                const timing = timingOf(t);
+                const a11y = flag('a11yTasks');
+                const aria = (txt) => a11y ? ` aria-label="${txt}"` : '';
+
                 const pomosHTML = showPomos ?
-                    `<div class="task-pomos" data-action="edit-est" title="Click to edit estimate">${displayProgress} ${POMO_ICON}</div>` :
+                    `<div class="task-pomos" data-action="edit-est" title="${flag('estDots') ? 'Pomodoros done / estimated — click to edit (0 = flow / untimed)' : 'Click to edit estimate'}">${estDisplayHTML(t)}</div>` :
                     `<div class="task-pomos" style="display:none;"></div>`;
-                const timing = t.timing || 'today';
-                const timingDotClass = `task-timing-dot ${timing}`;
-                const timingDot = !isCompleted ? `<button class="${timingDotClass}" data-action="cycle-timing" title="Timing: ${timing} (click to cycle)"></button>` : '';
+
+                let timingEl = '';
+                if (!isCompleted) {
+                    timingEl = flag('timingChips') ?
+                        `<button type="button" class="timing-chip ${timing}" data-action="cycle-timing" title="Scheduled for ${TIMING_LABELS[timing].toLowerCase()} — click to change">${TIMING_SHORT[timing]}</button>` :
+                        `<button class="task-timing-dot ${timing}" data-action="cycle-timing" title="Timing: ${timing} (click to cycle)"></button>`;
+                }
+                const carryChip = (flag('carryMarkers') && !isCompleted && t.carry) ?
+                    `<span class="carry-chip" title="${t.carry === 'yesterday' ? 'Unfinished from yesterday' : 'Rolled over from an earlier plan'}">↻ ${t.carry === 'yesterday' ? 'from yesterday' : 'moved to today'}</span>` : '';
                 const priority = t.priority || 'low';
-                const priorityDot = (state.taskPriority && !isCompleted) ? `<button class="task-priority-dot ${priority}" data-action="cycle-priority" title="Priority: ${priority} (click to cycle)"></button>` : '';
+                const priorityDot = (state.taskPriority && !isCompleted) ? `<button class="task-priority-dot ${priority}" data-action="cycle-priority" title="Priority: ${priority} (click to cycle)"${aria('Priority: ' + priority)}></button>` : '';
+                const hasNotes = flag('noteIndicator') && !isCompleted && !isActive && (t.notes || '').trim();
+                const noteIcon = hasNotes ? `<span class="note-indicator" title="Has notes"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg></span>` : '';
+                const titleAttrs = (a11y && !isCompleted) ? ` role="button" tabindex="0" aria-label="Focus task: ${escapeHtml(t.title)}"` : '';
+                const titleTip = flag('inlineRename') ? (isCompleted ? '' : 'Click to focus · double-click to rename') : 'Click to focus this task';
+                const focusBtn = (flag('focusButton') && !isCompleted) ? `<button type="button" class="task-focus-btn${isActive ? ' on' : ''}" data-action="focus-btn" aria-pressed="${isActive}" title="${isActive ? 'Stop focusing on this task' : 'Focus on this task'}" aria-label="${isActive ? 'Stop focusing on this task' : 'Focus on this task'}"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></button>` : '';
+                const moveBtns = (flag('touchControls') && !isCompleted) ? `<div class="task-move"><button type="button" data-action="move-up" title="Move up" aria-label="Move up">▲</button><button type="button" data-action="move-down" title="Move down" aria-label="Move down">▼</button></div>` : '';
+                const checkAttrs = a11y ? ` role="checkbox" aria-checked="${done}" tabindex="0" aria-label="${done ? 'Mark as not done' : 'Mark as done'}"` : '';
 
                 return `
                 <div class="task-row">
                   ${!isCompleted ? `<div class="drag-handle" title="Drag to reorder"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="1.5"/><circle cx="8" cy="12" r="1.5"/><circle cx="8" cy="18" r="1.5"/><circle cx="16" cy="6" r="1.5"/><circle cx="16" cy="12" r="1.5"/><circle cx="16" cy="18" r="1.5"/></svg></div>` : ''}
-                  <div class="task-check ${done?'done':''}" data-action="toggle">
+                  ${moveBtns}
+                  <div class="task-check ${done?'done':''}" data-action="toggle"${checkAttrs}>
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
                   ${priorityDot}
-                  ${timingDot}
-                  <div class="task-title" data-action="activate" title="Click to focus this task">${escapeHtml(t.title)}</div>
+                  ${timingEl}
+                  ${carryChip}
+                  <div class="task-title" data-action="activate"${titleAttrs} title="${titleTip}">${escapeHtml(t.title)}</div>
+                  ${noteIcon}
                   ${pomosHTML}
-                  ${!isCompleted ? `<button class="task-rename" data-action="rename" title="Rename task"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>` : ''}
-                  ${isCompleted ? `<button class="task-undo" data-action="undo" title="Undo"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>` : ''}
-                  <button class="task-del" data-action="delete" title="Delete">
+                  ${focusBtn}
+                  ${!isCompleted ? `<button class="task-rename" data-action="rename" title="Rename task"${aria('Rename task')}><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>` : ''}
+                  ${isCompleted ? `<button class="task-undo" data-action="undo" title="${a11y ? 'Mark as not done' : 'Undo'}"${aria('Mark as not done')}><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>` : ''}
+                  <button class="task-del" data-action="delete" title="Delete"${aria('Delete task')}>
                     <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   </button>
                 </div>
@@ -6320,39 +6321,133 @@
               `;
             }
 
+            // ----- toast with undo -----
+            let toastTimer = null;
+            let toastAction = null;
+            function showToast(msg, undoFn) {
+                const toastEl = document.getElementById('toast');
+                document.getElementById('toastMsg').textContent = msg;
+                toastAction = undoFn || null;
+                document.getElementById('toastUndo').style.display = undoFn ? '' : 'none';
+                toastEl.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(hideToast, 7000);
+            }
+            function hideToast() {
+                document.getElementById('toast').classList.remove('show');
+                toastAction = null;
+            }
+            document.getElementById('toastUndo').addEventListener('click', () => {
+                const fn = toastAction;
+                hideToast();
+                if (fn) fn();
+            });
+
+            // ----- rename: popup (original) or inline -----
+            function openRenameModal(t) {
+                state.renameTargetId = t.id;
+                renameInput.value = t.title;
+                renameBackdrop.classList.add('show');
+                setTimeout(() => {
+                    renameInput.focus();
+                    renameInput.select();
+                }, 50);
+            }
+
+            function startInlineEdit(el, t) {
+                const titleEl = el.querySelector('.task-title');
+                if (!titleEl || el.querySelector('.task-title-input')) return;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'task-title-input';
+                input.value = t.title;
+                input.maxLength = 120;
+                titleEl.replaceWith(input);
+                input.focus();
+                input.select();
+                let finished = false;
+                const finish = (commit) => {
+                    if (finished) return;
+                    finished = true;
+                    const v = input.value.trim();
+                    if (commit && v) { t.title = v; save(); }
+                    renderTasks();
+                    render();
+                };
+                input.addEventListener('keydown', ev => {
+                    ev.stopPropagation();
+                    if (ev.key === 'Enter') finish(true);
+                    else if (ev.key === 'Escape') finish(false);
+                });
+                input.addEventListener('blur', () => finish(true));
+                input.addEventListener('click', ev => ev.stopPropagation());
+            }
+
+            // ----- move a task up/down within its list (touch arrows) -----
+            function moveTask(id, dir) {
+                const t = state.tasks.find(x => x.id === id);
+                if (!t) return;
+                const grouped = flag('dayGroups') && (state.taskFilter || 'all') === 'all';
+                const filter = state.taskFilter || 'all';
+                const peers = state.tasks.filter(x => {
+                    if (x.done) return false;
+                    if (grouped) return timingOf(x) === timingOf(t);
+                    return filter === 'all' || timingOf(x) === filter;
+                });
+                const i = peers.indexOf(t);
+                const j = i + dir;
+                if (j < 0 || j >= peers.length) return;
+                const a = state.tasks.indexOf(t);
+                const b = state.tasks.indexOf(peers[j]);
+                [state.tasks[a], state.tasks[b]] = [state.tasks[b], state.tasks[a]];
+                save();
+                renderTasks();
+            }
+
             function wireTaskEvents(el, t) {
+                const toggleActive = (e) => {
+                    e.stopPropagation();
+                    if (t.done) return;
+                    state.activeTaskId = (state.activeTaskId === t.id) ? null : t.id;
+                    save();
+                    renderTasks();
+                    render();
+                };
+
                 // Toggle complete
                 el.querySelector('[data-action=toggle]').addEventListener('click', e => {
                     e.stopPropagation();
                     t.done = !t.done;
-                    if (t.done && state.activeTaskId === t.id) state.activeTaskId = null;
+                    t.completedAt = t.done ? Date.now() : null;
+                    if (t.done && state.activeTaskId === t.id) {
+                        state.activeTaskId = flag('autoNextTask') ? pickNextTaskId(t.id) : null;
+                    }
                     save();
                     renderTasks();
                     render();
                 });
 
-                // Activate task (click on title)
+                // Activate task (click on title / focus button)
                 const titleEl = el.querySelector('[data-action=activate]');
                 if (titleEl) {
                     titleEl.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        if (t.done) return;
-                        state.activeTaskId = (state.activeTaskId === t.id) ? null : t.id;
-                        save();
-                        renderTasks();
-                        render();
+                        toggleActive(e);
                     });
+                    if (flag('inlineRename') && !t.done) {
+                        titleEl.addEventListener('dblclick', e => { e.stopPropagation(); startInlineEdit(el, t); });
+                    }
                 }
+                const focusBtn = el.querySelector('[data-action=focus-btn]');
+                if (focusBtn) focusBtn.addEventListener('click', toggleActive);
 
                 // Timing cycle — just change the day, no sorting
                 const timingBtn = el.querySelector('[data-action=cycle-timing]');
                 if (timingBtn) {
                     timingBtn.addEventListener('click', e => {
                         e.stopPropagation();
-                        const timings = ['today', 'tomorrow', 'weekend'];
-                        const idx = timings.indexOf(t.timing || 'today');
-                        t.timing = timings[(idx + 1) % timings.length];
-                        // Save and re-render without sorting
+                        const idx = TIMING_ORDER.indexOf(timingOf(t));
+                        t.timing = TIMING_ORDER[(idx + 1) % TIMING_ORDER.length];
+                        delete t.carry;
                         save();
                         renderTasks();
                         render();
@@ -6377,15 +6472,16 @@
                 if (renameBtn) {
                     renameBtn.addEventListener('click', e => {
                         e.stopPropagation();
-                        state.renameTargetId = t.id;
-                        renameInput.value = t.title;
-                        renameBackdrop.classList.add('show');
-                        setTimeout(() => {
-                            renameInput.focus();
-                            renameInput.select();
-                        }, 50);
+                        if (flag('inlineRename')) startInlineEdit(el, t);
+                        else openRenameModal(t);
                     });
                 }
+
+                // Move up / down
+                const upBtn = el.querySelector('[data-action=move-up]');
+                const downBtn = el.querySelector('[data-action=move-down]');
+                if (upBtn) upBtn.addEventListener('click', e => { e.stopPropagation(); moveTask(t.id, -1); });
+                if (downBtn) downBtn.addEventListener('click', e => { e.stopPropagation(); moveTask(t.id, 1); });
 
                 // Undo completed
                 const undoBtn = el.querySelector('[data-action=undo]');
@@ -6393,6 +6489,7 @@
                     undoBtn.addEventListener('click', e => {
                         e.stopPropagation();
                         t.done = false;
+                        t.completedAt = null;
                         save();
                         renderTasks();
                         render();
@@ -6402,11 +6499,22 @@
                 // Delete task
                 el.querySelector('[data-action=delete]').addEventListener('click', e => {
                     e.stopPropagation();
+                    const idx = state.tasks.indexOf(t);
+                    const wasActive = state.activeTaskId === t.id;
                     state.tasks = state.tasks.filter(x => x.id !== t.id);
-                    if (state.activeTaskId === t.id) state.activeTaskId = null;
+                    if (wasActive) state.activeTaskId = null;
                     save();
                     renderTasks();
                     render();
+                    if (flag('undoToast')) {
+                        showToast('Task deleted', () => {
+                            state.tasks.splice(Math.min(idx, state.tasks.length), 0, t);
+                            if (wasActive && !state.activeTaskId && !t.done) state.activeTaskId = t.id;
+                            save();
+                            renderTasks();
+                            render();
+                        });
+                    }
                 });
 
                 // Notes
@@ -6444,6 +6552,17 @@
                         });
                     });
                 }
+
+                // Keyboard: Enter/Space activates the focusable "buttons" (only present when the a11y option is on)
+                el.querySelectorAll('[role=button][tabindex], [role=checkbox][tabindex]').forEach(n => {
+                    n.addEventListener('keydown', ev => {
+                        if (ev.key === 'Enter' || ev.key === ' ') {
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                            n.click();
+                        }
+                    });
+                });
             }
 
             // ===== SORT BY DAY =====
@@ -6474,82 +6593,197 @@
             }
 
             // ===== RENDER TASKS =====
+            function fmtDur(mins) {
+                mins = Math.max(0, Math.round(mins));
+                const h = Math.floor(mins / 60), m = mins % 60;
+                return h > 0 ? h + 'h ' + String(m).padStart(2, '0') + 'm' : m + 'm';
+            }
+
+            // "Today: 5 pomodoros · ~2h 40m · 6h 10m left in the day" (warns when it doesn't fit)
+            function renderPlan() {
+                const el = document.getElementById('planSummary');
+                if (!el) return;
+                if (!flag('planSummary')) { el.style.display = 'none'; return; }
+                let cycles = 0, flow = 0;
+                state.tasks.forEach(t => {
+                    if (t.done || timingOf(t) !== 'today') return;
+                    if (t.est > 0) cycles += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
+                    else flow++;
+                });
+                if (!cycles && !flow) { el.style.display = 'none'; return; }
+                const per = state.durations.pomodoro / 60;
+                const n = Math.max(1, state.cyclesBeforeLong);
+                const breakAvg = ((n - 1) * state.durations.short / 60 + state.durations.long / 60) / n;
+                const mins = cycles * per + Math.max(0, cycles - 1) * breakAvg;
+                const now = new Date();
+                const midnight = new Date(now);
+                midnight.setHours(24, 0, 0, 0);
+                const left = (midnight - now) / 60000;
+                let text = 'Today: ' + cycles + ' pomodoro' + (cycles === 1 ? '' : 's') + ' · ~' + fmtDur(mins) + ' incl. breaks';
+                if (flow) text += ' · ' + flow + ' flow task' + (flow === 1 ? '' : 's');
+                text += ' · ' + fmtDur(left) + ' left in the day';
+                const over = mins > left;
+                if (over) text += ' — more than fits today';
+                el.textContent = text;
+                el.classList.toggle('warn', over);
+                el.style.display = '';
+            }
+
+            // Banner for unfinished tasks carried over from yesterday
+            function renderSweep() {
+                const banner = document.getElementById('sweepBanner');
+                if (!banner) return;
+                if (!flag('carryMarkers')) { banner.classList.remove('show'); return; }
+                const n = state.tasks.filter(t => !t.done && t.carry === 'yesterday' && timingOf(t) === 'today').length;
+                if (!n) { banner.classList.remove('show'); return; }
+                document.getElementById('sweepText').textContent =
+                    n + ' unfinished task' + (n === 1 ? '' : 's') + ' from yesterday';
+                banner.classList.add('show');
+            }
+
+            function sweepCarried(moveToTomorrow) {
+                state.tasks.forEach(t => {
+                    if (!t.done && t.carry === 'yesterday' && timingOf(t) === 'today') {
+                        delete t.carry;
+                        if (moveToTomorrow) t.timing = 'tomorrow';
+                    }
+                });
+                save();
+                renderTasks();
+                render();
+            }
+            document.getElementById('sweepKeep').addEventListener('click', () => sweepCarried(false));
+            document.getElementById('sweepMove').addEventListener('click', () => sweepCarried(true));
+
+            function buildTaskEl(t) {
+                const el = document.createElement('div');
+                el.className = 'task' + (t.id === state.activeTaskId ? ' active' : '');
+                el.dataset.id = t.id;
+                const handleOnly = flag('dragHandleOnly');
+                // original: the whole row is draggable. Option: only while the handle is held
+                // (so selecting text in notes can't start a drag, and Firefox gets its drag data).
+                el.draggable = !handleOnly;
+                el.innerHTML = taskRowHTML(t, false);
+                wireTaskEvents(el, t);
+
+                if (handleOnly) {
+                    const handle = el.querySelector('.drag-handle');
+                    if (handle) handle.addEventListener('mousedown', () => { el.draggable = true; });
+                    el.addEventListener('mouseup', () => { el.draggable = false; });
+                }
+
+                el.addEventListener('dragstart', (e) => {
+                    if (handleOnly && !el.draggable) return;
+                    e.dataTransfer.effectAllowed = 'move';
+                    if (handleOnly) { try { e.dataTransfer.setData('text/plain', t.id); } catch (_) {} }
+                    el.classList.add('dragging');
+                });
+                el.addEventListener('dragend', () => {
+                    if (handleOnly) el.draggable = false;
+                    if (!el.classList.contains('dragging')) return;
+                    el.classList.remove('dragging');
+                    // Re-order only the tasks of this list, inside the slots they already occupy.
+                    // Everything else (completed tasks, other days, filtered-out tasks) is left untouched.
+                    const list = el.parentElement;
+                    if (list) {
+                        const ids = [...list.querySelectorAll('.task[data-id]')].map(n => n.dataset.id);
+                        const visible = new Set(ids);
+                        const reordered = ids.map(id => state.tasks.find(x => x.id === id)).filter(Boolean);
+                        if (reordered.length === ids.length) {
+                            let k = 0;
+                            state.tasks = state.tasks.map(task => visible.has(task.id) ? reordered[k++] : task);
+                            save();
+                        }
+                    }
+                    renderTasks();
+                });
+                return el;
+            }
+
             function renderTasks() {
                 const filter = state.taskFilter || 'all';
 
-                // Separate active and completed
                 let active = state.tasks.filter(t => !t.done);
                 const completed = state.tasks.filter(t => t.done);
-
-                // Apply filter to active tasks
-                if (filter !== 'all') {
-                    active = active.filter(t => (t.timing || 'today') === filter);
-                }
-
-                // No automatic sorting — tasks stay in the order they are in state.tasks
+                if (filter !== 'all') active = active.filter(t => timingOf(t) === filter);
 
                 taskList.innerHTML = '';
                 taskList.classList.toggle('hide-pomos', !state.showTaskPomos);
                 emptyState.style.display = active.length ? 'none' : 'block';
 
-                active.forEach(t => {
-                    const el = document.createElement('div');
-                    const isActive = t.id === state.activeTaskId;
-                    el.className = 'task' + (isActive ? ' active' : '');
-                    el.dataset.id = t.id;
-                    el.draggable = true;
-                    el.innerHTML = taskRowHTML(t, false);
-                    wireTaskEvents(el, t);
-
-                    // Drag events — manual reordering
-                    el.addEventListener('dragstart', (e) => {
-                        e.dataTransfer.effectAllowed = 'move';
-                        el.classList.add('dragging');
+                // With "group by day" on (All view): sections with headers. Otherwise one plain list (original).
+                const grouped = flag('dayGroups') && filter === 'all';
+                const sections = grouped ?
+                    TIMING_ORDER.map(g => ({ g, items: active.filter(t => timingOf(t) === g) })) :
+                    [{ g: 'all', items: active }];
+                sections.forEach(sec => {
+                    if (!sec.items.length) return;
+                    const wrap = document.createElement('div');
+                    wrap.className = 'task-group';
+                    if (grouped) {
+                        const h = document.createElement('div');
+                        h.className = 'task-group-header';
+                        h.innerHTML = `<span class="gdot ${sec.g}"></span>${TIMING_LABELS[sec.g]}<span class="count">${sec.items.length}</span>`;
+                        wrap.appendChild(h);
+                    }
+                    const list = document.createElement('div');
+                    list.className = 'task-group-list';
+                    list.dataset.group = sec.g;
+                    sec.items.forEach(t => list.appendChild(buildTaskEl(t)));
+                    // drag-and-drop re-ordering inside this list
+                    list.addEventListener('dragover', e => {
+                        const dragging = taskList.querySelector('.dragging');
+                        if (!dragging || dragging.parentElement !== list) return;
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                        const after = getDragAfterElement(list, e.clientY);
+                        if (after === null) list.appendChild(dragging);
+                        else list.insertBefore(dragging, after);
                     });
-                    el.addEventListener('dragend', (e) => {
-                        el.classList.remove('dragging');
-                        // Save the new order after drag
-                        const ids = [...taskList.querySelectorAll('.task[data-id]')].map(n => n.dataset.id);
-                        const ordered = ids.map(id => state.tasks.find(x => x.id === id)).filter(Boolean);
-                        // Move done tasks to the end
-                        const doneTasks = ordered.filter(t => t.done);
-                        const activeTasks = ordered.filter(t => !t.done);
-                        state.tasks = [...activeTasks, ...doneTasks];
-                        save();
-                        renderTasks();
-                    });
-                    taskList.appendChild(el);
+                    wrap.appendChild(list);
+                    taskList.appendChild(wrap);
                 });
 
-                // Render completed tasks
+                // Completed tasks
+                const cc = flag('completedCollapse');
+                const collapsed = cc && !!state.completedCollapsed;
+                completedSection.style.display = completed.length ? 'block' : 'none';
+                const todayStart = new Date(new Date().toDateString()).getTime();
+                const doneToday = completed.filter(t => (t.completedAt || 0) >= todayStart).length;
+                const tog = document.getElementById('completedToggle');
+                if (tog) {
+                    tog.textContent = cc ?
+                        ((collapsed ? '▸ ' : '▾ ') + 'Completed (' + completed.length + ')' + (doneToday ? ' · ' + doneToday + ' today' : '')) :
+                        'Completed';
+                    tog.style.cursor = cc ? '' : 'default';
+                    tog.setAttribute('aria-expanded', String(!collapsed));
+                }
+                completedList.hidden = collapsed;
                 completedList.innerHTML = '';
                 completedList.classList.toggle('hide-pomos', !state.showTaskPomos);
-                completedSection.style.display = completed.length ? 'block' : 'none';
-                // Sort completed by completion time (most recent first)
-                const sortedCompleted = [...completed].sort((a, b) => {
-                    return (b.completedAt || 0) - (a.completedAt || 0);
-                });
-                sortedCompleted.forEach(t => {
-                    const el = document.createElement('div');
-                    el.className = 'task completed';
-                    el.dataset.id = t.id;
-                    el.innerHTML = taskRowHTML(t, true);
-                    wireTaskEvents(el, t);
-                    completedList.appendChild(el);
-                });
+                if (!collapsed) {
+                    // most recently completed first (only with the collapsible-list option; original kept list order)
+                    const shown = cc ? [...completed].sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0)) : completed;
+                    shown.forEach(t => {
+                        const el = document.createElement('div');
+                        el.className = 'task completed';
+                        el.dataset.id = t.id;
+                        el.innerHTML = taskRowHTML(t, true);
+                        wireTaskEvents(el, t);
+                        completedList.appendChild(el);
+                    });
+                }
 
+                renderPlan();
+                renderSweep();
                 updateCyclesLeftStat();
             }
 
-            // Drag and drop support on taskList
-            taskList.addEventListener('dragover', e => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-                const dragging = taskList.querySelector('.dragging');
-                if (!dragging) return;
-                const after = getDragAfterElement(taskList, e.clientY);
-                if (after === null) taskList.appendChild(dragging);
-                else taskList.insertBefore(dragging, after);
+            document.getElementById('completedToggle').addEventListener('click', () => {
+                if (!flag('completedCollapse')) return;
+                state.completedCollapsed = !state.completedCollapsed;
+                save();
+                renderTasks();
             });
 
             function getDragAfterElement(container, y) {
@@ -6563,23 +6797,51 @@
             }
 
             clearCompletedBtn.addEventListener('click', () => {
+                const removed = [];
+                state.tasks.forEach((t, i) => { if (t.done) removed.push({ t, i }); });
                 state.tasks = state.tasks.filter(t => !t.done);
                 save();
                 renderTasks();
                 render();
+                if (flag('undoToast') && removed.length) {
+                    showToast('Cleared ' + removed.length + ' completed task' + (removed.length === 1 ? '' : 's'), () => {
+                        removed.forEach(({ t, i }) => state.tasks.splice(Math.min(i, state.tasks.length), 0, t));
+                        save();
+                        renderTasks();
+                        render();
+                    });
+                }
             });
 
-            function showConfirmDialog() { confirmDialog.classList.add('show'); }
+            function showConfirmDialog() {
+                const cl = flag('completedCollapse');
+                document.getElementById('confirmTitle').textContent = cl ? 'Delete everything?' : 'Clear all tasks?';
+                document.getElementById('confirmProceed').textContent = cl ? 'Delete all' : 'Clear all';
+                document.getElementById('confirmText').innerHTML = 'This will permanently remove <strong>all</strong> tasks — both active and completed. ' +
+                    (flag('undoToast') ? "You'll have a few seconds to undo." : 'This action cannot be undone.');
+                confirmDialog.classList.add('show');
+            }
 
             function hideConfirmDialog() { confirmDialog.classList.remove('show'); }
 
             function clearAllTasks() {
+                const snapshot = state.tasks.slice();
+                const prevActive = state.activeTaskId;
                 state.tasks = [];
                 state.activeTaskId = null;
                 save();
                 renderTasks();
                 render();
                 hideConfirmDialog();
+                if (flag('undoToast') && snapshot.length) {
+                    showToast('All tasks deleted', () => {
+                        state.tasks = snapshot;
+                        state.activeTaskId = prevActive;
+                        save();
+                        renderTasks();
+                        render();
+                    });
+                }
             }
 
             clearAllTasksBtn.addEventListener('click', showConfirmDialog);
@@ -6590,19 +6852,7 @@
                 if (e.target === confirmDialog) hideConfirmDialog();
             });
 
-            resetCyclesBtn.addEventListener('click', () => {
-                state.cycleCount = 0;
-                state.totalFocusedSec = 0;
-                save();
-                renderStats();
-                renderPips();
-                render();
-            });
-
-            $('#addTaskBtn').addEventListener('click', addTask);
-            $('#taskInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
-
-            // ===== RENAME MODAL =====
+            // ===== RENAME MODAL (original popup, used when inline rename is off) =====
             renameConfirmBtn.addEventListener('click', () => {
                 const newName = renameInput.value.trim();
                 if (newName && state.renameTargetId) {
@@ -6635,6 +6885,18 @@
                 if (e.key === 'Escape') renameCancelBtn.click();
             });
 
+            resetCyclesBtn.addEventListener('click', () => {
+                state.cycleCount = 0;
+                state.totalFocusedSec = 0;
+                save();
+                renderStats();
+                renderPips();
+                render();
+            });
+
+            $('#addTaskBtn').addEventListener('click', addTask);
+            $('#taskInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+
             // ===== DESIGN PRINCIPLES MODAL =====
             const principlesBackdrop = $('#principlesBackdrop');
             const openPrinciplesBtn = $('#openPrinciplesBtn');
@@ -6652,19 +6914,47 @@
             function addTask() {
                 const input = $('#taskInput');
                 const estInput = $('#taskEstimate');
-                const title = input.value.trim();
+                let title = input.value.trim();
                 if (!title) return;
                 const val = parseInt(estInput.value);
-                const est = isNaN(val) ? 1 : Math.max(0, val);
-                const timing = currentTiming || 'today';
+                let est = isNaN(val) ? 1 : Math.max(0, val);
+                let timing = currentTiming || 'today';
+
+                // Quick-add (option): trailing "@today / @tmrw / @wknd" and "x3" (or "3x") override the controls
+                if (flag('quickAdd')) {
+                    const tokens = title.split(/\s+/);
+                    let tm = null, ee = null;
+                    while (tokens.length > 1) {
+                        const tk = tokens[tokens.length - 1].toLowerCase();
+                        let m;
+                        if ((m = tk.match(/^@(today|tod|tomorrow|tmrw|tom|weekend|wknd)$/))) {
+                            if (tm === null) tm = (m[1] === 'today' || m[1] === 'tod') ? 'today' :
+                                (m[1] === 'weekend' || m[1] === 'wknd') ? 'weekend' : 'tomorrow';
+                            tokens.pop();
+                        } else if ((m = tk.match(/^(?:x(\d{1,2})|(\d{1,2})x)$/))) {
+                            if (ee === null) ee = Math.min(20, parseInt(m[1] || m[2], 10));
+                            tokens.pop();
+                        } else break;
+                    }
+                    title = tokens.join(' ');
+                    if (tm !== null) timing = tm;
+                    if (ee !== null) est = ee;
+                }
+
                 const t = { id: uid(), title, est, completedPomos: 0, untimedProgress: 0, done: false, notes: '',
                     timing, completedAt: null };
                 state.tasks.push(t);
                 if (!state.activeTaskId) state.activeTaskId = t.id;
                 input.value = '';
-                estInput.value = 1;
-                currentTiming = 'today';
-                updateTimingButtons();
+                if (flag('rememberAdd')) {
+                    // keep your last day + estimate in the form
+                    state.lastAddTiming = currentTiming;
+                    state.lastAddEst = isNaN(val) ? 1 : Math.max(0, val);
+                } else {
+                    estInput.value = 1;
+                    currentTiming = 'today';
+                    updateTimingButtons();
+                }
                 save();
                 renderTasks();
                 render();
@@ -6827,6 +7117,7 @@
                 $('#setVoiceAnnounce').classList.toggle('on', state.voiceAnnounce);
                 $('#setHighContrast').classList.toggle('on', state.highContrast);
                 $('#setReducedMotion').classList.toggle('on', state.reducedMotion);
+                buildFlagRows();
                 timerScaleSlider.value = Math.round(state.timerScale * 100);
                 timerScaleLabel.textContent = Math.round(state.timerScale * 100) + '%';
                 $$('.theme-grid .theme-swatch').forEach(el => {
@@ -6874,6 +7165,7 @@
                 state.voiceAnnounce = DEFAULTS.voiceAnnounce;
                 state.highContrast = DEFAULTS.highContrast;
                 state.reducedMotion = DEFAULTS.reducedMotion;
+                state.flags = {};
                 state.remaining = state.durations[state.mode];
                 pendingCycles = DEFAULTS.cyclesBeforeLong;
                 pendingAlarmRepeats = DEFAULTS.alarmRepeats;
@@ -6911,6 +7203,8 @@
                 $('#setVoiceAnnounce').classList.toggle('on', DEFAULTS.voiceAnnounce);
                 $('#setHighContrast').classList.toggle('on', DEFAULTS.highContrast);
                 $('#setReducedMotion').classList.toggle('on', DEFAULTS.reducedMotion);
+                buildFlagRows();
+                applyFlags();
                 applyAccessibility();
                 updateSkipButton();
                 updateTabsDisabled();
@@ -7173,7 +7467,10 @@
                 reader.onload = () => {
                     try {
                         JSON.parse(reader.result);
+                        if (flag('importConfirm') && !confirm('Replace ALL current data with this backup? This cannot be undone.')) return;
                         localStorage.setItem('ripe_state', reader.result);
+                        // FIX (storage): stop the beforeunload handler from overwriting the import
+                        skipUnloadSave = true;
                         location.reload();
                     } catch (_) {
                         alert('Invalid backup file.');
@@ -7203,13 +7500,29 @@
             const exportCsvBtn = $('#exportCsvBtn');
             if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportCSV);
 
+            const restoreBackupBtn = $('#restoreBackupBtn');
+            if (restoreBackupBtn) restoreBackupBtn.addEventListener('click', () => {
+                try {
+                    const b = localStorage.getItem('ripe_backup');
+                    if (!b) { alert('No daily backup yet — one is created the first time you open Ripe each day.'); return; }
+                    const d = localStorage.getItem('ripe_backup_date') || 'an earlier day';
+                    if (!confirm('Restore the automatic backup taken on ' + d + '? This replaces ALL current data.')) return;
+                    localStorage.setItem('ripe_state', b);
+                    skipUnloadSave = true;
+                    location.reload();
+                } catch (_) {
+                    alert('Could not restore the backup.');
+                }
+            });
+
             // ===== SCROLL CUE CLICK =====
             scrollCue.addEventListener('click', () => {
                 document.querySelector('.tasks-section').scrollIntoView({ behavior: 'smooth' });
             });
 
             // ===== TIMING BUTTONS =====
-            let currentTiming = 'today';
+            let currentTiming = (flag('rememberAdd') && TIMING_ORDER.includes(state.lastAddTiming)) ? state.lastAddTiming : 'today';
+            if (flag('rememberAdd')) $('#taskEstimate').value = state.lastAddEst ?? 1;
 
             function updateTimingButtons() {
                 $$('.timing-btn-select').forEach(btn => btn.classList.remove('active'));
@@ -7221,6 +7534,7 @@
                 btn.addEventListener('click', () => {
                     currentTiming = btn.dataset.timing;
                     updateTimingButtons();
+                    if (flag('rememberAdd')) { state.lastAddTiming = currentTiming; save(); }
                 });
             });
 
@@ -7232,8 +7546,8 @@
                     $$('.filter-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     state.taskFilter = btn.dataset.filter;
-                    // When filter changes, sort by day (group by day)
-                    sortTasksByDay();
+                    // original behaviour: changing the filter also sorts by day (not needed when grouped)
+                    if (!flag('dayGroups')) sortTasksByDay();
                     save();
                     renderTasks();
                     renderStats();
@@ -7302,6 +7616,8 @@
             }
 
             // ===== INIT =====
+            applyFlagsUI();
+            syncFilterButtons();
             checkDayRollover();
             switchMode('pomodoro', false);
             renderPips();
