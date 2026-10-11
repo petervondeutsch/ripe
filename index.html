@@ -3911,6 +3911,32 @@
         .timing-chip.today::before { background: #4ade80; }
         .timing-chip.tomorrow::before { background: #60a5fa; }
         .timing-chip.weekend::before { background: #6366f1; }
+        .timing-chip.later::before { background: #a78bfa; }
+        .task-timing-dot.later { background: #a78bfa; }
+        .task-group-header .gdot.later { background: #a78bfa; }
+        .task-group-header .gdate { text-transform: none; letter-spacing: 0; font-weight: 500; opacity: 0.75; font-size: 11px; }
+        .day-menu {
+            position: fixed; z-index: 95; min-width: 220px; background: var(--bg-2);
+            border: 1px solid var(--line); border-radius: 12px; padding: 6px;
+            box-shadow: 0 16px 48px var(--shadow); display: flex; flex-direction: column; gap: 2px;
+        }
+        .day-menu-item {
+            display: flex; justify-content: space-between; align-items: center; gap: 16px;
+            background: none; border: none; color: var(--fg); font-size: 13px; padding: 8px 10px;
+            border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; text-align: left;
+        }
+        .day-menu-item:hover, .day-menu-item:focus-visible { background: var(--accent-soft); outline: none; }
+        .day-menu-item.current { color: var(--accent); font-weight: 600; }
+        .day-menu-item .dm-date { color: var(--fg-dim); font-size: 12px; font-family: var(--font-mono); font-weight: 400; }
+        .day-menu-pick {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            padding: 8px 10px 4px; border-top: 1px solid var(--line); margin-top: 4px;
+            font-size: 12px; color: var(--fg-dim);
+        }
+        .day-menu-pick input {
+            background: var(--bg-3); color: var(--fg); border: 1px solid var(--line);
+            border-radius: 6px; padding: 3px 6px; font-family: var(--font-ui); font-size: 12px;
+        }
         .timing-chip:hover { color: var(--fg); border-color: var(--fg-dim); }
 
         .carry-chip {
@@ -3983,6 +4009,317 @@
             background: none; border: none; color: var(--accent); font-weight: 700; cursor: pointer;
             font-size: 13px; font-family: 'Inter', sans-serif; padding: 2px 4px;
         }
+
+        /* ===== v5: calendar, history, events & due dates ===== */
+        [hidden] { display: none !important; }
+        .task.active .task-notes { max-height: 260px; }
+        .task-due-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .task-due-input, .agenda-add input, .agenda-add select, .cal-add input, .cal-add select {
+            background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 8px;
+            padding: 5px 8px; font-family: var(--font-ui); font-size: 12px; outline: none;
+        }
+        .task-due-input:focus, .agenda-add input:focus, .cal-add input:focus { border-color: var(--accent); }
+        .task-due-clear, .agenda-add button, .cal-add button, .agenda-add-btn {
+            background: var(--bg-3); color: var(--fg-dim); border: 1px solid var(--line); border-radius: 8px;
+            padding: 5px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+        }
+        .task-due-clear:hover, .agenda-add button:hover, .cal-add button:hover, .agenda-add-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .due-chip {
+            font-size: 10px; color: var(--accent-long); border: 1px solid var(--line); border-radius: 20px;
+            padding: 1px 8px; flex-shrink: 0; white-space: nowrap;
+        }
+        .due-chip.overdue { color: #e05a3d; border-color: #e05a3d; }
+
+        .agenda { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; }
+        .agenda-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+        .agenda-head > span { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--fg-dim); font-weight: 600; }
+        .agenda-add { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 10px; }
+        .agenda-add input[type="text"] { flex: 1; min-width: 120px; }
+        .agenda-sec { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--fg-dim-2); font-weight: 600; margin: 10px 0 4px; }
+        .agenda-empty, .agenda-more { font-size: 12px; color: var(--fg-dim); padding: 6px 0 2px; }
+        .link-btn { background: none; border: none; color: var(--accent); cursor: pointer; font: inherit; text-decoration: underline; padding: 0; }
+        .ag-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+        .ag-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .ag-title { font-size: 13px; color: var(--fg); word-break: break-word; }
+        .ag-meta { font-size: 11px; color: var(--fg-dim); font-family: var(--font-mono); }
+        .ag-row.done .ag-title { text-decoration: line-through; color: var(--fg-dim); }
+        .ag-row.overdue .ag-meta, .ag-row.overdue .ag-title { color: #e05a3d; }
+        .ag-icon { width: 20px; text-align: center; font-size: 12px; flex-shrink: 0; }
+        .ag-icon.event { color: #4f86c6; }
+        .ag-icon.taskdue { color: var(--accent-long); }
+        .ag-icon.done { color: #4f9a4a; }
+        .ag-check {
+            width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--fg-dim); background: transparent;
+            color: var(--on-accent); font-size: 11px; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 0; margin: 0 1px;
+        }
+        .ag-check.done { background: var(--accent); border-color: var(--accent); }
+        .ag-row.due .ag-check { border-color: var(--accent-long); }
+        .ag-del { background: none; border: none; color: var(--fg-dim-2); font-size: 16px; cursor: pointer; padding: 0 4px; line-height: 1; }
+        .ag-del:hover { color: #e05a3d; }
+
+        .cal-backdrop {
+            position: fixed; inset: 0; z-index: 65; background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(6px);
+            display: none; align-items: center; justify-content: center; padding: 16px;
+        }
+        .cal-backdrop.show { display: flex; }
+        .cal-modal {
+            background: var(--bg-2); border: 1px solid var(--line); border-radius: 20px; width: 100%; max-width: 820px;
+            max-height: 92vh; display: flex; flex-direction: column; box-shadow: 0 30px 70px var(--shadow); overflow: hidden;
+        }
+        .cal-head { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+        .cal-tabs { display: flex; gap: 4px; background: var(--bg); border-radius: 10px; padding: 3px; }
+        .cal-tab { border: none; background: transparent; color: var(--fg-dim); font-weight: 600; font-size: 13px; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; }
+        .cal-tab.active { background: var(--accent); color: var(--on-accent); }
+        .cal-nav { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+        .cal-nav button, .cal-close {
+            background: var(--bg-3); border: 1px solid var(--line); color: var(--fg); border-radius: 8px;
+            min-width: 30px; height: 30px; padding: 0 10px; cursor: pointer; font-size: 14px; font-family: 'Inter', sans-serif;
+        }
+        .cal-nav button:hover, .cal-close:hover { border-color: var(--accent); color: var(--accent); }
+        .cal-nav #calTitle { font-family: 'Fraunces', serif; font-size: 17px; min-width: 150px; text-align: center; color: var(--fg); }
+        .cal-close { margin-left: 4px; }
+        .cal-body { padding: 14px 18px; overflow-y: auto; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .cal-dow { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--fg-dim); text-align: center; padding: 2px 0 4px; font-weight: 600; }
+        .cal-cell {
+            min-height: 66px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 5px 6px;
+            display: flex; flex-direction: column; align-items: flex-start; gap: 4px; cursor: pointer; color: var(--fg);
+            font-family: 'Inter', sans-serif; text-align: left;
+        }
+        .cal-cell:hover { border-color: var(--fg-dim); }
+        .cal-cell.out { opacity: 0.4; }
+        .cal-cell.today .cal-num { color: var(--accent); font-weight: 700; }
+        .cal-cell.today { border-color: var(--accent); }
+        .cal-cell.sel { box-shadow: 0 0 0 2px var(--accent); }
+        .cal-num { font-size: 12px; font-weight: 500; }
+        .cal-marks { display: flex; flex-wrap: wrap; gap: 3px; }
+        .cm { font-size: 10px; border-radius: 8px; padding: 0 5px; line-height: 15px; font-family: var(--font-mono); background: var(--bg-3); color: var(--fg-dim); }
+        .cm.plan { color: var(--fg); }
+        .cm.done { color: #4f9a4a; }
+        .cm.ev { color: #4f86c6; }
+        .cm.due { color: var(--accent-long); }
+        .cal-legend { display: flex; flex-wrap: wrap; gap: 14px; padding: 10px 18px 14px; font-size: 11px; color: var(--fg-dim); border-top: 1px solid var(--line); }
+        .cal-detail { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+        .cal-detail h4 { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin: 0 0 4px; color: var(--fg); }
+        .cal-detail .cal-sub { font-size: 11px; color: var(--fg-dim); margin-bottom: 8px; }
+        .cal-sec { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--fg-dim-2); font-weight: 600; margin: 12px 0 4px; }
+        .cal-add { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
+        .cal-add input[type="text"] { flex: 1; min-width: 140px; }
+        .cal-empty { font-size: 12px; color: var(--fg-dim); }
+        .hist-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+        .hist-card { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+        .hist-card .hc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--fg-dim); font-weight: 600; }
+        .hist-card .hc-val { font-family: var(--font-mono); font-size: 13px; color: var(--fg); margin-top: 4px; line-height: 1.6; }
+        .hist-day { border-top: 1px solid var(--line); padding: 10px 0; }
+        .hist-day-head { display: flex; justify-content: space-between; gap: 10px; background: none; border: none; width: 100%; color: var(--fg); font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; font-family: 'Inter', sans-serif; text-align: left; }
+        .hist-day-head span { color: var(--fg-dim); font-weight: 400; font-size: 11px; font-family: var(--font-mono); }
+        .hist-day ul { list-style: none; margin: 6px 0 0; padding: 0; font-size: 12px; color: var(--fg-dim); }
+        .hist-day li { padding: 2px 0; }
+        .hist-more { display: block; margin: 12px auto 0; }
+        @media (max-width: 520px) {
+            .cal-cell { min-height: 48px; padding: 4px; }
+            .cal-body { padding: 10px 10px; }
+            .cal-head { padding: 10px 12px; }
+            .cal-nav #calTitle { min-width: 110px; font-size: 15px; }
+        }
+
+        /* ===== v6: calmer agenda, quick-add, timeline, editor, heatmap ===== */
+        .agenda.collapsed { padding: 8px 14px; }
+        .agenda-toggle {
+            background: none; border: none; color: var(--fg-dim); cursor: pointer; font-size: 12px; text-align: left;
+            font-family: 'Inter', sans-serif; padding: 2px 0; display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0;
+        }
+        .agenda-toggle:hover { color: var(--fg); }
+        .agenda-toggle .chev { font-size: 10px; width: 10px; flex-shrink: 0; }
+        #agendaSummary { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .agenda-head { gap: 10px; margin-bottom: 0; }
+        .agenda:not(.collapsed) .agenda-head { margin-bottom: 8px; }
+        .quick-input {
+            width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px;
+            color: var(--fg); font-size: 13px; font-family: 'Inter', sans-serif; outline: none;
+        }
+        .quick-input:focus { border-color: var(--accent); }
+        .quick-preview { font-size: 11px; color: var(--fg-dim); min-height: 16px; margin: 4px 2px 6px; font-family: var(--font-mono); }
+        .agenda-bed, .cal-bed { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--fg-dim); margin: 4px 0 6px; flex-wrap: wrap; }
+        .agenda-bed input, .cal-bed input {
+            background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 8px;
+            padding: 4px 8px; font-family: var(--font-ui); font-size: 12px; outline: none;
+        }
+        .mini-btn {
+            background: var(--bg-3); color: var(--fg-dim); border: 1px solid var(--line); border-radius: 8px;
+            padding: 4px 10px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+        }
+        .mini-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .ag-icon.block { color: #8a6fc2; }
+        .ag-rep { color: var(--fg-dim); margin-left: 4px; }
+        .ag-main[data-act="edit-item"] { cursor: pointer; }
+        .ag-main[data-act="edit-item"]:hover .ag-title { text-decoration: underline; text-decoration-color: var(--fg-dim-2); }
+        .cm.bed { color: #c99a2e; }
+        .cal-sub .warn, .tl-free .warn { color: #e05a3d; }
+
+        .tl { margin: 8px 0 4px; }
+        .tl-track { position: relative; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+        .tl-seg { position: absolute; height: 14px; border-radius: 4px; font-size: 9px; line-height: 14px; padding: 0 4px; overflow: hidden; white-space: nowrap; color: #0d1117; min-width: 4px; }
+        .tl-seg.event { background: #4f86c6; }
+        .tl-seg.block { background: #8a6fc2; }
+        .tl-mark { position: absolute; top: 0; bottom: 0; width: 2px; }
+        .tl-bed { background: #c99a2e; }
+        .tl-now { background: #e05a3d; }
+        .tl-ticks { position: relative; height: 14px; font-size: 9px; color: var(--fg-dim-2); font-family: var(--font-mono); margin-top: 2px; }
+        .tl-ticks span { position: absolute; transform: translateX(-50%); }
+        .tl-free { font-size: 11px; color: var(--fg-dim); margin-top: 4px; font-family: var(--font-mono); }
+
+        .item-backdrop {
+            position: fixed; inset: 0; z-index: 72; background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(6px);
+            display: none; align-items: center; justify-content: center; padding: 16px;
+        }
+        .item-backdrop.show { display: flex; }
+        .item-modal {
+            background: var(--bg-2); border: 1px solid var(--line); border-radius: 18px; width: 100%; max-width: 460px;
+            padding: 20px 20px 16px; box-shadow: 0 30px 70px var(--shadow); max-height: 92vh; overflow-y: auto;
+        }
+        .item-modal h4 { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; margin: 0 0 14px; color: var(--fg); }
+        .item-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+        .item-row > label { width: 58px; font-size: 12px; color: var(--fg-dim); flex-shrink: 0; }
+        .item-row input, .item-row select {
+            background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 8px;
+            padding: 6px 9px; font-family: var(--font-ui); font-size: 13px; outline: none;
+        }
+        .item-row input:focus, .item-row select:focus { border-color: var(--accent); }
+        .item-row input[type="text"] { flex: 1; min-width: 160px; }
+        .item-row input[type="number"] { width: 56px; }
+        .item-days { display: flex; gap: 4px; flex-wrap: wrap; }
+        .item-days button {
+            width: 34px; height: 28px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg);
+            color: var(--fg-dim); font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+        }
+        .item-days button.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+        .item-note { font-size: 11px; color: var(--fg-dim); margin: -4px 0 10px 66px; }
+        .item-actions { display: flex; gap: 8px; align-items: center; margin-top: 14px; }
+        .item-actions button {
+            padding: 8px 18px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;
+            border: 1px solid var(--line); background: var(--bg-3); color: var(--fg-dim); font-family: 'Inter', sans-serif;
+        }
+        .item-actions .primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+        .item-actions .danger:hover { color: #e05a3d; border-color: #e05a3d; }
+
+        .hist-heat { margin-bottom: 14px; }
+        .hm-grid { display: grid; grid-template-rows: repeat(7, 12px); grid-auto-flow: column; gap: 3px; margin-top: 6px; justify-content: start; }
+        .hm-cell { width: 12px; height: 12px; border-radius: 3px; border: none; padding: 0; background: var(--bg-3); cursor: pointer; }
+        .hm-cell.hm-future { background: transparent; cursor: default; }
+        .hm-cell.hm-1 { background: rgba(var(--leaf-rgb), 0.3); }
+        .hm-cell.hm-2 { background: rgba(var(--leaf-rgb), 0.5); }
+        .hm-cell.hm-3 { background: rgba(var(--leaf-rgb), 0.75); }
+        .hm-cell.hm-4 { background: rgba(var(--leaf-rgb), 1); }
+        .cal-keys { font-size: 10px; color: var(--fg-dim-2); margin-left: auto; }
+
+        /* ===== calendar & agenda polish (kept from the redesign) ===== */
+        :root { --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --leaf-rgb: 75, 143, 63; --bad: #c4452f; }
+        .ic { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; flex-shrink: 0; }
+        .agenda { background: transparent; border-radius: var(--r-md); }
+        .agenda-sec, .cal-sec { text-transform: none; letter-spacing: 0; font-size: 12px; font-weight: 600; color: var(--fg-dim); margin: 14px 0 4px; }
+        .ag-icon { color: var(--fg-dim); display: inline-flex; justify-content: center; }
+        .ag-icon.event { color: #4f86c6; } .ag-icon.block { color: #8a6fc2; } .ag-icon.taskdue, .ag-icon.due { color: #b9801f; } .ag-icon.done { color: #4f9a4a; }
+        .ag-check { display: inline-flex; align-items: center; justify-content: center; border-radius: 5px; }
+        .ag-check .ic { width: 11px; height: 11px; stroke-width: 2; }
+        .ag-del { display: inline-flex; color: var(--fg-dim-2); opacity: 0; }
+        .ag-row:hover .ag-del, .ag-del:focus-visible { opacity: 1; }
+        .ag-del .ic { width: 12px; height: 12px; }
+        .ag-meta { font-family: var(--font-ui); display: inline-flex; align-items: center; gap: 4px; }
+        .ag-rep .ic { width: 11px; height: 11px; }
+        .agenda-toggle .chev { display: inline-flex; width: auto; }
+        .agenda-toggle .ic { width: 12px; height: 12px; }
+        .agenda-add-btn, .mini-btn { border-radius: var(--r-sm); }
+        .quick-input { border-radius: var(--r-md); }
+        .quick-preview { font-family: var(--font-ui); }
+        .cm .ic, .lg-done .ic, .lg-ev .ic, .lg-due .ic, .lg-bed .ic { width: 11px; height: 11px; }
+
+        .cal-modal, .item-modal { border-radius: var(--r-lg); box-shadow: 0 18px 50px var(--shadow); }
+        .cal-tabs { background: transparent; padding: 0; gap: 2px; }
+        .cal-tab { border-radius: 0; background: transparent; color: var(--fg-dim); padding: 6px 12px; border-bottom: 2px solid transparent; }
+        .cal-tab.active { background: transparent; color: var(--fg); border-bottom-color: var(--fg); }
+        .cal-nav button, .cal-close { border-radius: var(--r-sm); background: transparent; border-color: var(--line); }
+        .cal-nav #calTitle { font-size: 16px; font-weight: 600; }
+        .cal-grid { gap: 3px; }
+        .cal-dow { text-transform: none; letter-spacing: 0; font-size: 11px; font-weight: 500; }
+        .cal-cell { border-radius: var(--r-sm); background: var(--bg); }
+        .cal-cell.sel { box-shadow: 0 0 0 2px var(--fg); border-color: transparent; }
+        .cal-cell.today { border-color: var(--fg); }
+        .cal-cell.today .cal-num { color: var(--fg); }
+        .cm { background: transparent; padding: 0; line-height: 14px; font-family: var(--font-ui); display: inline-flex; align-items: center; gap: 2px; font-size: 11px; }
+        .cm.ev { color: #4f86c6; } .cm.due { color: #b9801f; } .cm.done { color: #4f9a4a; } .cm.bed { color: #b98a1f; }
+        .cal-legend { font-size: 11px; }
+        .cal-legend .lg-done { color: #4f9a4a; } .cal-legend .lg-ev { color: #4f86c6; } .cal-legend .lg-due { color: #b9801f; } .cal-legend .lg-bed { color: #b98a1f; }
+        .cal-detail h4 { font-size: 17px; font-weight: 600; }
+        .hist-card { border-radius: var(--r-md); background: transparent; }
+        .hist-card .hc-label, .hist-heat .hc-label { text-transform: none !important; letter-spacing: 0 !important; font-size: 12px !important; font-weight: 600 !important; color: var(--fg-dim) !important; }
+        .hist-card .hc-val { font-family: var(--font-ui); }
+        .tl-free { font-family: var(--font-ui); }
+        .tl-ticks { font-family: var(--font-ui); }
+        .day-menu { border-radius: var(--r-md); box-shadow: 0 10px 34px var(--shadow); }
+        .day-menu-item { border-radius: var(--r-sm); }
+        .day-menu-item .dm-date { font-family: var(--font-ui); }
+        .item-days button { border-radius: var(--r-sm); }
+        .item-actions button { border-radius: var(--r-md); }
+        @media (hover: none) { .ag-del { opacity: 1; } }
+
+        /* ===== day budget (time left vs bedtime), due-date button ===== */
+        .day-budget {
+            display: flex; flex-direction: column; justify-content: center; gap: 4px; align-self: center; margin-right: 6px;
+            background: var(--bg-2); border: 1px solid var(--line); border-radius: 20px; padding: 6px 14px 7px;
+            color: var(--fg-dim); font-size: 12px; line-height: 1.2; text-align: left; cursor: pointer; white-space: nowrap;
+            font-family: var(--font-ui); transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .day-budget:hover { border-color: var(--fg-dim); background: var(--bg-3); }
+        .day-budget b { color: var(--fg); font-weight: 600; }
+        .day-budget .db-warn, .day-budget.over .db-warn { color: #e05a3d; }
+        .db-bar { display: block; width: 100%; height: 3px; border-radius: 2px; background: var(--bg-3); overflow: hidden; }
+        .day-budget:hover .db-bar { background: var(--bg-2); }
+        .db-fill { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+        .day-budget.over .db-fill { background: #e05a3d; }
+        .task-due-btn {
+            display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0;
+            border: none; background: transparent; color: var(--fg-dim); cursor: pointer; border-radius: 6px;
+            flex-shrink: 0; opacity: 0; transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
+        }
+        .task:hover .task-due-btn, .task:focus-within .task-due-btn { opacity: 0.7; }
+        .task-due-btn:hover { opacity: 1 !important; color: var(--accent); background: var(--accent-soft); }
+        .task-due-btn .ic { width: 15px; height: 15px; }
+        @media (hover: none) { .task-due-btn { opacity: 0.7; } }
+        @media (max-width: 520px) {
+            .day-budget { position: absolute; top: 44px; right: 0; margin: 0; font-size: 11px; padding: 5px 11px 6px; }
+        }
+
+        /* ===== polish ===== */
+        @media (min-width: 521px) { .statbar { padding-right: calc(var(--topbar-w, 0px) + 28px); } }
+        .day-budget:focus-visible, .task-due-btn:focus-visible, .cal-cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .day-budget { max-width: min(380px, 60vw); overflow: hidden; text-overflow: ellipsis; }
+        .item-note#itConflict { margin: -2px 0 10px 66px; }
+
+        /* ===== per-task due switch, pomodoro room, focus reminder ===== */
+        .mini-toggle {
+            width: 34px; height: 20px; border-radius: 20px; border: 1px solid var(--line); background: var(--bg);
+            position: relative; cursor: pointer; padding: 0; flex-shrink: 0; transition: background 0.25s ease, border-color 0.25s ease;
+        }
+        .mini-toggle::after {
+            content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%;
+            background: var(--fg); transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .mini-toggle.on { background: var(--accent); border-color: var(--accent); }
+        .mini-toggle.on::after { transform: translateX(14px); background: var(--on-accent); }
+        .pomo-fit b { color: var(--fg); }
+        .focus-nudge {
+            margin-top: 18px; max-width: 400px; padding: 10px 14px 12px; background: var(--bg-2); border: 1px solid var(--line);
+            border-radius: 14px; text-align: center; font-size: 13px; color: var(--fg-dim);
+        }
+        .fn-actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: center; margin-top: 8px; }
+        .fn-actions button {
+            background: var(--bg-3); color: var(--fg); border: 1px solid var(--line); border-radius: 20px; padding: 5px 12px;
+            font-size: 12px; font-weight: 500; cursor: pointer; font-family: var(--font-ui); max-width: 170px;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .fn-actions button:hover { border-color: var(--accent); }
+        .fn-actions .fn-dismiss { background: transparent; border-color: transparent; color: var(--fg-dim); padding: 3px 8px; font-size: 15px; line-height: 1; }
     </style>
 </head>
 <body data-theme="og-dark" class="mode-focus" style="--accent-soft: rgba(224, 90, 61, 0.14); --accent-rgb: 224, 90, 61; --timer-scale: 1;">
@@ -3997,6 +4334,10 @@
 
     <!-- ===== TOPBAR ===== -->
     <div class="topbar-actions">
+        <button type="button" class="day-budget" id="dayBudget" style="display:none;" aria-label="Time left today compared with bedtime. Click for options." aria-haspopup="menu"></button>
+        <button class="btn-icon" id="calendarBtn" title="Calendar & history" aria-label="Calendar and history" style="display:none;">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"></rect><line x1="3" y1="10" x2="21" y2="10"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line></svg>
+        </button>
         <button class="btn-icon" id="themeToggleBtn" title="Cycle themes">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <circle cx="12" cy="12" r="4"></circle>
@@ -4072,6 +4413,7 @@
 
                 <!-- Focused task badge -->
                 <div class="est-line" id="estLine">No active task selected</div>
+                <div class="focus-nudge" id="focusNudge" hidden></div>
             </div>
 
             <!-- Scroll Cue -->
@@ -4132,6 +4474,7 @@
             <button type="button" class="filter-btn" data-filter="today">Today</button>
             <button type="button" class="filter-btn" data-filter="tomorrow">Tomorrow</button>
             <button type="button" class="filter-btn" data-filter="weekend">Weekend</button>
+            <button type="button" class="filter-btn" data-filter="later" id="laterFilterBtn" style="display:none;">Later</button>
             <button type="button" class="sort-btn" id="sortByDayBtn">Sort by Day</button>
             <button type="button" class="sort-btn" id="sortByPriorityBtn" style="display:none;">Sort by Priority</button>
         </div>
@@ -4145,6 +4488,20 @@
             </div>
         </div>
         <div class="plan-summary" id="planSummary" style="display:none;"></div>
+
+        <!-- Agenda: events, time blocks & due dates (collapsed by default) -->
+        <div class="agenda collapsed" id="agenda" style="display:none;">
+            <div class="agenda-head">
+                <button type="button" class="agenda-toggle" id="agendaToggle" aria-expanded="false"><span class="chev" id="agendaChev"></span><span id="agendaSummary">Agenda</span></button>
+                <button type="button" class="agenda-add-btn" id="agendaDetailsBtn" title="Add an event, time block or due date">+ Add</button>
+            </div>
+            <div id="agendaBody" hidden>
+                <input type="text" class="quick-input" id="agQuick" autocomplete="off" placeholder="Quick add — “Dentist 2:30pm 1h @fri” · “due Tax return @2026-10-24” · “Gym 6-7pm every mon”">
+                <div class="quick-preview" id="agPreview"></div>
+                <div class="agenda-bed" id="agBed"></div>
+                <div class="agenda-list" id="agendaList"></div>
+            </div>
+        </div>
 
         <!-- Task List -->
         <div class="task-list" id="taskList"></div>
@@ -4239,6 +4596,71 @@
             </div>
 
             <button class="close-principles" id="closePrinciplesBtn">Close</button>
+        </div>
+    </div>
+
+    <!-- ===== CALENDAR & HISTORY ===== -->
+    <div class="cal-backdrop" id="calBackdrop">
+        <div class="cal-modal" role="dialog" aria-label="Calendar and history">
+            <div class="cal-head">
+                <div class="cal-tabs">
+                    <button type="button" class="cal-tab active" data-view="cal">Calendar</button>
+                    <button type="button" class="cal-tab" data-view="history">History</button>
+                </div>
+                <div class="cal-nav" id="calNav">
+                    <button type="button" id="calPrev" aria-label="Previous month">‹</button>
+                    <span id="calTitle"></span>
+                    <button type="button" id="calNext" aria-label="Next month">›</button>
+                    <button type="button" id="calToday">Today</button>
+                </div>
+                <button type="button" class="cal-close" id="calClose" aria-label="Close">✕</button>
+            </div>
+            <div class="cal-body" id="calBody"></div>
+            <div class="cal-legend" id="calLegend">
+                <span>Number = tasks planned</span><span class="lg-done"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg> done</span>
+                <span class="lg-ev"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="3.5" width="11" height="10" rx="1.5"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"/></svg> events and blocks</span><span class="lg-due"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2v12M4 3h8l-1.5 3L12 9H4"/></svg> due</span>
+                <span class="lg-bed"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 9.5A5 5 0 0 1 6.5 3.5a5 5 0 1 0 6 6z"/></svg> bedtime set</span><span>Shaded = focus sessions</span>
+                <span class="cal-keys">← → ↑ ↓ move · N new · T today · Esc close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== EVENT / BLOCK / DUE EDITOR ===== -->
+    <div class="item-backdrop" id="itemBackdrop">
+        <div class="item-modal" role="dialog" aria-label="Event details">
+            <h4 id="itemTitleH">New item</h4>
+            <div class="item-row"><label for="itKind">Type</label>
+                <select id="itKind"></select></div>
+            <div class="item-row"><label for="itTitle">Title</label>
+                <input type="text" id="itTitle" maxlength="120" autocomplete="off"></div>
+            <div class="item-row"><label for="itDate">Date</label>
+                <input type="date" id="itDate"></div>
+            <div class="item-row" id="itTimeRow"><label for="itStart">Time</label>
+                <input type="time" id="itStart"><span id="itEndWrap">to <input type="time" id="itEnd"></span></div>
+            <div class="item-note" id="itConflict" hidden style="color:var(--accent-long)"></div>
+            <div class="item-row" id="itRepeatRow"><label for="itFreq">Repeat</label>
+                <select id="itFreq">
+                    <option value="none">Does not repeat</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekdays">Weekdays (Mon–Fri)</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                </select>
+                <span id="itEveryWrap">every <input type="number" id="itInterval" min="1" max="99" value="1"> <span id="itUnit">days</span></span></div>
+            <div class="item-row" id="itDaysRow"><label>On</label>
+                <div class="item-days" id="itDays">
+                    <button type="button" data-d="1">Mon</button><button type="button" data-d="2">Tue</button><button type="button" data-d="3">Wed</button><button type="button" data-d="4">Thu</button><button type="button" data-d="5">Fri</button><button type="button" data-d="6">Sat</button><button type="button" data-d="0">Sun</button>
+                </div></div>
+            <div class="item-row" id="itUntilRow"><label for="itUntil">Until</label>
+                <input type="date" id="itUntil"> <span style="font-size:11px;color:var(--fg-dim)">(optional)</span></div>
+            <div class="item-note" id="itNote" hidden></div>
+            <div class="item-actions">
+                <button type="button" class="danger" id="itDelete">Delete</button>
+                <span style="flex:1"></span>
+                <button type="button" id="itCancel">Cancel</button>
+                <button type="button" class="primary" id="itSave">Save</button>
+            </div>
         </div>
     </div>
 
@@ -4496,6 +4918,10 @@
                     Task manager extras
                 </div>
                 <div id="flagRows"></div>
+                <div class="field-row" id="bedtimeRow" style="display:none;">
+                    <label>Default bedtime (blank = none)</label>
+                    <input type="time" id="setDefaultBedtime" class="task-due-input">
+                </div>
                 <div class="field-row">
                     <label style="font-size:11px;color:var(--fg-dim-2);font-weight:400;">Everything in this section is off by default. With all of it off, the task manager behaves exactly like the original.</label>
                 </div>
@@ -4762,6 +5188,11 @@
                 ytStations: [],
                 ytLastLoadedId: null,
                 flags: {},
+                items: [],
+                doneLog: [],
+                bedtimes: {},
+                defaultBedtime: '',
+                agendaOpen: false,
                 lastAddTiming: 'today',
                 lastAddEst: 1,
                 completedCollapsed: true
@@ -4779,6 +5210,7 @@
                 ['dragHandleOnly', 'Drag rows only by their handle'],
                 ['a11yTasks', 'Keyboard & screen-reader support on tasks'],
                 ['shortcutN', 'Press N to jump to the add-task box'],
+                ['dateScheduling', 'Schedule by real date (weekend = Saturday, defer to Sunday, + Later)'],
                 ['dayGroups', 'Group tasks under Today / Tomorrow / Weekend headers'],
                 ['timingChips', 'Labeled day chips instead of colored dots'],
                 ['carryMarkers', 'Mark tasks carried over from yesterday + sweep banner'],
@@ -4793,9 +5225,42 @@
                 ['saveIndicator', '"Saved" indicator & storage-full warning'],
                 ['dailyBackup', 'Daily automatic backup (+ restore button)'],
                 ['importConfirm', 'Confirm before importing a backup'],
-                ['restoreFilter', 'Remember the active day filter after reload']
+                ['restoreFilter', 'Remember the active day filter after reload'],
+                ['calendarView', 'Calendar view & history (top-bar button, or press C)'],
+                ['eventsDue', 'Events, due dates & agenda (task due dates, calendar markers)'],
+                ['timeBlocks', 'Time blocks, end times & day timeline (needs Events)'],
+                ['repeatEvents', 'Repeating events, blocks & due dates (needs Events)'],
+                ['bedtime', 'Target bedtime per day + default (counts toward free time)'],
+                ['taskDue', 'Due-date switch on tasks (each task starts with it off)'],
+                ['taskNudge', 'Remind me to pick a task when a focus session starts without one']
             ];
-            function flag(key) { return !!(state.flags && state.flags[key]); }
+            // On out of the box: the calendar, agenda (collapsed), due dates, time blocks, repeats and bedtime.
+            // Everything is still optional per item and can be switched off in Settings.
+            const FLAG_DEFAULTS = { calendarView: true, eventsDue: true, timeBlocks: true, repeatEvents: true, bedtime: true, taskDue: true, taskNudge: true };
+            function flag(key) {
+                const v = state.flags ? state.flags[key] : undefined;
+                return v === undefined ? !!FLAG_DEFAULTS[key] : !!v;
+            }
+
+            // Small line icons for the calendar / agenda
+            const ICONS = {
+                flag: '<path d="M4 2v12M4 3h8l-1.5 3L12 9H4"/>',
+                event: '<rect x="2.5" y="3.5" width="11" height="10" rx="1.5"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"/>',
+                block: '<rect x="2.5" y="5" width="11" height="6" rx="1.5"/>',
+                moon: '<path d="M12.5 9.5A5 5 0 0 1 6.5 3.5a5 5 0 1 0 6 6z"/>',
+                repeat: '<path d="M3 7a5 5 0 0 1 8.6-2.6L13 6M13 3v3h-3M13 9a5 5 0 0 1-8.6 2.6L3 10M3 13v-3h3"/>',
+                chevRight: '<path d="M6 3.5L10.5 8 6 12.5"/>',
+                chevDown: '<path d="M3.5 6L8 10.5 12.5 6"/>',
+                check: '<path d="M3 8.5l3.2 3.2L13 4.8"/>',
+                x: '<path d="M4 4l8 8M12 4l-8 8"/>',
+                dot: '<circle cx="8" cy="8" r="2.5"/>'
+            };
+            function ic(name) { return '<svg class="ic" viewBox="0 0 16 16" aria-hidden="true">' + (ICONS[name] || '') + '</svg>'; }
+            // (declared up here so they exist before the first render)
+            const TIMING_ORDER = ['today', 'tomorrow', 'weekend'];
+            const TIMING_ORDER_DATES = ['today', 'tomorrow', 'weekend', 'later'];
+            const TIMING_LABELS = { today: 'Today', tomorrow: 'Tomorrow', weekend: 'Weekend', later: 'Later' };
+            const TIMING_SHORT = { today: 'Today', tomorrow: 'Tmrw', weekend: 'Wknd', later: 'Later' };
 
             function buildFlagRows() {
                 const wrap = document.getElementById('flagRows');
@@ -4830,6 +5295,10 @@
                     if (isNaN(state.lastAddEst)) state.lastAddEst = 1;
                 }
                 if (key === 'restoreFilter') syncFilterButtons();
+                if (key === 'dateScheduling') {
+                    if (flag(key)) ensureDates();
+                    else state.tasks.forEach(t => { if (t.date) t.timing = legacyBucket(bucketOf(t.date)); });
+                }
                 save();
                 applyFlags();
             }
@@ -4847,6 +5316,15 @@
                 b.classList.toggle('f-a11y', flag('a11yTasks'));
                 b.classList.toggle('f-chips', flag('timingChips'));
                 const q = (id) => document.getElementById(id);
+                if (q('bedtimeRow')) q('bedtimeRow').style.display = flag('bedtime') ? '' : 'none';
+                if (q('calendarBtn')) q('calendarBtn').style.display = flag('calendarView') ? '' : 'none';
+                if (!flag('calendarView') && calIsOpen()) closeCalendar();
+                const ds = flag('dateScheduling');
+                if (q('laterFilterBtn')) q('laterFilterBtn').style.display = ds ? '' : 'none';
+                if (!ds && state.taskFilter === 'later') {
+                    state.taskFilter = 'all';
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+                }
                 if (q('sortByDayBtn')) q('sortByDayBtn').style.display = flag('dayGroups') ? 'none' : '';
                 if (q('saveIndicator')) q('saveIndicator').style.display = flag('saveIndicator') ? '' : 'none';
                 if (q('restoreBackupBtn')) q('restoreBackupBtn').style.display = flag('dailyBackup') ? '' : 'none';
@@ -4926,6 +5404,11 @@
                     sessionPauseCount: state.sessionPauseCount,
                     activeTaskId: state.activeTaskId,
                     flags: state.flags,
+                    items: state.items,
+                    bedtimes: state.bedtimes,
+                    defaultBedtime: state.defaultBedtime,
+                    agendaOpen: state.agendaOpen,
+                    doneLog: state.doneLog.slice(-1500),
                     lastAddTiming: state.lastAddTiming,
                     lastAddEst: state.lastAddEst,
                     completedCollapsed: state.completedCollapsed
@@ -4977,7 +5460,7 @@
                         state.showCycleFocus = raw.showCycleFocus ?? true;
                         state.showTaskPomos = raw.showTaskPomos ?? true;
                         state.showActivePomos = raw.showActivePomos ?? true;
-                        state.timerFont = raw.timerFont || "'Fraunces', serif";
+                        state.timerFont = (raw.timerFont && raw.timerFont.indexOf('Schibsted') < 0) ? raw.timerFont : "'Fraunces', serif"; // drops the font from the short-lived redesign
                         state.keyboardShortcuts = raw.keyboardShortcuts ?? true;
                         state.tasks = raw.tasks || [];
                         state.cycleCount = raw.cycleCount || 0;
@@ -5027,6 +5510,11 @@
                         state.lastResumeData = raw.lastResumeData || null;
                         state.sessionPauseCount = raw.sessionPauseCount || 0;
                         state.flags = (raw.flags && typeof raw.flags === 'object') ? raw.flags : {};
+                        state.items = Array.isArray(raw.items) ? raw.items : [];
+                        state.doneLog = Array.isArray(raw.doneLog) ? raw.doneLog : [];
+                        state.bedtimes = (raw.bedtimes && typeof raw.bedtimes === 'object') ? raw.bedtimes : {};
+                        state.defaultBedtime = raw.defaultBedtime || '';
+                        state.agendaOpen = !!raw.agendaOpen;
                         state.lastAddTiming = raw.lastAddTiming || 'today';
                         state.lastAddEst = raw.lastAddEst ?? 1;
                         state.completedCollapsed = raw.completedCollapsed ?? true;
@@ -5093,7 +5581,8 @@
                         }
                     }
 
-                    state.tasks.forEach(t => {
+                    // In date-scheduling mode tasks keep their real date, so nothing needs rewriting at midnight
+                    if (!flag('dateScheduling')) state.tasks.forEach(t => {
                         delete t.carry;
                         if (t.done) return;
                         if (t.timing === 'tomorrow') { t.timing = 'today'; t.carry = 'scheduled'; }
@@ -5414,7 +5903,7 @@
                 let total = 0;
                 state.tasks.forEach(t => {
                     if (t.done || !(t.est > 0)) return;
-                    if (filter !== 'all' && (t.timing || 'today') !== filter) return;
+                    if (filter !== 'all' && timingOf(t) !== filter) return;
                     total += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
                 });
                 el.textContent = total;
@@ -5501,6 +5990,7 @@
             }
 
             function switchMode(mode, resetTime = true) {
+                hideFocusNudge();
                 state.mode = mode;
                 $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
                 applyModeClass();
@@ -5628,7 +6118,7 @@
                     [...state.tasks.slice(idx + 1), ...state.tasks.slice(0, idx)];
                 const open = ordered.filter(t => !t.done && t.id !== finishedId);
                 const filter = state.taskFilter || 'all';
-                const inView = filter === 'all' ? open : open.filter(t => (t.timing || 'today') === filter);
+                const inView = filter === 'all' ? open : open.filter(t => timingOf(t) === filter);
                 const next = inView[0] || open[0];
                 return next ? next.id : null;
             }
@@ -5712,7 +6202,7 @@
             function totalRemainingMinutes() {
                 // Filter by current filter first
                 const filter = state.taskFilter || 'all';
-                const tasks = filter === 'all' ? state.tasks : state.tasks.filter(t => (t.timing || 'today') === filter);
+                const tasks = filter === 'all' ? state.tasks : state.tasks.filter(t => timingOf(t) === filter);
 
                 let rem = 0;
                 tasks.forEach(t => {
@@ -5821,6 +6311,7 @@
 
             function start() {
                 if (state.running) return;
+                const freshStart = !(state.timerPausedRemaining > 0 && state.timerPausedAt !== null);
                 // If we have a paused timer, resume it
                 if (state.timerPausedRemaining > 0 && state.timerPausedAt !== null) {
                     state.timerStartTime = performance.now();
@@ -5842,10 +6333,72 @@
                 updateSkipButton();
                 updateTabsDisabled();
                 save();
+                if (freshStart && flag('taskNudge') && state.mode === 'pomodoro' && !activeTaskOpen()) showFocusNudge();
+            }
+
+            // A gentle (non-blocking) reminder to pick a task when a focus session starts without one
+            let nudgeTimer = null;
+            function activeTaskOpen() { const t = activeTask(); return !!t && !t.done; }
+            function hideFocusNudge() {
+                const n = document.getElementById('focusNudge');
+                if (n) n.hidden = true;
+                clearTimeout(nudgeTimer);
+            }
+            function showFocusNudge() {
+                const n = document.getElementById('focusNudge');
+                if (!n) return;
+                const open = state.tasks.filter(t => !t.done);
+                const today = open.filter(t => timingOf(t) === 'today');
+                const picks = (today.length ? today : open).slice(0, 3);
+                n.innerHTML = '';
+                const msg = document.createElement('div');
+                msg.className = 'fn-msg';
+                msg.textContent = open.length ? 'No task selected for this focus session.' : 'No tasks yet. What are you working on?';
+                n.appendChild(msg);
+                const row = document.createElement('div');
+                row.className = 'fn-actions';
+                picks.forEach(t => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'fn-pick';
+                    b.textContent = t.title;
+                    b.title = 'Work on: ' + t.title;
+                    b.addEventListener('click', () => {
+                        state.activeTaskId = t.id;
+                        save();
+                        hideFocusNudge();
+                        renderTasks();
+                        render();
+                    });
+                    row.appendChild(b);
+                });
+                const add = document.createElement('button');
+                add.type = 'button';
+                add.textContent = open.length ? 'New task…' : 'Add a task…';
+                add.addEventListener('click', () => {
+                    hideFocusNudge();
+                    const ti = document.getElementById('taskInput');
+                    ti.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    ti.focus();
+                });
+                row.appendChild(add);
+                const x = document.createElement('button');
+                x.type = 'button';
+                x.className = 'fn-dismiss';
+                x.setAttribute('aria-label', 'Dismiss');
+                x.title = 'Dismiss';
+                x.textContent = '×';
+                x.addEventListener('click', hideFocusNudge);
+                row.appendChild(x);
+                n.appendChild(row);
+                n.hidden = false;
+                clearTimeout(nudgeTimer);
+                nudgeTimer = setTimeout(hideFocusNudge, 15000);
             }
 
             function pause() {
                 if (!state.running) return;
+                hideFocusNudge();
                 state.running = false;
                 if (timerTickInterval) {
                     clearInterval(timerTickInterval);
@@ -5888,6 +6441,7 @@
                     updateStats();
                 } else {
                     renderPlan(); // keeps "time left today" fresh
+                    renderBudget();
                 }
             }
 
@@ -5898,13 +6452,35 @@
             function syncTasksFromStorage() {
                 try {
                     const raw = JSON.parse(localStorage.getItem('ripe_state'));
-                    if (!raw || !Array.isArray(raw.tasks)) return;
-                    if (JSON.stringify(raw.tasks) === JSON.stringify(state.tasks)) return;
-                    state.tasks = raw.tasks;
-                    state.activeTaskId = (raw.activeTaskId && state.tasks.some(t => t.id === raw.activeTaskId && !t.done)) ?
-                        raw.activeTaskId : null;
-                    renderTasks();
-                    render();
+                    if (!raw) return;
+                    let changed = false;
+                    if (Array.isArray(raw.tasks) && JSON.stringify(raw.tasks) !== JSON.stringify(state.tasks)) {
+                        state.tasks = raw.tasks;
+                        if (flag('dateScheduling')) ensureDates();
+                        state.activeTaskId = (raw.activeTaskId && state.tasks.some(t => t.id === raw.activeTaskId && !t.done)) ?
+                            raw.activeTaskId : null;
+                        changed = true;
+                    }
+                    if (Array.isArray(raw.items) && JSON.stringify(raw.items) !== JSON.stringify(state.items)) {
+                        state.items = raw.items;
+                        changed = true;
+                    }
+                    if (Array.isArray(raw.doneLog) && JSON.stringify(raw.doneLog) !== JSON.stringify(state.doneLog)) {
+                        state.doneLog = raw.doneLog;
+                        changed = true;
+                    }
+                    if (raw.bedtimes && typeof raw.bedtimes === 'object' && JSON.stringify(raw.bedtimes) !== JSON.stringify(state.bedtimes)) {
+                        state.bedtimes = raw.bedtimes;
+                        changed = true;
+                    }
+                    if ((raw.defaultBedtime || '') !== (state.defaultBedtime || '')) {
+                        state.defaultBedtime = raw.defaultBedtime || '';
+                        changed = true;
+                    }
+                    if (changed) {
+                        renderTasks();
+                        render();
+                    }
                 } catch (_) { /* ignore */ }
             }
 
@@ -6022,6 +6598,7 @@
                         if (t.completedPomos >= t.est) {
                             t.done = true;
                             t.completedAt = Date.now();
+                            logDone(t, t.completedAt);
                             if (flag('autoNextTask') && state.activeTaskId === t.id) state.activeTaskId = pickNextTaskId(t.id);
                         }
                     }
@@ -6214,6 +6791,7 @@
                 if (modalBackdrop.classList.contains('show')) return;
                 if (confirmDialog.classList.contains('show')) return;
                 if (renameBackdrop.classList.contains('show')) return;
+                if (calIsOpen() || itemIsOpen()) return;
                 if (alarmOverlay.classList.contains('show')) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -6223,6 +6801,11 @@
                 }
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')
                     return;
+                if (flag('calendarView') && (e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    e.preventDefault();
+                    openCalendar();
+                    return;
+                }
                 if (flag('shortcutN') && (e.key === 'n' || e.key === 'N') && !e.ctrlKey && !e.metaKey && !e.altKey) {
                     e.preventDefault();
                     const ti = $('#taskInput');
@@ -6244,10 +6827,128 @@
             const POMO_ICON =
                 '<svg class="pomo-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4 3-7 7-7 11a7 7 0 0014 0c0-4-3-8-7-11z"/></svg>';
 
-            const TIMING_ORDER = ['today', 'tomorrow', 'weekend'];
-            const TIMING_LABELS = { today: 'Today', tomorrow: 'Tomorrow', weekend: 'Weekend' };
-            const TIMING_SHORT = { today: 'Today', tomorrow: 'Tmrw', weekend: 'Wknd' };
-            function timingOf(t) { return TIMING_ORDER.includes(t.timing) ? t.timing : 'today'; }
+            function timingOrder() { return flag('dateScheduling') ? TIMING_ORDER_DATES : TIMING_ORDER; }
+            function timingLabel(g) { return (g === 'weekend' && flag('dateScheduling')) ? 'This weekend' : TIMING_LABELS[g]; }
+
+            // ----- real-date scheduling helpers (dates are local "YYYY-MM-DD" strings) -----
+            function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+            function parseYmd(str) { const [y, m, d] = str.split('-').map(Number); return new Date(y, m - 1, d); }
+            function todayYmd() { return ymd(new Date()); }
+            function addDays(str, n) { const d = parseYmd(str); d.setDate(d.getDate() + n); return ymd(d); }
+            function dowOf(str) { return parseYmd(str).getDay(); }
+            function fmtShort(str) { return parseYmd(str).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); }
+            function fmtDay(str) { return parseYmd(str).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric' }); }
+            // First Saturday/Sunday strictly after today: Mon–Fri → Saturday, Saturday → Sunday, Sunday → next Saturday
+            function weekendDate() {
+                const T = todayYmd();
+                for (let i = 1; i <= 7; i++) { const d = addDays(T, i); const w = dowOf(d); if (w === 6 || w === 0) return d; }
+                return addDays(T, 1);
+            }
+            function dateForBucket(b) {
+                const T = todayYmd();
+                if (b === 'tomorrow') return addDays(T, 1);
+                if (b === 'weekend') return weekendDate();
+                if (b === 'later') return addDays(T, 7);
+                return T;
+            }
+            function legacyBucket(b) { return b === 'later' ? 'weekend' : b; }
+            // today / tomorrow / this weekend (Sat or Sun within the next 6 days) / later. Overdue counts as today.
+            function bucketOf(date) {
+                const T = todayYmd();
+                if (date <= T) return 'today';
+                if (date === addDays(T, 1)) return 'tomorrow';
+                const w = dowOf(date);
+                if ((w === 6 || w === 0) && date <= addDays(T, 6)) return 'weekend';
+                return 'later';
+            }
+            function taskDate(t) { return t.date || dateForBucket(TIMING_ORDER.includes(t.timing) ? t.timing : 'today'); }
+            // Give every task a real date (migrates old today/tomorrow/weekend labels once)
+            function ensureDates() {
+                state.tasks.forEach(t => { if (!t.date) t.date = dateForBucket(TIMING_ORDER.includes(t.timing) ? t.timing : 'today'); });
+            }
+            function setTaskDate(t, date) {
+                t.date = date;
+                t.timing = legacyBucket(bucketOf(date));
+                delete t.carry;
+                save();
+                renderTasks();
+                render();
+            }
+            function timingOf(t) {
+                if (flag('dateScheduling')) return bucketOf(taskDate(t));
+                return TIMING_ORDER.includes(t.timing) ? t.timing : 'today';
+            }
+            function isOverdue(t) { return flag('dateScheduling') && !t.done && taskDate(t) < todayYmd(); }
+            // Date text next to a section header
+            function groupDateText(g) {
+                const T = todayYmd();
+                if (g === 'today') return fmtShort(T);
+                if (g === 'tomorrow') return fmtShort(addDays(T, 1));
+                if (g === 'weekend') {
+                    const days = [];
+                    for (let i = 2; i <= 6; i++) { const d = addDays(T, i); const w = dowOf(d); if (w === 6 || w === 0) days.push(fmtDay(d)); }
+                    return days.join(' – ');
+                }
+                return '';
+            }
+            // Choices offered in the reschedule menu (depends on today's weekday)
+            function dayMenuOptions() {
+                const T = todayYmd();
+                const opts = [];
+                const add = (date, label) => { if (!opts.some(o => o.date === date)) opts.push({ date, label }); };
+                add(T, 'Today');
+                add(addDays(T, 1), 'Tomorrow');
+                for (let i = 2; i <= 6; i++) { // first weekend day not already covered by "Tomorrow"
+                    const d = addDays(T, i); const w = dowOf(d);
+                    if (w === 6 || w === 0) { add(d, w === 6 ? 'Saturday' : 'Sunday'); break; }
+                }
+                for (let i = 1; i <= 7; i++) { // next Monday
+                    const d = addDays(T, i);
+                    if (dowOf(d) === 1) { add(d, 'Next week (Mon)'); break; }
+                }
+                return opts;
+            }
+            let dayMenuEl = null;
+            function closeDayMenu() { if (dayMenuEl) { dayMenuEl.remove(); dayMenuEl = null; } }
+            function openDayMenu(anchor, t) {
+                closeDayMenu();
+                const cur = taskDate(t);
+                const m = document.createElement('div');
+                m.className = 'day-menu';
+                m.setAttribute('role', 'menu');
+                dayMenuOptions().forEach(o => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.setAttribute('role', 'menuitem');
+                    b.className = 'day-menu-item' + (o.date === cur ? ' current' : '');
+                    b.innerHTML = `<span>${o.label}</span><span class="dm-date">${fmtShort(o.date)}</span>`;
+                    b.addEventListener('click', e => { e.stopPropagation(); closeDayMenu(); setTaskDate(t, o.date); });
+                    m.appendChild(b);
+                });
+                const pick = document.createElement('div');
+                pick.className = 'day-menu-pick';
+                const lbl = document.createElement('span');
+                lbl.textContent = 'Pick a date…';
+                const inp = document.createElement('input');
+                inp.type = 'date';
+                inp.min = todayYmd();
+                inp.value = cur > todayYmd() ? cur : '';
+                inp.addEventListener('click', e => e.stopPropagation());
+                inp.addEventListener('change', () => { if (inp.value) { closeDayMenu(); setTaskDate(t, inp.value); } });
+                pick.appendChild(lbl);
+                pick.appendChild(inp);
+                m.appendChild(pick);
+                document.body.appendChild(m);
+                const r = anchor.getBoundingClientRect();
+                m.style.top = Math.min(r.bottom + 6, window.innerHeight - m.offsetHeight - 8) + 'px';
+                m.style.left = Math.max(8, Math.min(r.left, window.innerWidth - m.offsetWidth - 8)) + 'px';
+                dayMenuEl = m;
+                const first = m.querySelector('.day-menu-item');
+                if (first) first.focus({ preventScroll: true });
+            }
+            document.addEventListener('click', e => { if (dayMenuEl && !dayMenuEl.contains(e.target)) closeDayMenu(); }, true);
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && dayMenuEl) { closeDayMenu(); e.preventDefault(); } });
+            window.addEventListener('scroll', closeDayMenu, { passive: true });
 
             // Estimate display: original "2/4 🔥" text, or dots when the option is on
             function estDisplayHTML(t) {
@@ -6277,12 +6978,26 @@
 
                 let timingEl = '';
                 if (!isCompleted) {
+                    const ds = flag('dateScheduling');
+                    const dateStr = ds ? taskDate(t) : '';
+                    const chipText = ds ? (timing === 'today' ? 'Today' : timing === 'tomorrow' ? 'Tmrw' : fmtShort(dateStr)) : TIMING_SHORT[timing];
+                    const chipTitle = ds ? `Scheduled ${fmtShort(dateStr)} — click to reschedule` : `Scheduled for ${TIMING_LABELS[timing].toLowerCase()} — click to change`;
                     timingEl = flag('timingChips') ?
-                        `<button type="button" class="timing-chip ${timing}" data-action="cycle-timing" title="Scheduled for ${TIMING_LABELS[timing].toLowerCase()} — click to change">${TIMING_SHORT[timing]}</button>` :
-                        `<button class="task-timing-dot ${timing}" data-action="cycle-timing" title="Timing: ${timing} (click to cycle)"></button>`;
+                        `<button type="button" class="timing-chip ${timing}" data-action="cycle-timing" title="${chipTitle}">${chipText}</button>` :
+                        `<button class="task-timing-dot ${timing}" data-action="cycle-timing" title="${ds ? chipTitle : 'Timing: ' + timing + ' (click to cycle)'}"></button>`;
                 }
-                const carryChip = (flag('carryMarkers') && !isCompleted && t.carry) ?
-                    `<span class="carry-chip" title="${t.carry === 'yesterday' ? 'Unfinished from yesterday' : 'Rolled over from an earlier plan'}">↻ ${t.carry === 'yesterday' ? 'from yesterday' : 'moved to today'}</span>` : '';
+                let carryChip = '';
+                if (flag('carryMarkers') && !isCompleted) {
+                    if (flag('dateScheduling')) {
+                        if (isOverdue(t)) {
+                            const dd = taskDate(t);
+                            const yday = dd === addDays(todayYmd(), -1);
+                            carryChip = `<span class="carry-chip" title="Scheduled for ${fmtShort(dd)}">↻ ${yday ? 'from yesterday' : 'from ' + fmtShort(dd)}</span>`;
+                        }
+                    } else if (t.carry) {
+                        carryChip = `<span class="carry-chip" title="${t.carry === 'yesterday' ? 'Unfinished from yesterday' : 'Rolled over from an earlier plan'}">↻ ${t.carry === 'yesterday' ? 'from yesterday' : 'moved to today'}</span>`;
+                    }
+                }
                 const priority = t.priority || 'low';
                 const priorityDot = (state.taskPriority && !isCompleted) ? `<button class="task-priority-dot ${priority}" data-action="cycle-priority" title="Priority: ${priority} (click to cycle)"${aria('Priority: ' + priority)}></button>` : '';
                 const hasNotes = flag('noteIndicator') && !isCompleted && !isActive && (t.notes || '').trim();
@@ -6291,6 +7006,12 @@
                 const titleTip = flag('inlineRename') ? (isCompleted ? '' : 'Click to focus · double-click to rename') : 'Click to focus this task';
                 const focusBtn = (flag('focusButton') && !isCompleted) ? `<button type="button" class="task-focus-btn${isActive ? ' on' : ''}" data-action="focus-btn" aria-pressed="${isActive}" title="${isActive ? 'Stop focusing on this task' : 'Focus on this task'}" aria-label="${isActive ? 'Stop focusing on this task' : 'Focus on this task'}"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></button>` : '';
                 const moveBtns = (flag('touchControls') && !isCompleted) ? `<div class="task-move"><button type="button" data-action="move-up" title="Move up" aria-label="Move up">▲</button><button type="button" data-action="move-down" title="Move down" aria-label="Move down">▼</button></div>` : '';
+                const ev = flag('eventsDue') && flag('taskDue');
+                const dueT = todayYmd();
+                const dueChip = (ev && !isCompleted && t.due) ?
+                    `<span class="due-chip${t.due < dueT ? ' overdue' : ''}" title="Due ${fmtShort(t.due)}">⚑ ${t.due === dueT ? 'due today' : t.due === addDays(dueT, 1) ? 'due tomorrow' : t.due < dueT ? 'overdue · ' + fmtShort(t.due) : 'due ' + fmtShort(t.due)}</span>` : '';
+                const dueOn = !!t.due;
+                const dueRow = ev ? `<div class="task-due-row"><span class="notes-label" style="margin:0">Due date</span><button type="button" class="mini-toggle${dueOn ? ' on' : ''}" data-action="due-toggle" role="switch" aria-checked="${dueOn}" aria-label="Due date"></button>${dueOn ? `<input type="date" class="task-due-input" value="${t.due}">` : ''}</div>` : '';
                 const checkAttrs = a11y ? ` role="checkbox" aria-checked="${done}" tabindex="0" aria-label="${done ? 'Mark as not done' : 'Mark as done'}"` : '';
 
                 return `
@@ -6303,6 +7024,7 @@
                   ${priorityDot}
                   ${timingEl}
                   ${carryChip}
+                  ${dueChip}
                   <div class="task-title" data-action="activate"${titleAttrs} title="${titleTip}">${escapeHtml(t.title)}</div>
                   ${noteIcon}
                   ${pomosHTML}
@@ -6315,7 +7037,7 @@
                 </div>
                 ${!isCompleted ? `
                 <div class="task-notes">
-                  <span class="notes-label">Notes</span>
+                  ${dueRow}<span class="notes-label">Notes</span>
                   <textarea placeholder="Jot down context, next steps…">${escapeHtml(t.notes||'')}</textarea>
                 </div>` : ''}
               `;
@@ -6417,14 +7139,7 @@
                 // Toggle complete
                 el.querySelector('[data-action=toggle]').addEventListener('click', e => {
                     e.stopPropagation();
-                    t.done = !t.done;
-                    t.completedAt = t.done ? Date.now() : null;
-                    if (t.done && state.activeTaskId === t.id) {
-                        state.activeTaskId = flag('autoNextTask') ? pickNextTaskId(t.id) : null;
-                    }
-                    save();
-                    renderTasks();
-                    render();
+                    setTaskDone(t, !t.done);
                 });
 
                 // Activate task (click on title / focus button)
@@ -6445,6 +7160,7 @@
                 if (timingBtn) {
                     timingBtn.addEventListener('click', e => {
                         e.stopPropagation();
+                        if (flag('dateScheduling')) { openDayMenu(timingBtn, t); return; }
                         const idx = TIMING_ORDER.indexOf(timingOf(t));
                         t.timing = TIMING_ORDER[(idx + 1) % TIMING_ORDER.length];
                         delete t.carry;
@@ -6488,11 +7204,7 @@
                 if (undoBtn) {
                     undoBtn.addEventListener('click', e => {
                         e.stopPropagation();
-                        t.done = false;
-                        t.completedAt = null;
-                        save();
-                        renderTasks();
-                        render();
+                        setTaskDone(t, false);
                     });
                 }
 
@@ -6522,6 +7234,25 @@
                 if (notes) {
                     notes.addEventListener('input', e => { t.notes = e.target.value;
                         save(); });
+                }
+
+                // Due date: off for every task until you switch it on here
+                const dueTg = el.querySelector('[data-action=due-toggle]');
+                if (dueTg) dueTg.addEventListener('click', e => {
+                    e.stopPropagation();
+                    if (t.due) delete t.due;
+                    else { const d = taskDate(t), T0 = todayYmd(); t.due = d < T0 ? T0 : d; }
+                    save();
+                    renderTasks();
+                });
+                const dueIn = el.querySelector('.task-due-input');
+                if (dueIn) {
+                    dueIn.addEventListener('click', e => e.stopPropagation());
+                    dueIn.addEventListener('change', () => {
+                        if (dueIn.value) t.due = dueIn.value; else delete t.due;
+                        save();
+                        renderTasks();
+                    });
                 }
 
                 // Edit estimate
@@ -6565,16 +7296,1033 @@
                 });
             }
 
+            // ===== EVENTS, BLOCKS, DUE DATES, REPEATS, BEDTIME, AGENDA, CALENDAR & HISTORY =====
+            const byId = (id) => document.getElementById(id);
+            const WD_IDX = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
+            const WD_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const WAKE_MIN = 7 * 60; // assumed wake-up time when estimating free time on other days
+
+            function fmtTime(hhmm) {
+                if (!hhmm) return '';
+                const [h, m] = hhmm.split(':').map(Number);
+                return new Date(2000, 0, 1, h, m).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+            }
+            function minOf(hhmm) { if (!hhmm) return null; const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; }
+            function hhmmOf(mins) { mins = ((Math.round(mins) % 1440) + 1440) % 1440; return String(Math.floor(mins / 60)).padStart(2, '0') + ':' + String(mins % 60).padStart(2, '0'); }
+            function daysBetween(a, b) { return Math.round((parseYmd(b) - parseYmd(a)) / 86400000); }
+
+            // ----- completion history (kept even when tasks are cleared/deleted) -----
+            function logDone(t, at) {
+                state.doneLog = state.doneLog.filter(e => e.taskId !== t.id);
+                state.doneLog.push({ taskId: t.id, title: t.title, at: at, pomos: t.completedPomos || 0 });
+                if (state.doneLog.length > 1500) state.doneLog.splice(0, state.doneLog.length - 1500);
+            }
+            function unlogDone(t) { state.doneLog = state.doneLog.filter(e => e.taskId !== t.id); }
+            function backfillDoneLog() {
+                const have = new Set(state.doneLog.map(e => e.taskId));
+                let added = false;
+                state.tasks.forEach(t => {
+                    if (t.done && t.completedAt && !have.has(t.id)) {
+                        state.doneLog.push({ taskId: t.id, title: t.title, at: t.completedAt, pomos: t.completedPomos || 0 });
+                        added = true;
+                    }
+                });
+                if (added) state.doneLog.sort((a, b) => a.at - b.at);
+            }
+            // Single place that marks a task done / not done
+            function setTaskDone(t, done) {
+                t.done = !!done;
+                t.completedAt = t.done ? Date.now() : null;
+                if (t.done) logDone(t, t.completedAt); else unlogDone(t);
+                if (t.done && state.activeTaskId === t.id) {
+                    state.activeTaskId = flag('autoNextTask') ? pickNextTaskId(t.id) : null;
+                }
+                save();
+                renderTasks();
+                render();
+            }
+
+            // ----- repeating items -----
+            function itemRec(it) { return (flag('repeatEvents') && it.rec && it.rec.freq) ? it.rec : null; }
+            function daysInMonthOf(y, m) { return new Date(y, m, 0).getDate(); } // m = 1..12
+            // All dates in [from, to] on which an item occurs (one date if it doesn't repeat)
+            function occDates(it, from, to) {
+                const rec = itemRec(it);
+                const start = it.date;
+                if (!rec) return (start >= from && start <= to) ? [start] : [];
+                let until = to;
+                if (rec.until && rec.until < until) until = rec.until;
+                if (start > until || from > until) return [];
+                const skip = it.skip || [];
+                const out = [];
+                const push = d => { if (d >= from && d <= until && d >= start && !skip.includes(d)) out.push(d); };
+                const n = Math.max(1, parseInt(rec.interval, 10) || 1);
+                let guard = 0;
+                if (rec.freq === 'daily') {
+                    let d = start;
+                    if (from > start) d = addDays(start, Math.ceil(daysBetween(start, from) / n) * n);
+                    for (; d <= until && guard++ < 1000; d = addDays(d, n)) push(d);
+                } else if (rec.freq === 'weekdays') {
+                    let d = from > start ? from : start;
+                    for (; d <= until && guard++ < 1000; d = addDays(d, 1)) { const w = dowOf(d); if (w !== 0 && w !== 6) push(d); }
+                } else if (rec.freq === 'weekly') {
+                    const days = (rec.days && rec.days.length) ? rec.days : [dowOf(start)];
+                    const startMon = addDays(start, -((dowOf(start) + 6) % 7));
+                    let wk = startMon;
+                    if (from > startMon) { const weeks = Math.floor(daysBetween(startMon, from) / 7); wk = addDays(startMon, Math.floor(weeks / n) * n * 7); }
+                    for (; wk <= until && guard++ < 500; wk = addDays(wk, 7 * n)) days.forEach(w => push(addDays(wk, (w + 6) % 7)));
+                } else if (rec.freq === 'monthly' || rec.freq === 'yearly') {
+                    const [sy, sm, sd] = start.split('-').map(Number);
+                    const step = rec.freq === 'yearly' ? 12 * n : n;
+                    const [fy, fm] = from.split('-').map(Number);
+                    const sinceStart = (fy - sy) * 12 + (fm - sm);
+                    let k = sinceStart > 0 ? Math.floor(sinceStart / step) * step : 0;
+                    for (; guard++ < 500; k += step) {
+                        const total = sm - 1 + k;
+                        const y = sy + Math.floor(total / 12);
+                        const m = (total % 12) + 1;
+                        const d = ymd(new Date(y, m - 1, Math.min(sd, daysInMonthOf(y, m))));
+                        if (d > until) break;
+                        push(d);
+                    }
+                }
+                return out;
+            }
+            function recText(rec) {
+                const n = rec.interval || 1;
+                let t = '';
+                if (rec.freq === 'daily') t = n === 1 ? 'daily' : 'every ' + n + ' days';
+                else if (rec.freq === 'weekdays') t = 'weekdays';
+                else if (rec.freq === 'weekly') {
+                    t = (n === 1 ? 'weekly' : 'every ' + n + ' weeks');
+                    if (rec.days && rec.days.length) t += ' on ' + rec.days.slice().sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7)).map(x => WD_NAMES[x]).join(', ');
+                } else if (rec.freq === 'monthly') t = n === 1 ? 'monthly' : 'every ' + n + ' months';
+                else if (rec.freq === 'yearly') t = n === 1 ? 'yearly' : 'every ' + n + ' years';
+                if (rec.until) t += ' until ' + fmtShort(rec.until);
+                return t;
+            }
+
+            // ----- items: add / update / delete / done -----
+            function addItem(d) {
+                const title = (d.title || '').trim();
+                if (!title || !d.date) return false;
+                const it = { id: uid(), kind: d.kind || 'event', title: title, date: d.date, time: d.kind === 'due' ? '' : (d.time || ''),
+                    end: d.kind === 'due' ? '' : (d.end || ''), done: false };
+                if (d.rec) it.rec = d.rec;
+                state.items.push(it);
+                save();
+                renderTasks();
+                return true;
+            }
+            function updateItem(id, d) {
+                const it = state.items.find(i => i.id === id);
+                if (!it) return;
+                it.kind = d.kind; it.title = d.title; it.date = d.date;
+                it.time = d.kind === 'due' ? '' : (d.time || '');
+                it.end = d.kind === 'due' ? '' : (d.end || '');
+                if (d.rec) it.rec = d.rec; else delete it.rec;
+                save();
+                renderTasks();
+            }
+            function deleteItem(id, date, scope) {
+                const idx = state.items.findIndex(i => i.id === id);
+                if (idx < 0) return;
+                const it = state.items[idx];
+                const oldSkip = (it.skip || []).slice();
+                const one = scope === 'one' && itemRec(it);
+                if (one) it.skip = oldSkip.concat(date); else state.items.splice(idx, 1);
+                save();
+                renderTasks();
+                if (flag('undoToast')) {
+                    showToast(one ? 'Occurrence deleted' : 'Deleted', () => {
+                        if (one) it.skip = oldSkip; else state.items.splice(Math.min(idx, state.items.length), 0, it);
+                        save();
+                        renderTasks();
+                    });
+                }
+            }
+            function requestDelete(anchor, id, date) {
+                const it = state.items.find(i => i.id === id);
+                if (!it) return;
+                if (itemRec(it)) {
+                    openPopMenu(anchor, [
+                        { label: 'Delete this occurrence', fn: () => deleteItem(id, date, 'one') },
+                        { label: 'Delete all occurrences', fn: () => deleteItem(id, date, 'all') }
+                    ]);
+                } else deleteItem(id, date, 'all');
+            }
+            function toggleItemDone(id, date) {
+                const it = state.items.find(i => i.id === id);
+                if (!it) return;
+                if (itemRec(it)) {
+                    const dd = it.doneDates || (it.doneDates = []);
+                    const k = dd.indexOf(date);
+                    if (k >= 0) dd.splice(k, 1); else dd.push(date);
+                } else it.done = !it.done;
+                save();
+                renderTasks();
+            }
+            function openPopMenu(anchor, opts) {
+                closeDayMenu();
+                const m = document.createElement('div');
+                m.className = 'day-menu';
+                m.setAttribute('role', 'menu');
+                opts.forEach(o => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'day-menu-item';
+                    b.setAttribute('role', 'menuitem');
+                    b.textContent = o.label;
+                    b.addEventListener('click', e => { e.stopPropagation(); closeDayMenu(); o.fn(); });
+                    m.appendChild(b);
+                });
+                document.body.appendChild(m);
+                const r = anchor.getBoundingClientRect();
+                m.style.top = Math.min(r.bottom + 6, window.innerHeight - m.offsetHeight - 8) + 'px';
+                m.style.left = Math.max(8, Math.min(r.left, window.innerWidth - m.offsetWidth - 8)) + 'px';
+                dayMenuEl = m;
+                const first = m.querySelector('.day-menu-item');
+                if (first) first.focus({ preventScroll: true });
+            }
+
+            // ----- entries (what shows up on a given day) -----
+            function cmpEntries(a, b) {
+                if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+                const ta = a.time || '99:99', tb = b.time || '99:99';
+                if (ta !== tb) return ta < tb ? -1 : 1;
+                return a.title.localeCompare(b.title);
+            }
+            function entryType(it) { return (it.kind === 'block' && !flag('timeBlocks')) ? 'event' : it.kind; }
+            // Events, blocks, due items (with repeats expanded) and task due dates in [from, to]
+            function entriesForRange(from, to, includeDone) {
+                const out = [];
+                state.items.forEach(it => {
+                    const rec = !!itemRec(it);
+                    occDates(it, from, to).forEach(d => {
+                        const done = it.kind === 'due' ? (rec ? (it.doneDates || []).indexOf(d) >= 0 : !!it.done) : false;
+                        if (!includeDone && done) return;
+                        out.push({ type: entryType(it), id: it.id, title: it.title, date: d, time: it.time || '',
+                            end: flag('timeBlocks') ? (it.end || '') : '', done: done, rec: rec });
+                    });
+                });
+                state.tasks.forEach(t => {
+                    if (flag('taskDue') && t.due && t.due >= from && t.due <= to && (includeDone || !t.done))
+                        out.push({ type: 'taskdue', id: t.id, title: t.title, date: t.due, time: '', end: '', done: !!t.done, rec: false });
+                });
+                return out.sort(cmpEntries);
+            }
+            // Overdue = one-off due dates / task due dates that slipped by (repeating ones don't pile up)
+            function overdueEntries() {
+                const T = todayYmd();
+                const out = [];
+                state.items.forEach(i => { if (i.kind === 'due' && !i.done && !itemRec(i) && i.date < T) out.push({ type: 'due', id: i.id, title: i.title, date: i.date, time: '', end: '', done: false, rec: false }); });
+                state.tasks.forEach(t => { if (flag('taskDue') && t.due && !t.done && t.due < T) out.push({ type: 'taskdue', id: t.id, title: t.title, date: t.due, time: '', end: '', done: false, rec: false }); });
+                return out.sort(cmpEntries);
+            }
+            function entryRowHTML(e, showDate) {
+                const T = todayYmd();
+                const overdue = (e.type === 'due' || e.type === 'taskdue') && !e.done && e.date < T;
+                let when;
+                if (e.type === 'event' || e.type === 'block') when = e.time ? fmtTime(e.time) + (e.end ? '–' + fmtTime(e.end) : '') : 'All day';
+                else when = e.type === 'taskdue' ? 'Task due' : 'Due';
+                const datePart = showDate ? fmtShort(e.date) + ' · ' : '';
+                const lead = e.type === 'due' ?
+                    `<button type="button" class="ag-check${e.done ? ' done' : ''}" data-act="toggle-item" data-id="${e.id}" data-date="${e.date}" aria-label="${e.done ? 'Mark as not done' : 'Mark as done'}" title="${e.done ? 'Mark as not done' : 'Mark as done'}">${e.done ? ic('check') : ''}</button>` :
+                    `<span class="ag-icon ${e.type}">${ic(e.type === 'event' ? 'event' : e.type === 'block' ? 'block' : 'flag')}</span>`;
+                const isItem = e.type !== 'taskdue';
+                const del = isItem ? `<button type="button" class="ag-del" data-act="del-item" data-id="${e.id}" data-date="${e.date}" aria-label="Delete" title="Delete">${ic('x')}</button>` : '';
+                const mainAttr = isItem ? ` data-act="edit-item" data-id="${e.id}" title="Click to edit"` : '';
+                return `<div class="ag-row ${e.type}${e.done ? ' done' : ''}${overdue ? ' overdue' : ''}">${lead}<span class="ag-main"${mainAttr}><span class="ag-title">${escapeHtml(e.title)}</span><span class="ag-meta">${datePart}${when}${e.rec ? '<span class="ag-rep" title="Repeats">' + ic('repeat') + '</span>' : ''}</span></span>${del}</div>`;
+            }
+
+            // ----- bedtime + free time -----
+            function bedtimeFor(date) {
+                if (!flag('bedtime')) return '';
+                return (state.bedtimes && state.bedtimes[date]) || state.defaultBedtime || '';
+            }
+            function setBedtime(date, val) {
+                if (val) state.bedtimes[date] = val; else delete state.bedtimes[date];
+                const cutoff = addDays(todayYmd(), -60);
+                Object.keys(state.bedtimes).forEach(d => { if (d < cutoff) delete state.bedtimes[d]; });
+                save();
+                renderTasks();
+            }
+            function nowMinutes() { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); }
+            function dayWindow(date) {
+                const T = todayYmd();
+                const start = date === T ? nowMinutes() : (date < T ? 0 : WAKE_MIN);
+                let end = 1440;
+                const bed = bedtimeFor(date);
+                if (bed) { end = minOf(bed); if (end < 300) end += 1440; } // before 05:00 = after midnight
+                return { start: start, end: end, bed: bed };
+            }
+            function blockedMinutes(date, from, to) {
+                if (!(flag('eventsDue') && flag('timeBlocks'))) return 0;
+                const iv = entriesForRange(date, date, true)
+                    .filter(e => (e.type === 'event' || e.type === 'block') && e.time && e.end)
+                    .map(e => { const s = minOf(e.time); let en = minOf(e.end); if (en <= s) en += 1440; return [Math.max(s, from), Math.min(en, to)]; })
+                    .filter(x => x[1] > x[0]).sort((a, b) => a[0] - b[0]);
+                let total = 0, cs = null, ce = null;
+                iv.forEach(x => {
+                    if (ce === null || x[0] > ce) { if (ce !== null) total += ce - cs; cs = x[0]; ce = x[1]; } else ce = Math.max(ce, x[1]);
+                });
+                if (ce !== null) total += ce - cs;
+                return total;
+            }
+            function freeFor(date) {
+                const w = dayWindow(date);
+                const blocked = blockedMinutes(date, w.start, w.end);
+                return { start: w.start, end: w.end, bed: w.bed, blocked: blocked, free: Math.max(0, w.end - w.start - blocked) };
+            }
+
+            // ----- quick-add parser: "Dentist 2:30pm 1h @fri", "due Tax @2026-10-24", "Gym 6-7pm every mon" -----
+            function to24(h, m, ap) {
+                if (h > 23 || m > 59) return null;
+                if (ap === 'pm' && h < 12) h += 12;
+                if (ap === 'am' && h === 12) h = 0;
+                if (ap && h > 23) return null;
+                return h * 60 + m;
+            }
+            function resolveDayToken(tok) {
+                tok = tok.toLowerCase();
+                const T = todayYmd();
+                if (tok === 'today' || tok === 'tod') return T;
+                if (tok === 'tomorrow' || tok === 'tmrw' || tok === 'tom') return addDays(T, 1);
+                if (tok === 'weekend' || tok === 'wknd') return weekendDate();
+                let m;
+                if ((m = tok.match(/^(mon|tue|wed|thu|fri|sat|sun)(?:day|sday|nesday|rsday|urday|s|r|rs)?$/))) {
+                    for (let i = 1; i <= 7; i++) { const d = addDays(T, i); if (dowOf(d) === WD_IDX[m[1]]) return d; }
+                }
+                if ((m = tok.match(/^(\d{4}-\d{2}-\d{2})$/)) && !isNaN(parseYmd(m[1]).getTime())) return m[1];
+                return null;
+            }
+            function parseQuick(text, defDate) {
+                let str = ' ' + (text || '').trim() + ' ';
+                const d = { kind: 'event', title: '', date: defDate || todayYmd(), time: '', end: '', rec: null };
+                const k = str.match(/^\s*(due|deadline|block)\b[:\s]+/i);
+                if (k) { d.kind = k[1].toLowerCase() === 'block' ? 'block' : 'due'; str = ' ' + str.slice(k[0].length); }
+                const take = (re, fn) => {
+                    const mm = str.match(re);
+                    if (!mm) return false;
+                    if (fn(mm) === false) return false;
+                    str = str.slice(0, mm.index) + ' ' + str.slice(mm.index + mm[0].length);
+                    return true;
+                };
+                const UNIT = { day: 'daily', week: 'weekly', month: 'monthly', year: 'yearly' };
+                const WDR = '(?:mon|tue|wed|thu|fri|sat|sun)(?:day|sday|nesday|rsday|urday|s|r|rs)?';
+                take(/\bevery\s+(\d+)\s+(day|week|month|year)s?\b/i, mm => { d.rec = { freq: UNIT[mm[2].toLowerCase()], interval: Math.max(1, +mm[1]) }; });
+                if (!d.rec) take(new RegExp('\\bevery\\s+(' + WDR + '(?:\\s*(?:,|and|&)?\\s*' + WDR + ')*)\\b', 'i'), mm => {
+                    const names = mm[1].toLowerCase().match(/mon|tue|wed|thu|fri|sat|sun/g) || [];
+                    d.rec = { freq: 'weekly', interval: 1, days: Array.from(new Set(names.map(x => WD_IDX[x]))) };
+                });
+                if (!d.rec) take(/\bevery\s+(day|weekday|week|month|year)\b/i, mm => { const w = mm[1].toLowerCase(); d.rec = { freq: w === 'weekday' ? 'weekdays' : UNIT[w], interval: 1 }; });
+                if (!d.rec) take(/\b(daily|weekdays|weekly|monthly|yearly|annually)\b/i, mm => { const w = mm[1].toLowerCase(); d.rec = { freq: w === 'annually' ? 'yearly' : w, interval: 1 }; });
+                take(/\buntil\s+(\d{4}-\d{2}-\d{2})\b/i, mm => { if (!d.rec) return false; d.rec.until = mm[1]; });
+                let dateSet = false;
+                str = str.replace(/(\s)@(\S+)/g, (full, sp, tok) => {
+                    if (dateSet) return full;
+                    const r = resolveDayToken(tok);
+                    if (r) { dateSet = true; d.date = r; return ' '; }
+                    return full;
+                });
+                take(/(?<![\d:.-])(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:-|–|—|to)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b/i, mm => {
+                    if (!(mm[2] || mm[5] || mm[3] || mm[6])) return false;
+                    const ap1 = (mm[3] || mm[6] || '').toLowerCase(), ap2 = (mm[6] || mm[3] || '').toLowerCase();
+                    const a = to24(+mm[1], +(mm[2] || 0), ap1), b = to24(+mm[4], +(mm[5] || 0), ap2);
+                    if (a === null || b === null) return false;
+                    d.time = hhmmOf(a); d.end = hhmmOf(b);
+                });
+                if (!d.time) {
+                    const ok = take(/(?<![\d:.-])(\d{1,2}):(\d{2})\s*(am|pm)?\b/i, mm => {
+                        const a = to24(+mm[1], +mm[2], (mm[3] || '').toLowerCase());
+                        if (a === null) return false;
+                        d.time = hhmmOf(a);
+                    });
+                    if (!ok) take(/(?<![\d:.-])(\d{1,2})\s*(am|pm)\b/i, mm => {
+                        const a = to24(+mm[1], 0, mm[2].toLowerCase());
+                        if (a === null) return false;
+                        d.time = hhmmOf(a);
+                    });
+                }
+                if (d.time && !d.end) {
+                    take(/(?<![\d:.-])(\d+(?:\.\d+)?)\s*(h|hr|hrs|hours?|m|mins?|minutes?)\b/i, mm => {
+                        const v = parseFloat(mm[1]);
+                        const mins = /^h/i.test(mm[2]) ? Math.round(v * 60) : Math.round(v);
+                        if (!mins || mins > 1440) return false;
+                        d.end = hhmmOf(minOf(d.time) + mins);
+                    });
+                }
+                d.title = str.replace(/\s+/g, ' ').replace(/^[\s,;:\-–]+|[\s,;:\-–]+$/g, '');
+                if (!flag('timeBlocks')) { if (d.kind === 'block') d.kind = 'event'; d.end = ''; }
+                if (!flag('repeatEvents')) d.rec = null;
+                if (d.kind === 'block' && d.time && !d.end) d.end = hhmmOf(minOf(d.time) + 60);
+                if (d.kind === 'due') { d.time = ''; d.end = ''; }
+                return d;
+            }
+            function describeDraft(d) {
+                if (!d.title) return 'Type a title — e.g. “Dentist 2:30pm 1h @fri”';
+                let s = (d.kind === 'due' ? 'Due' : d.kind === 'block' ? 'Block' : 'Event') + ' · ' + fmtShort(d.date);
+                if (d.time) s += ' · ' + fmtTime(d.time) + (d.end ? '–' + fmtTime(d.end) : '');
+                if (d.rec) s += ' · repeats ' + recText(d.rec);
+                return s;
+            }
+
+            // ----- editor dialog (add + edit) -----
+            const itemUI = { id: null };
+            function itemIsOpen() { const b = byId('itemBackdrop'); return !!b && b.classList.contains('show'); }
+            function closeItemEditor() {
+                byId('itemBackdrop').classList.remove('show');
+                itemUI.id = null;
+                restoreFocus(itemUI.opener);
+                itemUI.opener = null;
+            }
+            // Heads-up (not a block) when the time you picked overlaps something already scheduled that day
+            function updateItemConflict() {
+                const el = byId('itConflict');
+                if (!el) return;
+                el.hidden = true;
+                const kind = byId('itKind').value, date = byId('itDate').value;
+                const st = minOf(byId('itStart').value);
+                const en = flag('timeBlocks') ? minOf(byId('itEnd').value) : null;
+                if (!flag('eventsDue') || kind === 'due' || !date || st === null) return;
+                const e0 = (en !== null && en !== st) ? (en > st ? en : en + 1440) : st + 1;
+                const hits = entriesForRange(date, date, true).filter(e => (e.type === 'event' || e.type === 'block') && e.time && e.id !== itemUI.id).filter(e => {
+                    const a = minOf(e.time);
+                    let b = e.end ? minOf(e.end) : a + 1;
+                    if (b <= a) b += 1440;
+                    return a < e0 && b > st;
+                });
+                if (!hits.length) return;
+                el.textContent = 'Overlaps ' + hits.slice(0, 2).map(h => h.title + ' ' + fmtTime(h.time) + (h.end ? '–' + fmtTime(h.end) : '')).join(', ') + (hits.length > 2 ? ' +' + (hits.length - 2) : '');
+                el.hidden = false;
+            }
+            function syncItemFields() {
+                const kind = byId('itKind').value, freq = byId('itFreq').value;
+                const rp = flag('repeatEvents') && freq !== 'none';
+                byId('itTimeRow').style.display = kind === 'due' ? 'none' : '';
+                byId('itEndWrap').style.display = flag('timeBlocks') ? '' : 'none';
+                byId('itRepeatRow').style.display = flag('repeatEvents') ? '' : 'none';
+                byId('itEveryWrap').style.display = (rp && freq !== 'weekdays') ? '' : 'none';
+                byId('itDaysRow').style.display = (rp && freq === 'weekly') ? '' : 'none';
+                byId('itUntilRow').style.display = rp ? '' : 'none';
+                const n = parseInt(byId('itInterval').value, 10) || 1;
+                byId('itUnit').textContent = ({ daily: 'day', weekly: 'week', monthly: 'month', yearly: 'year' }[freq] || 'day') + (n === 1 ? '' : 's');
+            }
+            function openItemEditor(opts) {
+                opts = opts || {};
+                const it = opts.id ? state.items.find(i => i.id === opts.id) : null;
+                const dr = opts.draft || {};
+                itemUI.opener = document.activeElement;
+                itemUI.id = it ? it.id : null;
+                byId('itemTitleH').textContent = it ? 'Edit' : 'New';
+                const kinds = [['event', 'Event'], ['due', 'Due date']];
+                if (flag('timeBlocks')) kinds.splice(1, 0, ['block', 'Time block']);
+                byId('itKind').innerHTML = kinds.map(k => `<option value="${k[0]}">${k[1]}</option>`).join('');
+                const kind = it ? it.kind : (dr.kind || 'event');
+                byId('itKind').value = kinds.some(k => k[0] === kind) ? kind : 'event';
+                byId('itTitle').value = it ? it.title : (dr.title || '');
+                byId('itDate').value = it ? it.date : (dr.date || opts.date || todayYmd());
+                byId('itStart').value = it ? (it.time || '') : (dr.time || '');
+                byId('itEnd').value = it ? (it.end || '') : (dr.end || '');
+                const rec = it ? it.rec : dr.rec;
+                byId('itFreq').value = (rec && rec.freq) ? rec.freq : 'none';
+                byId('itInterval').value = (rec && rec.interval) || 1;
+                byId('itUntil').value = (rec && rec.until) || '';
+                const days = (rec && rec.days) || [];
+                byId('itDays').querySelectorAll('button').forEach(b => b.classList.toggle('on', days.indexOf(+b.dataset.d) >= 0));
+                const note = byId('itNote');
+                note.hidden = !(it && itemRec(it));
+                note.textContent = 'Editing changes every occurrence of this repeating item.';
+                byId('itDelete').style.display = it ? '' : 'none';
+                byId('itDelete').textContent = (it && itemRec(it)) ? 'Delete all' : 'Delete';
+                syncItemFields();
+                updateItemConflict();
+                byId('itemBackdrop').classList.add('show');
+                byId('itTitle').focus();
+            }
+            function saveItemEditor() {
+                const kind = byId('itKind').value;
+                const title = byId('itTitle').value.trim();
+                const date = byId('itDate').value;
+                if (!title) { byId('itTitle').focus(); return; }
+                if (!date) { byId('itDate').focus(); return; }
+                const old = itemUI.id ? state.items.find(i => i.id === itemUI.id) : null;
+                let time = kind === 'due' ? '' : byId('itStart').value;
+                let end = (kind === 'due') ? '' : (flag('timeBlocks') ? byId('itEnd').value : (old ? (old.end || '') : ''));
+                if (kind === 'block' && (!time || !end)) { (!time ? byId('itStart') : byId('itEnd')).focus(); return; }
+                if (end && !time) end = '';
+                let rec = null;
+                if (flag('repeatEvents')) {
+                    const freq = byId('itFreq').value;
+                    if (freq !== 'none') {
+                        rec = { freq: freq, interval: freq === 'weekdays' ? 1 : Math.max(1, Math.min(99, parseInt(byId('itInterval').value, 10) || 1)) };
+                        if (freq === 'weekly') {
+                            const ds = Array.from(byId('itDays').querySelectorAll('button.on')).map(b => +b.dataset.d);
+                            if (ds.length) rec.days = ds;
+                        }
+                        const u = byId('itUntil').value;
+                        if (u) rec.until = u;
+                    }
+                } else if (old && old.rec) rec = old.rec; // keep an existing repeat when the option is off
+                const draft = { kind: kind, title: title, date: date, time: time, end: end, rec: rec };
+                if (itemUI.id) updateItem(itemUI.id, draft); else addItem(draft);
+                closeItemEditor();
+            }
+            (function wireItemEditor() {
+                byId('itKind').addEventListener('change', () => {
+                    if (byId('itKind').value === 'block' && !byId('itStart').value) { byId('itStart').value = '09:00'; byId('itEnd').value = '10:00'; }
+                    syncItemFields();
+                });
+                byId('itFreq').addEventListener('change', syncItemFields);
+                ['itKind', 'itDate', 'itStart', 'itEnd'].forEach(id => { byId(id).addEventListener('input', updateItemConflict); byId(id).addEventListener('change', updateItemConflict); });
+                byId('itInterval').addEventListener('input', syncItemFields);
+                byId('itDays').addEventListener('click', e => { const b = e.target.closest('button'); if (b) b.classList.toggle('on'); });
+                byId('itSave').addEventListener('click', saveItemEditor);
+                byId('itCancel').addEventListener('click', closeItemEditor);
+                byId('itDelete').addEventListener('click', () => {
+                    const id = itemUI.id;
+                    closeItemEditor();
+                    if (id) deleteItem(id, '', 'all');
+                });
+                byId('itemBackdrop').addEventListener('click', e => { if (e.target === byId('itemBackdrop')) closeItemEditor(); });
+                byId('itemBackdrop').addEventListener('keydown', e => {
+                    e.stopPropagation();
+                    if (e.key === 'Escape') { closeItemEditor(); e.preventDefault(); }
+                    else if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type !== 'number') { e.preventDefault(); saveItemEditor(); }
+                });
+            })();
+
+            // ----- agenda panel (main page, collapsed by default) -----
+            function agendaSummary() {
+                const T = todayYmd();
+                const over = overdueEntries();
+                const today = entriesForRange(T, T, false);
+                const parts = [];
+                if (over.length) parts.push(over.length + ' overdue');
+                if (today.length) {
+                    const shown = today.slice(0, 2).map(e => (e.time ? fmtTime(e.time) + ' ' : '') + e.title);
+                    parts.push(shown.join(' · ') + (today.length > 2 ? ' +' + (today.length - 2) : ''));
+                } else if (!over.length) parts.push('nothing scheduled today');
+                const bed = bedtimeFor(T);
+                if (bed) parts.push('bed ' + fmtTime(bed));
+                return 'Agenda · ' + parts.join(' · ');
+            }
+            function bedRowHTML(date) {
+                const explicit = (state.bedtimes && state.bedtimes[date]) || '';
+                const def = state.defaultBedtime || '';
+                return `<span>${ic('moon')} Bedtime</span><input type="time" data-bed-date="${date}" value="${explicit || def}" aria-label="Target bedtime"><button type="button" class="mini-btn" data-act="bed-clear" data-date="${date}" ${explicit ? '' : 'hidden'}>Use default${def ? ' (' + fmtTime(def) + ')' : ''}</button>`;
+            }
+            function renderAgenda() {
+                const box = byId('agenda');
+                if (!box) return;
+                if (!flag('eventsDue')) { box.style.display = 'none'; return; }
+                box.style.display = '';
+                const open = !!state.agendaOpen;
+                box.classList.toggle('collapsed', !open);
+                byId('agendaBody').hidden = !open;
+                byId('agendaChev').innerHTML = ic(open ? 'chevDown' : 'chevRight');
+                byId('agendaToggle').setAttribute('aria-expanded', String(open));
+                byId('agendaSummary').textContent = agendaSummary();
+                if (!open) return;
+                const T = todayYmd();
+                const sec = (label, arr, showDate) => arr.length ?
+                    `<div class="agenda-sec">${label}</div>` + arr.map(e => entryRowHTML(e, showDate)).join('') : '';
+                const over = overdueEntries();
+                const today = entriesForRange(T, T, true);
+                const upcoming = entriesForRange(addDays(T, 1), addDays(T, 7), false);
+                const LIM = 6;
+                let html = sec('Overdue', over, true) + sec('Today', today, false) + sec('Next 7 days', upcoming.slice(0, LIM), true);
+                if (upcoming.length > LIM) {
+                    html += `<div class="agenda-more">+${upcoming.length - LIM} more` +
+                        (flag('calendarView') ? ' — <button type="button" class="link-btn" data-act="open-cal">open calendar</button>' : '') + '</div>';
+                }
+                if (!html) html = '<div class="agenda-empty">Nothing scheduled.</div>';
+                byId('agendaList').innerHTML = html;
+                const bedEl = byId('agBed');
+                bedEl.style.display = flag('bedtime') ? '' : 'none';
+                if (flag('bedtime')) bedEl.innerHTML = bedRowHTML(T);
+            }
+            (function wireAgenda() {
+                const box = byId('agenda');
+                const quick = byId('agQuick');
+                const prev = byId('agPreview');
+                byId('agendaToggle').addEventListener('click', () => { state.agendaOpen = !state.agendaOpen; save(); renderAgenda(); if (state.agendaOpen) quick.focus(); });
+                byId('agendaDetailsBtn').addEventListener('click', () => openItemEditor({ date: todayYmd() }));
+                quick.addEventListener('input', () => { prev.textContent = quick.value.trim() ? describeDraft(parseQuick(quick.value, todayYmd())) : ''; });
+                quick.addEventListener('keydown', e => {
+                    e.stopPropagation();
+                    if (e.key === 'Enter') {
+                        const d = parseQuick(quick.value, todayYmd());
+                        if (d.title && addItem(d)) { quick.value = ''; prev.textContent = 'Added'; setTimeout(() => { if (prev.textContent === 'Added') prev.textContent = ''; }, 1500); }
+                    } else if (e.key === 'Escape') { quick.value = ''; prev.textContent = ''; quick.blur(); }
+                });
+                box.addEventListener('click', e => {
+                    const el = e.target.closest('[data-act]');
+                    if (!el) return;
+                    const act = el.dataset.act;
+                    if (act === 'toggle-item') toggleItemDone(el.dataset.id, el.dataset.date);
+                    else if (act === 'del-item') requestDelete(el, el.dataset.id, el.dataset.date);
+                    else if (act === 'edit-item') openItemEditor({ id: el.dataset.id });
+                    else if (act === 'open-cal') openCalendar();
+                    else if (act === 'bed-clear') setBedtime(el.dataset.date, '');
+                });
+                box.addEventListener('change', e => { if (e.target.dataset && e.target.dataset.bedDate) setBedtime(e.target.dataset.bedDate, e.target.value); });
+                const sd = byId('setDefaultBedtime');
+                sd.addEventListener('change', () => { state.defaultBedtime = sd.value || ''; save(); renderTasks(); });
+            })();
+
+            // ----- optional due date for a task (menu from the flag button on the row) -----
+            function setTaskDue(t, date) {
+                if (date) t.due = date; else delete t.due;
+                save();
+                renderTasks();
+            }
+            function placeMenu(m, anchor) {
+                document.body.appendChild(m);
+                const r = anchor.getBoundingClientRect();
+                m.style.top = Math.max(8, Math.min(r.bottom + 6, window.innerHeight - m.offsetHeight - 8)) + 'px';
+                m.style.left = Math.max(8, Math.min(r.left, window.innerWidth - m.offsetWidth - 8)) + 'px';
+                dayMenuEl = m;
+            }
+            function openDueMenu(anchor, t) {
+                closeDayMenu();
+                const m = document.createElement('div');
+                m.className = 'day-menu';
+                m.setAttribute('role', 'menu');
+                const head = document.createElement('div');
+                head.className = 'cal-sec';
+                head.style.margin = '4px 10px 4px';
+                head.textContent = t.due ? 'Due ' + fmtShort(t.due) : 'Due date (optional)';
+                m.appendChild(head);
+                dayMenuOptions().forEach(o => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.setAttribute('role', 'menuitem');
+                    b.className = 'day-menu-item' + (o.date === t.due ? ' current' : '');
+                    b.innerHTML = `<span>${o.label}</span><span class="dm-date">${fmtShort(o.date)}</span>`;
+                    b.addEventListener('click', e => { e.stopPropagation(); closeDayMenu(); setTaskDue(t, o.date); });
+                    m.appendChild(b);
+                });
+                const pick = document.createElement('div');
+                pick.className = 'day-menu-pick';
+                const lbl = document.createElement('span');
+                lbl.textContent = 'Pick a date…';
+                const inp = document.createElement('input');
+                inp.type = 'date';
+                inp.min = todayYmd();
+                inp.value = t.due && t.due >= todayYmd() ? t.due : '';
+                inp.addEventListener('click', e => e.stopPropagation());
+                inp.addEventListener('change', () => { if (inp.value) { closeDayMenu(); setTaskDue(t, inp.value); } });
+                pick.appendChild(lbl);
+                pick.appendChild(inp);
+                m.appendChild(pick);
+                if (t.due) {
+                    const rm = document.createElement('button');
+                    rm.type = 'button';
+                    rm.className = 'day-menu-item';
+                    rm.innerHTML = '<span>Remove due date</span>';
+                    rm.addEventListener('click', e => { e.stopPropagation(); closeDayMenu(); setTaskDue(t, ''); });
+                    m.appendChild(rm);
+                }
+                placeMenu(m, anchor);
+                const first = m.querySelector('.day-menu-item');
+                if (first) first.focus({ preventScroll: true });
+            }
+
+            // ----- top-of-page "time left vs bedtime" -----
+            // How many whole pomodoros (with the usual breaks between them) fit in a block of free minutes
+            function pomosFit(freeMins) {
+                const per = state.durations.pomodoro / 60;
+                const n = Math.max(1, state.cyclesBeforeLong);
+                const breakAvg = ((n - 1) * state.durations.short / 60 + state.durations.long / 60) / n;
+                return Math.max(0, Math.floor((freeMins + breakAvg) / (per + breakAvg)));
+            }
+            function planTodayMinutes() {
+                let cycles = 0;
+                state.tasks.forEach(t => {
+                    if (t.done || timingOf(t) !== 'today') return;
+                    if (t.est > 0) cycles += Math.max(0, (t.est || 0) - (t.completedPomos || 0));
+                });
+                const per = state.durations.pomodoro / 60;
+                const n = Math.max(1, state.cyclesBeforeLong);
+                const breakAvg = ((n - 1) * state.durations.short / 60 + state.durations.long / 60) / n;
+                return { cycles: cycles, mins: cycles * per + Math.max(0, cycles - 1) * breakAvg };
+            }
+            function renderBudget() {
+                const el = byId('dayBudget');
+                if (!el) return;
+                if (!(flag('bedtime') || (flag('eventsDue') && flag('timeBlocks')))) { el.style.display = 'none'; syncTopbarGap(); return; }
+                const T = todayYmd();
+                const f = freeFor(T);
+                const plan = planTodayMinutes();
+                const bed = bedtimeFor(T);
+                const past = !!bed && f.start >= f.end;
+                const over = plan.mins > f.free;
+                let html = '';
+                if (bed) html += 'Bed <b>' + fmtTime(bed) + '</b> · ';
+                html += past ? '<b class="db-warn">Past bedtime</b>' : '<b>' + fmtDur(f.free) + '</b> ' + (bed ? 'left' : 'left today');
+                if (plan.cycles) html += ' · <b class="' + (over ? 'db-warn' : '') + '">' + fmtDur(plan.mins) + '</b> planned';
+                const pct = plan.cycles ? Math.min(100, plan.mins / Math.max(1, f.free) * 100) : 0;
+                el.innerHTML = '<span class="db-text">' + html + '</span>' + (plan.cycles ? '<span class="db-bar"><span class="db-fill" style="width:' + pct.toFixed(0) + '%"></span></span>' : '');
+                el.classList.toggle('over', over && plan.cycles > 0);
+                el.title = 'Free time until ' + (bed ? 'bedtime' : 'midnight') + (f.blocked ? ' (' + fmtDur(f.blocked) + ' blocked out)' : '') + ' vs focus time planned for today. Click for options.';
+                el.style.display = '';
+                syncTopbarGap();
+            }
+            // keep the scrolled stat bar clear of the top-right buttons + pill
+            function syncTopbarGap() {
+                const bar = document.querySelector('.topbar-actions');
+                if (bar) document.documentElement.style.setProperty('--topbar-w', Math.round(bar.getBoundingClientRect().width) + 'px');
+            }
+            window.addEventListener('resize', syncTopbarGap);
+            function openBudgetMenu(anchor) {
+                closeDayMenu();
+                const T = todayYmd();
+                const m = document.createElement('div');
+                m.className = 'day-menu';
+                m.setAttribute('role', 'menu');
+                if (flag('bedtime')) {
+                    const explicit = (state.bedtimes && state.bedtimes[T]) || '';
+                    const def = state.defaultBedtime || '';
+                    const row = document.createElement('div');
+                    row.className = 'day-menu-pick';
+                    row.style.borderTop = 'none';
+                    row.style.marginTop = '0';
+                    const lbl = document.createElement('span');
+                    lbl.textContent = 'Bedtime today';
+                    const inp = document.createElement('input');
+                    inp.type = 'time';
+                    inp.value = explicit || def;
+                    inp.addEventListener('click', e => e.stopPropagation());
+                    inp.addEventListener('change', () => { closeDayMenu(); setBedtime(T, inp.value); });
+                    row.appendChild(lbl);
+                    row.appendChild(inp);
+                    m.appendChild(row);
+                    if (explicit) {
+                        const b = document.createElement('button');
+                        b.type = 'button';
+                        b.className = 'day-menu-item';
+                        b.innerHTML = '<span>Use default bedtime</span>' + (def ? '<span class="dm-date">' + fmtTime(def) + '</span>' : '');
+                        b.addEventListener('click', e => { e.stopPropagation(); closeDayMenu(); setBedtime(T, ''); });
+                        m.appendChild(b);
+                    }
+                }
+                const add = (label, fn) => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'day-menu-item';
+                    b.innerHTML = '<span>' + label + '</span>';
+                    b.addEventListener('click', e => { e.stopPropagation(); closeDayMenu(); fn(); });
+                    m.appendChild(b);
+                };
+                if (flag('eventsDue') && flag('timeBlocks')) add('Block out time…', () => {
+                    const start = Math.ceil(nowMinutes() / 30) * 30;
+                    openItemEditor({ draft: { kind: 'block', date: T, time: hhmmOf(start), end: hhmmOf(start + 60) } });
+                });
+                if (flag('eventsDue')) add('Add something due…', () => openItemEditor({ draft: { kind: 'due', date: T } }));
+                if (flag('calendarView')) add('Open calendar', openCalendar);
+                placeMenu(m, anchor);
+                const first = m.querySelector('input, .day-menu-item');
+                if (first) first.focus({ preventScroll: true });
+            }
+            byId('dayBudget').addEventListener('click', e => { e.stopPropagation(); openBudgetMenu(byId('dayBudget')); });
+
+            // ----- calendar + history modal -----
+            const calState = { view: 'cal', month: null, selected: null, histLimit: 14 };
+            const CAL_DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            function calIsOpen() { const b = byId('calBackdrop'); return !!b && b.classList.contains('show'); }
+            function shiftMonth(first, n) { const d = parseYmd(first); d.setMonth(d.getMonth() + n, 1); return ymd(d); }
+            function selectDay(date) { calState.selected = date; calState.month = date.slice(0, 8) + '01'; renderCalendar(); }
+            let calOpener = null;
+            function restoreFocus(el) { if (el && el !== document.body && el.focus && document.contains(el)) el.focus(); }
+            function openCalendar() {
+                const T = todayYmd();
+                calOpener = document.activeElement;
+                calState.month = T.slice(0, 8) + '01';
+                calState.selected = T;
+                byId('calBackdrop').classList.add('show');
+                renderCalendar();
+                const cell = byId('calBody').querySelector('.cal-cell.sel');
+                if (cell) cell.focus({ preventScroll: true });
+            }
+            function closeCalendar() {
+                byId('calBackdrop').classList.remove('show');
+                restoreFocus(calOpener);
+                calOpener = null;
+            }
+
+            function calData() {
+                const doneBy = {}, sessBy = {};
+                state.doneLog.forEach(e => { const d = ymd(new Date(e.at)); (doneBy[d] = doneBy[d] || []).push(e); });
+                state.sessionHistory.forEach(se => {
+                    if (se.mode !== 'pomodoro') return;
+                    const d = ymd(new Date(se.timestamp));
+                    (sessBy[d] = sessBy[d] || []).push(se);
+                });
+                return { doneBy: doneBy, sessBy: sessBy };
+            }
+
+            function monthHTML(data) {
+                const T = todayYmd();
+                const first = parseYmd(calState.month);
+                const dim = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+                const offset = (first.getDay() + 6) % 7;
+                const rows = Math.ceil((offset + dim) / 7);
+                const start = addDays(calState.month, -offset);
+                const ev = flag('eventsDue');
+                const byDate = {};
+                if (ev) entriesForRange(start, addDays(start, rows * 7 - 1), false).forEach(e => { (byDate[e.date] = byDate[e.date] || []).push(e); });
+                let html = '<div class="cal-grid">' + CAL_DOW.map(d => `<div class="cal-dow">${d}</div>`).join('');
+                for (let i = 0; i < rows * 7; i++) {
+                    const date = addDays(start, i);
+                    const inMonth = date.slice(0, 7) === calState.month.slice(0, 7);
+                    const planned = state.tasks.filter(t => !t.done && taskDate(t) === date).length;
+                    const done = (data.doneBy[date] || []).length;
+                    const sess = (data.sessBy[date] || []).length;
+                    const es = byDate[date] || [];
+                    const evN = es.filter(e => e.type === 'event' || e.type === 'block').length;
+                    const dueN = es.filter(e => e.type === 'due' || e.type === 'taskdue').length;
+                    const bedSet = flag('bedtime') && state.bedtimes && state.bedtimes[date];
+                    const heat = sess > 0 ? ` style="background: rgba(var(--leaf-rgb), ${Math.min(0.5, 0.12 + sess * 0.07).toFixed(2)})"` : '';
+                    const marks = (planned ? `<span class="cm plan" title="${planned} planned">${planned}</span>` : '') +
+                        (done ? `<span class="cm done" title="${done} done">${ic('check')}${done}</span>` : '') +
+                        (evN ? `<span class="cm ev" title="${evN} event(s)">${ic('event')}${evN}</span>` : '') +
+                        (dueN ? `<span class="cm due" title="${dueN} due">${ic('flag')}${dueN}</span>` : '') +
+                        (bedSet ? '<span class="cm bed" title="Bedtime set">' + ic('moon') + '</span>' : '');
+                    html += `<button type="button" class="cal-cell${inMonth ? '' : ' out'}${date === T ? ' today' : ''}${date === calState.selected ? ' sel' : ''}" data-act="pick-day" data-date="${date}"${heat} aria-label="${fmtShort(date)}"><span class="cal-num">${parseYmd(date).getDate()}</span><span class="cal-marks">${marks}</span></button>`;
+                }
+                return html + '</div>';
+            }
+
+            // compact horizontal day strip: events/blocks, bedtime, "now"
+            function timelineHTML(date, entries) {
+                const T = todayYmd();
+                const bed = bedtimeFor(date);
+                const segs = entries.filter(e => (e.type === 'event' || e.type === 'block') && e.time);
+                if (!segs.length && !bed) return '';
+                let from = 6 * 60;
+                segs.forEach(e => { from = Math.min(from, Math.floor(minOf(e.time) / 60) * 60); });
+                const to = 1440, span = to - from;
+                const pct = (m) => Math.max(0, Math.min(100, (m - from) / span * 100));
+                const lanes = [];
+                const placed = segs.slice().sort((a, b) => minOf(a.time) - minOf(b.time)).map(e => {
+                    const s = minOf(e.time);
+                    let en = e.end ? minOf(e.end) : s + 20;
+                    if (en <= s) en = Math.min(1440, en + 1440);
+                    en = Math.min(en, 1440);
+                    let lane = lanes.findIndex(le => le <= s);
+                    if (lane < 0) { lane = lanes.length; lanes.push(0); }
+                    lanes[lane] = en;
+                    return { e: e, s: s, en: en, lane: lane };
+                });
+                const nLanes = Math.max(1, lanes.length);
+                let html = `<div class="tl"><div class="tl-track" style="height:${nLanes * 16 + 6}px">`;
+                placed.forEach(p => {
+                    html += `<span class="tl-seg ${p.e.type}" style="left:${pct(p.s)}%;width:${Math.max(0.8, pct(p.en) - pct(p.s))}%;top:${3 + p.lane * 16}px" title="${escapeHtml(p.e.title)} ${fmtTime(p.e.time)}${p.e.end ? '–' + fmtTime(p.e.end) : ''}">${escapeHtml(p.e.title)}</span>`;
+                });
+                if (bed) html += `<span class="tl-mark tl-bed" style="left:${pct(Math.min(1439, minOf(bed) < 300 ? 1439 : minOf(bed)))}%" title="Bedtime ${fmtTime(bed)}"></span>`;
+                if (date === T) html += `<span class="tl-mark tl-now" style="left:${pct(nowMinutes())}%" title="Now"></span>`;
+                html += '</div><div class="tl-ticks">';
+                for (let h = from / 60; h <= 24; h += 3) html += `<span style="left:${pct(h * 60)}%">${h === 24 ? '24' : String(h).padStart(2, '0')}</span>`;
+                return html + '</div></div>';
+            }
+
+            function detailHTML(data) {
+                const T = todayYmd();
+                const sel = calState.selected || T;
+                const ev = flag('eventsDue');
+                const planned = state.tasks.filter(t => !t.done && taskDate(t) === sel);
+                const entries = ev ? entriesForRange(sel, sel, true) : [];
+                const done = data.doneBy[sel] || [];
+                const sess = data.sessBy[sel] || [];
+                const rel = sel === T ? ' · Today' : sel === addDays(T, 1) ? ' · Tomorrow' : sel === addDays(T, -1) ? ' · Yesterday' : '';
+                let html = `<div class="cal-detail"><h4>${fmtShort(sel)}${rel}</h4>`;
+                const bits = [];
+                if (planned.length) bits.push(planned.length + ' planned');
+                if (done.length) bits.push(done.length + ' done');
+                if (sess.length) bits.push(sess.length + ' focus session' + (sess.length === 1 ? '' : 's'));
+                html += `<div class="cal-sub">${bits.length ? bits.join(' · ') : 'Nothing here yet'}</div>`;
+
+                if (flag('bedtime')) html += `<div class="cal-bed">${bedRowHTML(sel)}</div>`;
+                if (ev && flag('timeBlocks')) html += timelineHTML(sel, entries);
+                if (sel >= T) {
+                    const f = freeFor(sel);
+                    const plannedPomos = planned.reduce((n, t) => n + (t.est > 0 ? Math.max(0, (t.est || 0) - (t.completedPomos || 0)) : 0), 0);
+                    const mins = plannedPomos * (state.durations.pomodoro / 60);
+                    const over = mins > f.free;
+                    if (flag('bedtime') || (ev && flag('timeBlocks'))) {
+                        html += `<div class="tl-free">Free ${fmtDur(f.free)} · ${sel === T ? 'now' : fmtTime(hhmmOf(f.start))} → ${f.bed ? 'bed ' + fmtTime(f.bed) : 'midnight'}${f.blocked ? ' · ' + fmtDur(f.blocked) + ' blocked' : ''}${mins ? ` · <span class="${over ? 'warn' : ''}">focus planned ~${fmtDur(mins)}</span>` : ''}</div>`;
+                    }
+                    const fit = pomosFit(f.free);
+                    const room = fit - plannedPomos;
+                    html += '<div class="tl-free pomo-fit">' +
+                        (fit ? 'Room for about <b>' + fit + '</b> pomodoro' + (fit === 1 ? '' : 's') : 'No room for another pomodoro') +
+                        (plannedPomos ? ' · ' + plannedPomos + ' planned · ' + (room >= 0 ? '<b>' + room + '</b> more would fit' : '<span class="warn">' + (-room) + ' too many</span>') : '') + '</div>';
+                }
+
+                if (ev) {
+                    const evs = entries.filter(e => e.type === 'event' || e.type === 'block');
+                    const dues = entries.filter(e => e.type === 'due' || e.type === 'taskdue');
+                    if (evs.length) html += '<div class="cal-sec">Events &amp; blocks</div>' + evs.map(e => entryRowHTML(e, false)).join('');
+                    if (dues.length) html += '<div class="cal-sec">Due</div>' + dues.map(e => entryRowHTML(e, false)).join('');
+                }
+                if (planned.length) {
+                    html += '<div class="cal-sec">Planned tasks</div>' + planned.map(t => `<div class="ag-row task"><button type="button" class="ag-check" data-act="done-task" data-id="${t.id}" aria-label="Mark as done" title="Mark as done"></button><span class="ag-main"><span class="ag-title">${escapeHtml(t.title)}</span><span class="ag-meta">${t.est === 0 ? 'flow' : (t.completedPomos || 0) + '/' + (t.est || 1) + ' pomodoros'}</span></span></div>`).join('');
+                    if (!flag('dateScheduling')) html += '<div class="cal-empty" style="margin-top:4px">Tip: turn on “Schedule by real date” to place tasks on any day.</div>';
+                }
+                if (done.length) html += '<div class="cal-sec">Completed</div>' + done.slice().sort((a, b) => a.at - b.at).map(d => `<div class="ag-row done"><span class="ag-icon done">${ic('check')}</span><span class="ag-main"><span class="ag-title">${escapeHtml(d.title)}</span><span class="ag-meta">${new Date(d.at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</span></span></div>`).join('');
+                if (sess.length) {
+                    const agg = {};
+                    sess.forEach(x => { const k = x.taskTitle || 'Unnamed'; agg[k] = (agg[k] || 0) + 1; });
+                    html += '<div class="cal-sec">Focus sessions</div>' + Object.keys(agg).map(k => `<div class="ag-row"><span class="ag-icon">${ic('dot')}</span><span class="ag-main"><span class="ag-title">${escapeHtml(k)}</span><span class="ag-meta">× ${agg[k]}</span></span></div>`).join('');
+                }
+
+                if (ev) {
+                    html += `<div class="cal-add"><input type="text" class="quick-input" id="calQuick" autocomplete="off" placeholder="Add to ${fmtShort(sel)} — “Dentist 2:30pm 1h”, “due Report”, “Gym 6-7pm every mon”"><div class="quick-preview" id="calPreview"></div><button type="button" class="mini-btn" data-act="cal-details">More options…</button></div>`;
+                }
+                return html + '</div>';
+            }
+
+            function heatHTML(data) {
+                const T = todayYmd();
+                const start = addDays(addDays(T, -((dowOf(T) + 6) % 7)), -7 * 11);
+                let cells = '';
+                for (let i = 0; i < 84; i++) {
+                    const d = addDays(start, i);
+                    if (d > T) { cells += '<span class="hm-cell hm-future"></span>'; continue; }
+                    const sN = (data.sessBy[d] || []).length, dN = (data.doneBy[d] || []).length;
+                    const score = sN + dN * 2;
+                    const lvl = score === 0 ? 0 : score < 3 ? 1 : score < 6 ? 2 : score < 10 ? 3 : 4;
+                    cells += `<button type="button" class="hm-cell hm-${lvl}" data-act="goto-day" data-date="${d}" title="${fmtShort(d)}: ${dN} done, ${sN} sessions" aria-label="${fmtShort(d)}"></button>`;
+                }
+                return `<div class="hist-heat"><div class="hc-label" style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--fg-dim);font-weight:600">Last 12 weeks</div><div class="hm-grid">${cells}</div></div>`;
+            }
+
+            function historyHTML(data) {
+                const T = todayYmd();
+                const wkStart = addDays(T, -((dowOf(T) + 6) % 7));
+                const monthStart = T.slice(0, 8) + '01';
+                const countIn = (map, from) => { let n = 0; Object.keys(map).forEach(d => { if (d >= from && d <= T) n += map[d].length; }); return n; };
+                const allSess = Object.keys(data.sessBy).reduce((n, d) => n + data.sessBy[d].length, 0);
+                let html = '<div class="hist-cards">' +
+                    `<div class="hist-card"><div class="hc-label">Tasks done</div><div class="hc-val">This week: ${countIn(data.doneBy, wkStart)}<br>This month: ${countIn(data.doneBy, monthStart)}<br>All time: ${state.doneLog.length}</div></div>` +
+                    `<div class="hist-card"><div class="hc-label">Focus sessions</div><div class="hc-val">This week: ${countIn(data.sessBy, wkStart)}<br>This month: ${countIn(data.sessBy, monthStart)}<br>Recorded: ${allSess}</div></div>` +
+                    `<div class="hist-card"><div class="hc-label">Streak</div><div class="hc-val">${state.focusStreak || 0} day${state.focusStreak === 1 ? '' : 's'}</div></div></div>`;
+                html += heatHTML(data);
+                const days = Array.from(new Set(Object.keys(data.doneBy).concat(Object.keys(data.sessBy)))).sort().reverse();
+                if (!days.length) html += '<div class="cal-empty">No history yet — completed tasks and focus sessions will show up here.</div>';
+                days.slice(0, calState.histLimit).forEach(d => {
+                    const dn = data.doneBy[d] || [], ss = data.sessBy[d] || [];
+                    const agg = {};
+                    ss.forEach(x => { const k = x.taskTitle || 'Unnamed'; agg[k] = (agg[k] || 0) + 1; });
+                    html += `<div class="hist-day"><button type="button" class="hist-day-head" data-act="goto-day" data-date="${d}">${fmtShort(d)}<span>${dn.length} task${dn.length === 1 ? '' : 's'} · ${ss.length} session${ss.length === 1 ? '' : 's'}</span></button><ul>` +
+                        dn.slice().sort((a, b) => a.at - b.at).map(x => `<li>${ic('check')} ${escapeHtml(x.title)}</li>`).join('') +
+                        Object.keys(agg).map(k => `<li>${ic('dot')} ${escapeHtml(k)} × ${agg[k]}</li>`).join('') + '</ul></div>';
+                });
+                if (days.length > calState.histLimit) html += '<button type="button" class="agenda-add-btn hist-more" data-act="hist-more">Show more</button>';
+                const undated = state.tasks.filter(t => t.done && !state.doneLog.some(e => e.taskId === t.id)).length;
+                if (undated) html += `<div class="cal-empty" style="margin-top:10px">${undated} older completed task${undated === 1 ? '' : 's'} have no completion date and aren't listed.</div>`;
+                html += '<div class="cal-empty" style="margin-top:6px">Focus-session history keeps the most recent ~500 sessions.</div>';
+                return html;
+            }
+
+            function renderCalendar() {
+                const root = byId('calBody');
+                if (!root) return;
+                // keep what you're typing if a refresh happens
+                const qEl = byId('calQuick');
+                const keep = qEl ? qEl.value : '';
+                const hadFocus = qEl && document.activeElement === qEl;
+                const data = calData();
+                document.querySelectorAll('.cal-tab').forEach(b => b.classList.toggle('active', b.dataset.view === calState.view));
+                const isCal = calState.view === 'cal';
+                byId('calNav').style.display = isCal ? '' : 'none';
+                byId('calLegend').style.display = isCal ? '' : 'none';
+                if (isCal) {
+                    byId('calTitle').textContent = parseYmd(calState.month).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+                    root.innerHTML = monthHTML(data) + detailHTML(data);
+                    const nq = byId('calQuick');
+                    if (nq && keep) { nq.value = keep; byId('calPreview').textContent = describeDraft(parseQuick(keep, calState.selected)); }
+                    if (nq && hadFocus) nq.focus();
+                } else {
+                    root.innerHTML = historyHTML(data);
+                }
+            }
+
+            (function wireCalendar() {
+                byId('calendarBtn').addEventListener('click', openCalendar);
+                byId('calClose').addEventListener('click', closeCalendar);
+                byId('calBackdrop').addEventListener('click', e => { if (e.target === byId('calBackdrop')) closeCalendar(); });
+                byId('calPrev').addEventListener('click', () => { calState.month = shiftMonth(calState.month, -1); renderCalendar(); });
+                byId('calNext').addEventListener('click', () => { calState.month = shiftMonth(calState.month, 1); renderCalendar(); });
+                byId('calToday').addEventListener('click', () => selectDay(todayYmd()));
+                document.querySelectorAll('.cal-tab').forEach(b => b.addEventListener('click', () => { calState.view = b.dataset.view; renderCalendar(); }));
+                document.addEventListener('keydown', e => {
+                    if (!calIsOpen() || itemIsOpen()) return;
+                    if (e.key === 'Escape') { if (!e.defaultPrevented) closeCalendar(); return; }
+                    if (e.ctrlKey || e.metaKey || e.altKey) return;
+                    const tag = e.target.tagName;
+                    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+                    if (calState.view !== 'cal') return;
+                    const sel = calState.selected || todayYmd();
+                    let next = null;
+                    if (e.key === 'ArrowLeft') next = addDays(sel, -1);
+                    else if (e.key === 'ArrowRight') next = addDays(sel, 1);
+                    else if (e.key === 'ArrowUp') next = addDays(sel, -7);
+                    else if (e.key === 'ArrowDown') next = addDays(sel, 7);
+                    else if (e.key === 'PageUp') next = shiftMonth(sel.slice(0, 8) + '01', -1).slice(0, 8) + sel.slice(8);
+                    else if (e.key === 'PageDown') next = shiftMonth(sel.slice(0, 8) + '01', 1).slice(0, 8) + sel.slice(8);
+                    else if (e.key === 't' || e.key === 'T') next = todayYmd();
+                    else if ((e.key === 'n' || e.key === 'N') && flag('eventsDue')) { e.preventDefault(); openItemEditor({ date: sel }); return; }
+                    if (next) { e.preventDefault(); selectDay(next); }
+                });
+                const body = byId('calBody');
+                body.addEventListener('input', e => {
+                    if (e.target.id === 'calQuick') byId('calPreview').textContent = e.target.value.trim() ? describeDraft(parseQuick(e.target.value, calState.selected)) : '';
+                });
+                body.addEventListener('keydown', e => {
+                    if (e.target.id === 'calQuick') {
+                        e.stopPropagation();
+                        if (e.key === 'Enter') {
+                            const d = parseQuick(e.target.value, calState.selected);
+                            if (d.title && addItem(d)) { /* renderTasks() inside addItem refreshes the open calendar */ }
+                        } else if (e.key === 'Escape') { e.target.value = ''; byId('calPreview').textContent = ''; e.target.blur(); e.preventDefault(); }
+                    }
+                });
+                body.addEventListener('change', e => { if (e.target.dataset && e.target.dataset.bedDate) setBedtime(e.target.dataset.bedDate, e.target.value); });
+                body.addEventListener('dblclick', e => {
+                    const cell = e.target.closest('[data-act=pick-day]');
+                    if (cell && flag('eventsDue')) openItemEditor({ date: cell.dataset.date });
+                });
+                body.addEventListener('click', e => {
+                    const el = e.target.closest('[data-act]');
+                    if (!el) return;
+                    const act = el.dataset.act;
+                    if (act === 'pick-day') selectDay(el.dataset.date);
+                    else if (act === 'goto-day') { calState.view = 'cal'; selectDay(el.dataset.date); }
+                    else if (act === 'toggle-item') toggleItemDone(el.dataset.id, el.dataset.date);
+                    else if (act === 'del-item') requestDelete(el, el.dataset.id, el.dataset.date);
+                    else if (act === 'edit-item') openItemEditor({ id: el.dataset.id });
+                    else if (act === 'bed-clear') setBedtime(el.dataset.date, '');
+                    else if (act === 'done-task') { const t = state.tasks.find(x => x.id === el.dataset.id); if (t) setTaskDone(t, true); }
+                    else if (act === 'hist-more') { calState.histLimit += 14; renderCalendar(); }
+                    else if (act === 'cal-details') {
+                        const qv = byId('calQuick') ? byId('calQuick').value : '';
+                        openItemEditor({ draft: qv.trim() ? parseQuick(qv, calState.selected) : { date: calState.selected } });
+                    }
+                });
+            })();
+
             // ===== SORT BY DAY =====
             function sortTasksByDay() {
-                const order = { today: 0, tomorrow: 1, weekend: 2 };
+                const order = { today: 0, tomorrow: 1, weekend: 2, later: 3 };
                 // Separate done and active
                 const doneTasks = state.tasks.filter(t => t.done);
                 const activeTasks = state.tasks.filter(t => !t.done);
                 // Sort active by day, preserving existing order within each day group
                 activeTasks.sort((a, b) => {
-                    const aOrder = order[a.timing || 'today'] ?? 3;
-                    const bOrder = order[b.timing || 'today'] ?? 3;
+                    const aOrder = order[timingOf(a)] ?? 3;
+                    const bOrder = order[timingOf(b)] ?? 3;
                     if (aOrder !== bOrder) return aOrder - bOrder;
                     // If same day, keep original order (based on current array position)
                     return state.tasks.indexOf(a) - state.tasks.indexOf(b);
@@ -6618,10 +8366,12 @@
                 const now = new Date();
                 const midnight = new Date(now);
                 midnight.setHours(24, 0, 0, 0);
-                const left = (midnight - now) / 60000;
+                const useFree = flag('bedtime') || (flag('eventsDue') && flag('timeBlocks'));
+                const fw = useFree ? freeFor(todayYmd()) : null;
+                const left = fw ? fw.free : (midnight - now) / 60000;
                 let text = 'Today: ' + cycles + ' pomodoro' + (cycles === 1 ? '' : 's') + ' · ~' + fmtDur(mins) + ' incl. breaks';
                 if (flow) text += ' · ' + flow + ' flow task' + (flow === 1 ? '' : 's');
-                text += ' · ' + fmtDur(left) + ' left in the day';
+                text += ' · ' + fmtDur(left) + (fw ? (fw.bed ? ' free before bed' : ' free today') : ' left in the day');
                 const over = mins > left;
                 if (over) text += ' — more than fits today';
                 el.textContent = text;
@@ -6629,21 +8379,32 @@
                 el.style.display = '';
             }
 
-            // Banner for unfinished tasks carried over from yesterday
+            // Banner for unfinished tasks carried over from earlier days
+            function sweepTasks() {
+                if (flag('dateScheduling')) return state.tasks.filter(t => isOverdue(t));
+                return state.tasks.filter(t => !t.done && t.carry === 'yesterday' && timingOf(t) === 'today');
+            }
             function renderSweep() {
                 const banner = document.getElementById('sweepBanner');
                 if (!banner) return;
                 if (!flag('carryMarkers')) { banner.classList.remove('show'); return; }
-                const n = state.tasks.filter(t => !t.done && t.carry === 'yesterday' && timingOf(t) === 'today').length;
+                const list = sweepTasks();
+                const n = list.length;
                 if (!n) { banner.classList.remove('show'); return; }
+                const yday = addDays(todayYmd(), -1);
+                const allYesterday = !flag('dateScheduling') || list.every(t => taskDate(t) === yday);
                 document.getElementById('sweepText').textContent =
-                    n + ' unfinished task' + (n === 1 ? '' : 's') + ' from yesterday';
+                    n + ' unfinished task' + (n === 1 ? '' : 's') + (allYesterday ? ' from yesterday' : ' carried over');
                 banner.classList.add('show');
             }
 
             function sweepCarried(moveToTomorrow) {
-                state.tasks.forEach(t => {
-                    if (!t.done && t.carry === 'yesterday' && timingOf(t) === 'today') {
+                const T = todayYmd();
+                sweepTasks().forEach(t => {
+                    if (flag('dateScheduling')) {
+                        t.date = moveToTomorrow ? addDays(T, 1) : T;
+                        t.timing = legacyBucket(bucketOf(t.date));
+                    } else {
                         delete t.carry;
                         if (moveToTomorrow) t.timing = 'tomorrow';
                     }
@@ -6714,7 +8475,7 @@
                 // With "group by day" on (All view): sections with headers. Otherwise one plain list (original).
                 const grouped = flag('dayGroups') && filter === 'all';
                 const sections = grouped ?
-                    TIMING_ORDER.map(g => ({ g, items: active.filter(t => timingOf(t) === g) })) :
+                    timingOrder().map(g => ({ g, items: active.filter(t => timingOf(t) === g) })) :
                     [{ g: 'all', items: active }];
                 sections.forEach(sec => {
                     if (!sec.items.length) return;
@@ -6723,7 +8484,8 @@
                     if (grouped) {
                         const h = document.createElement('div');
                         h.className = 'task-group-header';
-                        h.innerHTML = `<span class="gdot ${sec.g}"></span>${TIMING_LABELS[sec.g]}<span class="count">${sec.items.length}</span>`;
+                        const dt = flag('dateScheduling') ? groupDateText(sec.g) : '';
+                        h.innerHTML = `<span class="gdot ${sec.g}"></span>${timingLabel(sec.g)}${dt ? '<span class="gdate">' + dt + '</span>' : ''}<span class="count">${sec.items.length}</span>`;
                         wrap.appendChild(h);
                     }
                     const list = document.createElement('div');
@@ -6776,6 +8538,10 @@
 
                 renderPlan();
                 renderSweep();
+                renderAgenda();
+                renderBudget();
+                if (activeTaskOpen()) hideFocusNudge();
+                if (calIsOpen()) renderCalendar();
                 updateCyclesLeftStat();
             }
 
@@ -6919,17 +8685,32 @@
                 const val = parseInt(estInput.value);
                 let est = isNaN(val) ? 1 : Math.max(0, val);
                 let timing = currentTiming || 'today';
+                let exactDate = null;
+                const dateMode = flag('dateScheduling');
 
-                // Quick-add (option): trailing "@today / @tmrw / @wknd" and "x3" (or "3x") override the controls
+                // Quick-add (option): trailing "@today / @tmrw / @wknd" and "x3" (or "3x") override the controls.
+                // With date scheduling also "@mon … @sun" (next such day) and "@2026-10-24".
                 if (flag('quickAdd')) {
+                    const WD = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
                     const tokens = title.split(/\s+/);
-                    let tm = null, ee = null;
+                    let dayTok = null, ee = null;
                     while (tokens.length > 1) {
                         const tk = tokens[tokens.length - 1].toLowerCase();
                         let m;
                         if ((m = tk.match(/^@(today|tod|tomorrow|tmrw|tom|weekend|wknd)$/))) {
-                            if (tm === null) tm = (m[1] === 'today' || m[1] === 'tod') ? 'today' :
-                                (m[1] === 'weekend' || m[1] === 'wknd') ? 'weekend' : 'tomorrow';
+                            if (!dayTok) dayTok = { b: (m[1] === 'today' || m[1] === 'tod') ? 'today' :
+                                (m[1] === 'weekend' || m[1] === 'wknd') ? 'weekend' : 'tomorrow' };
+                            tokens.pop();
+                        } else if (dateMode && (m = tk.match(/^@(mon|tue|wed|thu|fri|sat|sun)(?:day|sday|nesday|rsday|urday|s|r|rs)?$/))) {
+                            if (!dayTok) {
+                                const wd = WD[m[1]];
+                                let d = null;
+                                for (let i = 1; i <= 7; i++) { const c = addDays(todayYmd(), i); if (dowOf(c) === wd) { d = c; break; } }
+                                dayTok = { d };
+                            }
+                            tokens.pop();
+                        } else if (dateMode && (m = tk.match(/^@(\d{4}-\d{2}-\d{2})$/)) && !isNaN(parseYmd(m[1]).getTime())) {
+                            if (!dayTok) dayTok = { d: m[1] };
                             tokens.pop();
                         } else if ((m = tk.match(/^(?:x(\d{1,2})|(\d{1,2})x)$/))) {
                             if (ee === null) ee = Math.min(20, parseInt(m[1] || m[2], 10));
@@ -6937,12 +8718,16 @@
                         } else break;
                     }
                     title = tokens.join(' ');
-                    if (tm !== null) timing = tm;
+                    if (dayTok) { if (dayTok.b) timing = dayTok.b; else exactDate = dayTok.d; }
                     if (ee !== null) est = ee;
                 }
 
                 const t = { id: uid(), title, est, completedPomos: 0, untimedProgress: 0, done: false, notes: '',
                     timing, completedAt: null };
+                if (dateMode) {
+                    t.date = exactDate || dateForBucket(timing);
+                    t.timing = legacyBucket(bucketOf(t.date));
+                }
                 state.tasks.push(t);
                 if (!state.activeTaskId) state.activeTaskId = t.id;
                 input.value = '';
@@ -7118,6 +8903,7 @@
                 $('#setHighContrast').classList.toggle('on', state.highContrast);
                 $('#setReducedMotion').classList.toggle('on', state.reducedMotion);
                 buildFlagRows();
+                $('#setDefaultBedtime').value = state.defaultBedtime || '';
                 timerScaleSlider.value = Math.round(state.timerScale * 100);
                 timerScaleLabel.textContent = Math.round(state.timerScale * 100) + '%';
                 $$('.theme-grid .theme-swatch').forEach(el => {
@@ -7618,6 +9404,8 @@
             // ===== INIT =====
             applyFlagsUI();
             syncFilterButtons();
+            if (flag('dateScheduling')) ensureDates();
+            backfillDoneLog();
             checkDayRollover();
             switchMode('pomodoro', false);
             renderPips();
